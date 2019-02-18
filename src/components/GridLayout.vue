@@ -171,6 +171,10 @@
             });
         },
         watch: {
+            margin: function(val, old){
+                console.log(val, old);
+                 this.eventBus.$emit("resizeEvent");
+            },
             width: function () {
                 this.$nextTick(function () {
                     //this.$broadcast("updateWidth", this.width);

@@ -25,17 +25,20 @@
             <button @click="increaseWidth">Increase Width</button>
             <button @click="addItem">Add an item</button>
             <!-- Add to show rtl support -->
-            <button @click="changeDirection">Change Direction</button>
+            <!-- <button @click="changeDirection">Change Direction</button>  -->
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
-            <input type="checkbox" v-model="mirrored"/> Mirrored
+            <!-- <input type="checkbox" v-model="mirrored"/> Mirrored -->
             <input type="checkbox" v-model="responsive"/> Responsive
             <div style="margin-top: 10px;margin-bottom: 10px;">
                 Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNum"/>
             </div>
+            right margin <input type="number" v-model="margin[0]" />
+            bottom margin <input type="number" v-model="margin[1]" />
+            opacity(0 - 10) <input type="number" v-model="opacity">
+            background color <input type="text" v-model="bgcolor">
             <grid-layout
                     :layout.sync="layout"
-                    :col-num="parseInt(colNum)"
                     :row-height="rowHeight"
                     :is-draggable="draggable"
                     :is-resizable="resizable"
@@ -43,21 +46,27 @@
                     :vertical-compact="true"
                     :use-css-transforms="true"
                     :responsive="responsive"
+                    :col-num="12"
+                    :auto-size="true"
+                    :style="{backgroundColor: bgcolor}"
+                    :margin="margin"
             >
-                <grid-item v-for="item in layout" :key="item.i"
+                <grid-item v-for="(item, index) in layout" :key="item.i"
                            :x="item.x"
                            :y="item.y"
                            :w="item.w"
                            :h="item.h"
                            :i="item.i"
+                           :style="{backgroundColor: 'rgba(255,255,255, ' + (opacity/10) + ')'}"
                            @resize="resize"
                            @move="move"
                            @resized="resized"
                            @moved="moved"
                 >
                     <!--<custom-drag-element :text="item.i"></custom-drag-element>-->
-                    <test-element :text="item.i"></test-element>
-                    <!--<button @click="clicked">CLICK ME!</button>-->
+                    <!-- <test-element :text="item.i"></test-element> -->
+                    <button @click="clicked(index)">关闭</button>
+                    <div>{{item.i}}</div>
                 </grid-item>
             </grid-layout>
             <hr/>
@@ -99,25 +108,18 @@
 
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", resizable: true, draggable: true},
-        {"x":2,"y":0,"w":2,"h":4,"i":"1", resizable: null, draggable: null},
-        {"x":4,"y":0,"w":2,"h":5,"i":"2", resizable: false, draggable: false},
-        {"x":6,"y":0,"w":2,"h":3,"i":"3", resizable: false, draggable: false},
-        {"x":8,"y":0,"w":2,"h":3,"i":"4", resizable: false, draggable: false},
-        {"x":10,"y":0,"w":2,"h":3,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":5,"w":2,"h":5,"i":"6", resizable: false, draggable: false},
-        {"x":2,"y":5,"w":2,"h":5,"i":"7", resizable: false, draggable: false},
-        {"x":4,"y":5,"w":2,"h":5,"i":"8", resizable: false, draggable: false},
-        {"x":6,"y":4,"w":2,"h":4,"i":"9", resizable: false, draggable: false},
-        {"x":8,"y":4,"w":2,"h":4,"i":"10", resizable: false, draggable: false},
-        {"x":10,"y":4,"w":2,"h":4,"i":"11", resizable: false, draggable: false},
-        {"x":0,"y":10,"w":2,"h":5,"i":"12", resizable: false, draggable: false},
-        {"x":2,"y":10,"w":2,"h":5,"i":"13", resizable: false, draggable: false},
-        {"x":4,"y":8,"w":2,"h":4,"i":"14", resizable: false, draggable: false},
-        {"x":6,"y":8,"w":2,"h":4,"i":"15", resizable: false, draggable: false},
-        {"x":8,"y":10,"w":2,"h":5,"i":"16", resizable: false, draggable: false},
-        {"x":10,"y":4,"w":2,"h":2,"i":"17", resizable: false, draggable: false},
-        {"x":0,"y":9,"w":2,"h":3,"i":"18", resizable: false, draggable: false},
-        {"x":2,"y":6,"w":2,"h":2,"i":"19", resizable: false, draggable: false}
+        {"x":2,"y":0,"w":2,"h":2,"i":"1", resizable: null, draggable: null},
+        {"x":4,"y":0,"w":2,"h":2,"i":"2", resizable: false, draggable: false},
+        {"x":6,"y":0,"w":2,"h":2,"i":"3", resizable: false, draggable: false},
+        {"x":8,"y":0,"w":2,"h":2,"i":"4", resizable: false, draggable: false},
+        {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
+        {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
+        {"x":2,"y":5,"w":2,"h":2,"i":"7", resizable: false, draggable: false},
+        {"x":4,"y":5,"w":2,"h":2,"i":"8", resizable: false, draggable: false},
+        {"x":6,"y":4,"w":2,"h":2,"i":"9", resizable: false, draggable: false},
+        {"x":8,"y":4,"w":2,"h":2,"i":"10", resizable: false, draggable: false},
+        {"x":10,"y":4,"w":2,"h":2,"i":"11", resizable: false, draggable: false},
+        {"x":0,"y":10,"w":2,"h":2,"i":"12", resizable: false, draggable: false}
     ];
 
     export default {
@@ -137,17 +139,21 @@
                 resizable: true,
                 mirrored: false,
                 responsive: true,
-                rowHeight: 30,
+                rowHeight: 150,
                 colNum: 12,
-                index: 0
+                index: 0,
+                margin: [3, 3],
+                opacity: 100,
+                bgcolor: '#eee'
             }
         },
         mounted: function () {
             this.index = this.layout.length;
         },
         methods: {
-            clicked: function() {
-                window.alert("CLICK!");
+            clicked: function(index) {
+                this.layout.splice(index, 1);
+                // window.alert("CLICK!");
             },
             increaseWidth: function() {
                 let width = document.getElementById("content").offsetWidth;
