@@ -27,30 +27,6 @@
             </div>
         </div>
         <div id="content">
-            <!--<button @click="decreaseWidth">Decrease Width</button>
-            <button @click="increaseWidth">Increase Width</button>
-            <button @click="addItem">Add an item</button>-->
-            <input type="checkbox" v-model="draggable"/> Draggable
-            <input type="checkbox" v-model="resizable"/> Resizable
-            <br/>
-            <!-- <grid-layout :layout="layout"
-                         :col-num="12"
-                         :row-height="30"
-                         :is-draggable="draggable"
-                         :is-resizable="resizable"
-                         :vertical-compact="true"
-                         :use-css-transforms="true"
-            >
-                <grid-item v-for="item in layout"
-                           :x="item.x"
-                           :y="item.y"
-                           :w="item.w"
-                           :h="item.h"
-                           :i="item.i"
-                        >
-                    <span class="text">{{item.i}}</span>
-                </grid-item>
-            </grid-layout> -->
             <grid ref="grid"></grid>
         </div>
 
