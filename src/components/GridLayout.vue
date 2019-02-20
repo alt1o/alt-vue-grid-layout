@@ -19,6 +19,7 @@
 </style>
 <script>
     import Vue from 'vue';
+    if(!Vue) Vue = window.Vue;
     var elementResizeDetectorMaker = require("element-resize-detector");
 
     import {bottom, compact, getLayoutItem, moveElement, validateLayout, cloneLayout} from '../helpers/utils';
