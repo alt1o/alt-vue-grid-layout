@@ -42,22 +42,33 @@
             <div id="container">
                 <grid ref="altGrid" ></grid>
             </div>
+            <gridtwo ref="grid2"></gridtwo>
         </div>
     </div>
 </template>
 
 <script>
     // import {getDocumentDir, setDocumentDir} from "./helpers/DOM";
-    import Grid from './grid.vue';
+    import GridLayout from './index';
     import testA from './test-components/test-a.vue';
     import testB from './test-components/test-b.vue';
 
+    let Grid = GridLayout.createGrid();
     // console.log(Grid)
     Grid.addWidgetType('testA', testA);
     Grid.addWidgetType('testB', testB);
     Grid.addWidgetType('testC', {
         mounted(){
             this.$el.innerHTML += 'heello world'
+        }
+    })
+
+    let gridtwo = GridLayout.createGrid();
+    gridtwo.addWidgetType('testA', testA);
+    gridtwo.addWidgetType('testB', testB);
+    gridtwo.addWidgetType('testC', {
+        mounted(){
+            this.$el.innerHTML += 'heello world2222222222'
         }
     })
 
@@ -76,7 +87,8 @@
         name: 'app',
         components: {
             // ResponsiveGridLayout,
-            Grid
+            Grid,
+            gridtwo
         },
         props: {
             txt: String
@@ -98,6 +110,7 @@
         },
         mounted: function () {
             this.$refs.altGrid.setLayout(this.layout);
+            this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
             clicked: function(index) {

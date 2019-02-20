@@ -33,7 +33,7 @@
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
             <br/>
-            <grid-layout :layout="layout"
+            <!-- <grid-layout :layout="layout"
                          :col-num="12"
                          :row-height="30"
                          :is-draggable="draggable"
@@ -50,12 +50,13 @@
                         >
                     <span class="text">{{item.i}}</span>
                 </grid-item>
-            </grid-layout>
+            </grid-layout> -->
+            <grid ref="grid"></grid>
         </div>
 
     </div>
     <script src="vue.min.js"></script>
-    <script src="../dist/vue-grid-layout.umd.min.js"></script>
+    <script src="../dist/alt-vue-grid-layout.umd.min.js"></script>
     <script src="01-basic.js"></script>
 </body>
 </html>

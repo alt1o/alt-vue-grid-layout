@@ -1,7 +1,7 @@
 module.exports = {
     configureWebpack: {
         output: {
-            library: "VueGridLayout",
+            library: "AltVueGridLayout",
             libraryExport: 'default'
         },
     },

@@ -23,19 +23,25 @@ var testLayout = [
 
 // var GridLayout = VueGridLayout.GridLayout;
 // var GridItem = VueGridLayout.GridItem;
-
+let Grid = AltVueGridLayout.createGrid();
 new Vue({
     el: '#app',
     // components: {
     //     "GridLayout": GridLayout,
     //     "GridItem": GridItem
     // },
+    components: {
+        Grid
+    },
     data: {
         layout: testLayout,
         draggable: true,
         resizable: true,
         index: 0
     },
+    mounted: function(){
+        this.$refs.grid.setLayout(this.layout);
+    }
 /*
     mounted: function () {
         this.index = this.layout.length;
