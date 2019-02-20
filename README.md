@@ -32,7 +32,7 @@ new Vue({
 
 ## 全局配置属性
 属性 | 说明 | 默认值
-- | - | - 
+-- | -- | --
 isDraggable | Boolean类型，是否支持拖拽布局，true - 支持，false - 不支持 | true
 isResizable | Boolean类型，是否支持拖拽控制元素大小，true - 支持，false - 不支持 | true
 margin | Array类型，如 [3, 3]，设置可拖拽模块左侧和下侧间距，最小值为[2, 2]，表示没有间距 | [10, 10]
