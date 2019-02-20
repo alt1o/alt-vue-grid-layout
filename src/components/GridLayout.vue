@@ -2,12 +2,13 @@
     <div ref="item" class="vue-grid-layout" :style="mergedStyle">
         <slot></slot>
         <grid-item class="vue-grid-placeholder"
-                   v-show="isDragging"
-                   :x="placeholder.x"
-                   :y="placeholder.y"
-                   :w="placeholder.w"
-                   :h="placeholder.h"
-                   :i="placeholder.i"></grid-item>
+            v-show="isDragging"
+            :x="placeholder.x"
+            :y="placeholder.y"
+            :w="placeholder.w"
+            :h="placeholder.h"
+            :i="placeholder.i"
+            :item="placeholder"></grid-item>
     </div>
 </template>
 <style>
@@ -113,7 +114,7 @@
                 },
                 layouts: {}, // array to store all layouts from different breakpoints
                 lastBreakpoint: null, // store last active breakpoint
-                originalLayout: null, // store original Layout
+                originalLayout: [], // store original Layout
             };
         },
         created () {

@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <h1 style="text-align: center">Vue Grid Layout</h1>
+        <h2>{{ txt }}</h2>
         <!--<pre>{{ layout | json }}</pre>-->
         <div>
             <div class="layoutJSON">
@@ -21,8 +22,8 @@
             </div>-->
         </div>
         <div id="content">
-            <button @click="decreaseWidth">Decrease Width</button>
-            <button @click="increaseWidth">Increase Width</button>
+            <!-- <button @click="decreaseWidth">Decrease Width</button>
+            <button @click="increaseWidth">Increase Width</button> -->
             <button @click="addItem">Add an item</button>
             <!-- Add to show rtl support -->
             <!-- <button @click="changeDirection">Change Direction</button>  -->
@@ -37,104 +38,52 @@
             bottom margin <input type="number" v-model="margin[1]" />
             opacity(0 - 10) <input type="number" v-model="opacity">
             background color <input type="text" v-model="bgcolor">
-            <grid-layout
-                    :layout.sync="layout"
-                    :row-height="rowHeight"
-                    :is-draggable="draggable"
-                    :is-resizable="resizable"
-                    :is-mirrored="mirrored"
-                    :vertical-compact="true"
-                    :use-css-transforms="true"
-                    :responsive="responsive"
-                    :col-num="12"
-                    :auto-size="true"
-                    :style="{backgroundColor: bgcolor}"
-                    :margin="margin"
-            >
-                <grid-item v-for="(item, index) in layout" :key="item.i"
-                           :x="item.x"
-                           :y="item.y"
-                           :w="item.w"
-                           :h="item.h"
-                           :i="item.i"
-                           :style="{backgroundColor: 'rgba(255,255,255, ' + (opacity/10) + ')'}"
-                           @resize="resize"
-                           @move="move"
-                           @resized="resized"
-                           @moved="moved"
-                >
-                    <!--<custom-drag-element :text="item.i"></custom-drag-element>-->
-                    <!-- <test-element :text="item.i"></test-element> -->
-                    <button @click="clicked(index)">关闭</button>
-                    <div>{{item.i}}</div>
-                </grid-item>
-            </grid-layout>
-            <hr/>
-            <!--<grid-layout
-                    :layout="layout2"
-                    :col-num="12"
-                    :row-height="rowHeight"
-                    :is-draggable="draggable"
-                    :is-resizable="resizable"
-                    :vertical-compact="true"
-                    :use-css-transforms="true"
-            >
-                <grid-item v-for="item in layout2" :key="item.i"
-                           :x="item.x"
-                           :y="item.y"
-                           :w="item.w"
-                           :h="item.h"
-                           :min-w="2"
-                           :min-h="2"
-                           :i="item.i"
-                           :is-draggable="item.draggable"
-                           :is-resizable="item.resizable"
-                >
-                    <test-element :text="item.i"></test-element>
-                </grid-item>
-            </grid-layout>-->
+            <button @click="addItem">addItem</button>
+            <div id="container">
+                <grid ref="altGrid" ></grid>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import GridItem from './components/GridItem.vue';
-    import GridLayout from './components/GridLayout.vue';
-    // import ResponsiveGridLayout from './components/ResponsiveGridLayout.vue';
-    import TestElement from './components/TestElement.vue';
-    import CustomDragElement from './components/CustomDragElement.vue';
-    import {getDocumentDir, setDocumentDir} from "./helpers/DOM";
-    //var eventBus = require('./eventBus');
+    // import {getDocumentDir, setDocumentDir} from "./helpers/DOM";
+    import Grid from './grid.vue';
+    import testA from './test-components/test-a.vue';
+    import testB from './test-components/test-b.vue';
+
+    // console.log(Grid)
+    Grid.addWidgetType('testA', testA);
+    Grid.addWidgetType('testB', testB);
+    Grid.addWidgetType('testC', {
+        mounted(){
+            this.$el.innerHTML += 'heello world'
+        }
+    })
 
     let testLayout = [
-        {"x":0,"y":0,"w":2,"h":2,"i":"0", resizable: true, draggable: true},
-        {"x":2,"y":0,"w":2,"h":2,"i":"1", resizable: null, draggable: null},
-        {"x":4,"y":0,"w":2,"h":2,"i":"2", resizable: false, draggable: false},
-        {"x":6,"y":0,"w":2,"h":2,"i":"3", resizable: false, draggable: false},
-        {"x":8,"y":0,"w":2,"h":2,"i":"4", resizable: false, draggable: false},
+        {"x":0,"y":0,"w":2,"h":2,"i":"0", name:'nihaowxl', type: 'testA', resizable: true, draggable: true},
+        {"x":2,"y":0,"w":3,"h":2,"i":"1", type: 'testB', resizable: null, draggable: null},
+        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, draggable: false},
+        {"x":7,"y":0,"w":4,"h":2,"i":"3", resizable: false, draggable: false},
+        {"x":11,"y":0,"w":1,"h":2,"i":"4", resizable: false, draggable: false},
         {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
         {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
-        {"x":2,"y":5,"w":2,"h":2,"i":"7", resizable: false, draggable: false},
-        {"x":4,"y":5,"w":2,"h":2,"i":"8", resizable: false, draggable: false},
-        {"x":6,"y":4,"w":2,"h":2,"i":"9", resizable: false, draggable: false},
-        {"x":8,"y":4,"w":2,"h":2,"i":"10", resizable: false, draggable: false},
-        {"x":10,"y":4,"w":2,"h":2,"i":"11", resizable: false, draggable: false},
-        {"x":0,"y":10,"w":2,"h":2,"i":"12", resizable: false, draggable: false}
+        {"x":2,"y":5,"w":2,"h":2,"i":"7", resizable: false, draggable: false}
     ];
 
     export default {
         name: 'app',
         components: {
             // ResponsiveGridLayout,
-            GridLayout,
-            GridItem,
-            TestElement,
-            CustomDragElement,
+            Grid
+        },
+        props: {
+            txt: String
         },
         data () {
             return {
                 layout: JSON.parse(JSON.stringify(testLayout)),
-                layout2: JSON.parse(JSON.stringify(testLayout)),
                 draggable: true,
                 resizable: true,
                 mirrored: false,
@@ -148,7 +97,7 @@
             }
         },
         mounted: function () {
-            this.index = this.layout.length;
+            this.$refs.altGrid.setLayout(this.layout);
         },
         methods: {
             clicked: function(index) {
@@ -170,69 +119,33 @@
                 this.layout.splice(this.layout.indexOf(item), 1);
             },
             addItem: function() {
-                // let self = this;
-                //console.log("### LENGTH: " + this.layout.length);
-                let item = {"x":0,"y":0,"w":2,"h":2,"i":this.index+"", whatever: "bbb"};
-                this.index++;
-                this.layout.push(item);
+                this.$refs.altGrid.addItem();
             },
-            move: function(i, newX, newY){
-                console.log("MOVE i=" + i + ", X=" + newX + ", Y=" + newY);
+            move: function(item){
+                console.log("MOVE i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
+                this.$emit('move', item);
             },
-            resize: function(i, newH, newW, newHPx, newWPx){
-                console.log("RESIZE i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
+            resize: function(item, newSize){
+                console.log("RESIZE i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
+                this.$emit('resize', item);
             },
-            moved: function(i, newX, newY){
-                console.log("### MOVED i=" + i + ", X=" + newX + ", Y=" + newY);
+            moved: function(item){
+                console.log("### MOVED i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
+                this.$emit('moved', item);
             },
-            resized: function(i, newH, newW, newHPx, newWPx){
-                console.log("### RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
-            },
-            /**
-             * Add change direction button
-             */
-            changeDirection() {
-                let documentDirection = getDocumentDir();
-                let toggle = "";
-                if (documentDirection === "rtl") {
-                    toggle = "ltr"
-                } else {
-                    toggle = "rtl"
-                }
-                setDocumentDir(toggle);
-                //eventBus.$emit('directionchange');
+            resized: function(item, newSize){
+                console.log("### RESIZED i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
+                this.$emit('resized', item);
             }
         },
     }
 </script>
 
 <style>
-    /*    #app {
-            font-family: 'Avenir', Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-align: center;
-            color: #2c3e50;
-            margin-top: 60px;
-        }
-
-        h1, h2 {
-            font-weight: normal;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            display: inline-block;
-            margin: 0 10px;
-        }
-
-        a {
-            color: #42b983;
-        }*/
+    #container {
+        height: 500px;
+        overflow: auto;
+    }
 </style>
 
 <style lang="scss">

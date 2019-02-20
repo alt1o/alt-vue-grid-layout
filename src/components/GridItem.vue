@@ -96,27 +96,6 @@
     export default {
         name: "GridItem",
         props: {
-            /*cols: {
-             type: Number,
-             required: true
-             },*/
-            /*containerWidth: {
-             type: Number,
-             required: true
-
-             },
-             rowHeight: {
-             type: Number,
-             required: true
-             },
-             margin: {
-             type: Array,
-             required: true
-             },
-             maxRows: {
-             type: Number,
-             required: true
-             },*/
             isDraggable: {
                 type: Boolean,
                 required: false,
@@ -127,16 +106,6 @@
                 required: false,
                 default: null
             },
-            /*useCssTransforms: {
-             type: Boolean,
-             required: true
-             },
-             static: {
-             type: Boolean,
-             required: false,
-             default: false
-             },
-             */
             minH: {
                 type: Number,
                 required: false,
@@ -191,6 +160,9 @@
                 required: false,
                 default: 'a, button'
             },
+            item: {
+                required: true
+            }
         },
         inject: ["eventBus"],
         data: function () {
@@ -506,10 +478,10 @@
                 this.lastH = y;
 
                 if (this.innerW !== pos.w || this.innerH !== pos.h) {
-                    this.$emit("resize", this.i, pos.h, pos.w, newSize.height, newSize.width);
+                    this.$emit("resize", this.item, newSize);
                 }
                 if (event.type === "resizeend" && (this.previousW !== this.innerW || this.previousH !== this.innerH)) {
-                    this.$emit("resized", this.i, pos.h, pos.w, newSize.height, newSize.width);
+                    this.$emit("resized", this.item, newSize);
                 }
                 this.eventBus.$emit("resizeEvent", event.type, this.i, this.innerX, this.innerY, pos.h, pos.w);
             },
@@ -588,10 +560,10 @@
                 this.lastY = y;
 
                 if (this.innerX !== pos.x || this.innerY !== pos.y) {
-                    this.$emit("move", this.i, pos.x, pos.y);
+                    this.$emit("move", this.item);
                 }
                 if (event.type === "dragend" && (this.previousX !== this.innerX || this.previousY !== this.innerY)) {
-                    this.$emit("moved", this.i, pos.x, pos.y);
+                    this.$emit("moved", this.item);
                 }
                 this.eventBus.$emit("dragEvent", event.type, this.i, pos.x, pos.y, this.innerH, this.innerW);
             },
@@ -664,19 +636,16 @@
              * @return {Object} w, h as grid units.
              */
             calcWH(height, width) {
-                console.log(height, width);
                 const colWidth = this.calcColWidth();
 
                 // width = colWidth * w - (margin * (w - 1))
                 // ...
                 // w = (width + margin) / (colWidth + margin)
-                let w = Math.ceil((width + this.margin[0]) / (colWidth + this.margin[0]));
-                let h = Math.ceil((height + this.margin[1]) / (this.rowHeight + this.margin[1]));
-                console.log(w, h, (width + this.margin[0]) / (colWidth + this.margin[0]), (height + this.margin[1]) / (this.rowHeight + this.margin[1]));
+                let w = Math.round((width + this.margin[0]) / (colWidth + this.margin[0]));
+                let h = Math.round((height + this.margin[1]) / (this.rowHeight + this.margin[1]));
                 // Capping
                 w = Math.max(Math.min(w, this.cols - this.innerX), 0);
                 h = Math.max(Math.min(h, this.maxRows - this.innerY), 0);
-                console.log(w, h);
                 return {w, h};
             },
             updateWidth: function (width, colNum) {
@@ -767,10 +736,10 @@
                 // this.lastH = y;
 
                 if (this.innerW !== pos.w || this.innerH !== pos.h) {
-                    this.$emit("resize", this.i, pos.h, pos.w, newSize.height, newSize.width);
+                    this.$emit("resize", this.item, newSize);
                 }
                 if (this.previousW !== pos.w || this.previousH !== pos.h) {
-                    this.$emit("resized", this.i, pos.h, pos.w, newSize.height, newSize.width);
+                    this.$emit("resized", this.item, newSize);
                     this.eventBus.$emit("resizeEvent", "resizeend", this.i, this.innerX, this.innerY, pos.h, pos.w);
                 }
             }
