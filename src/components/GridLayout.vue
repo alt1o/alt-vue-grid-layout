@@ -19,7 +19,7 @@
 </style>
 <script>
     import Vue from 'vue';
-    if(!Vue) Vue = window.Vue;
+    // if(!Vue) Vue = window.Vue;
     var elementResizeDetectorMaker = require("element-resize-detector");
 
     import {bottom, compact, getLayoutItem, moveElement, validateLayout, cloneLayout} from '../helpers/utils';
@@ -129,8 +129,16 @@
             self.dragEventHandler = function(eventType, i, x, y, h, w) {
                 self.dragEvent(eventType, i, x, y, h, w);
             };
-
-            self._provided.eventBus =  new Vue();
+            try{
+                self._provided.eventBus =  new Vue();
+            } catch(err){
+                if(window.Vue){
+                    self._provided.eventBus = new window.Vue();
+                }else{
+                    throw err
+                } 
+            }
+            // self._provided.eventBus =  new Vue();
             self.eventBus = self._provided.eventBus;
             self.eventBus.$on('resizeEvent', self.resizeEventHandler);
             self.eventBus.$on('dragEvent', self.dragEventHandler);

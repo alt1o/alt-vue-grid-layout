@@ -2,7 +2,6 @@
     <div id="app">
         <h1 style="text-align: center">Vue Grid Layout</h1>
         <h2>{{ txt }}</h2>
-        <!--<pre>{{ layout | json }}</pre>-->
         <div>
             <div class="layoutJSON">
                 Displayed as <code>[x, y, w, h]</code>:
@@ -12,24 +11,11 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="layoutJSON">
-                Displayed as <code>[x, y, w, h]</code>:
-                <div class="columns">
-                    <div class="layoutItem" v-for="item in layout2">
-                        <b>{{item.i}}</b>: [{{item.x}}, {{item.y}}, {{item.w}}, {{item.h}}]
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div id="content">
-            <!-- <button @click="decreaseWidth">Decrease Width</button>
-            <button @click="increaseWidth">Increase Width</button> -->
             <button @click="addItem">Add an item</button>
-            <!-- Add to show rtl support -->
-            <!-- <button @click="changeDirection">Change Direction</button>  -->
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
-            <!-- <input type="checkbox" v-model="mirrored"/> Mirrored -->
             <input type="checkbox" v-model="responsive"/> Responsive
             <div style="margin-top: 10px;margin-bottom: 10px;">
                 Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNum"/>

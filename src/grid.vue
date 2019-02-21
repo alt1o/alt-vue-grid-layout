@@ -15,6 +15,8 @@
             :h="item.h"
             :i="item.i"
             :item="item"
+            :draggable="item.draggable"
+            :resizable="item.resizable"
             :style="{backgroundColor: backgroundColor}"
             @resize="resize"
             @move="move"

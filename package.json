@@ -22,7 +22,6 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "rimraf dist && vue-cli-service build",
-    "build-libs": "rimraf dist && vue-cli-service build --target lib ./src/components/index.js",
     "build-lib": "rimraf dist && vue-cli-service build --target lib ./src/index.js",
     "lint": "vue-cli-service lint"
   },
