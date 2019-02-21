@@ -15,8 +15,12 @@
             :h="item.h"
             :i="item.i"
             :item="item"
-            :draggable="item.draggable"
-            :resizable="item.resizable"
+            :is-draggable="getPropsValue(item.isDraggable, isDraggable, defVal.isDraggable)"
+            :is-resizable="getPropsValue(item.isResizable, isResizable, defVal.isResizable)"
+            :min-h="item.minH || defVal.minH"
+            :max-h="item.maxH || defVal.maxH"
+            :min-w="item.minW || defVal.minW"
+            :max-w="item.maxW || defVal.maxW"
             :style="{backgroundColor: backgroundColor}"
             @resize="resize"
             @move="move"
@@ -34,7 +38,7 @@
 
     import Widget from './components/Widget.vue';
 
-    import { deepCopy } from './utils/util';
+    import { deepCopy, isNil } from './utils/util';
 
     export default {
         name: 'app',
@@ -67,7 +71,10 @@
                 type: Number,
                 default: Infinity
             },
-            margin: [10, 10], // 元素的右边距和下边距
+            margin: {
+                type: Array,
+                default: () => [10, 10]
+            }, // 元素的右边距和下边距
             verticalCompact: { // 是否自动向上填充
                 type: Boolean,
                 default: true
@@ -80,32 +87,34 @@
                 type: Number,
                 default: 12
             },
-            dragIgnoreFrom: { // 在这些元素上不会触发拖拽事件
-                type: String,
-                default: 'a, button'
-            },
-            dragAllowFrom: { 
-                type: String,
-                default: 'a, button'
-            },
-            resizeIgnoreFrom: {
-                type: String,
-                default: 'a, button'
-            },
             backgroundColor: {
                 type: String,
-                default: 'rgba(255,255,255,1)'
+                default: 'rgba(200,200,200,1)'
             }
         },
         data () {
             return {
                 layout: [], // 布局源数据
+                defVal: {
+                    minH: 1,
+                    minW: 1,
+                    // maxH: Infinity,
+                    maxH: 4,
+                    maxW: 4,
+                    isDraggable: true,
+                    isResizable: true
+                }
             }
         },
         mounted: function () {
             this.index = this.layout.length;
         },
         methods: {
+            getPropsValue(itemValue, globalValue, defaultValue){
+                if(!isNil(itemValue)) return itemValue;
+                if(!isNil(globalValue)) return globalValue;
+                return defaultValue;
+            },
             setLayout(layout){
                 this.layout = deepCopy(layout);
             },
@@ -113,27 +122,28 @@
             closeWidget: function(index) {
                 this.layout.splice(index, 1);
             },
-            addItem: function() {
-                // let self = this;
-                //console.log("### LENGTH: " + this.layout.length);
-                let item = {"x":0,"y":0,"w":2,"h":2,"i":this.index+"", whatever: "bbb"};
+            addItem: function(opts) {
+                let defOpts = {
+                    x: 0,
+                    y: 0,
+                    w: 2,
+                    h: 2,
+                    i: this.index + ''
+                }
+                let item = Object.assign(defOpts, opts);
                 this.index++;
                 this.layout.push(item);
             },
             move: function(item){
-                // console.log("MOVE i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
                 this.$emit('move', item);
             },
             resize: function(item, newSize){
-                // console.log("RESIZE i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
                 this.$emit('resize', item, newSize);
             },
             moved: function(item){
-                // console.log("### MOVED i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
                 this.$emit('moved', item);
             },
             resized: function(item, newSize){
-                // console.log("### RESIZED i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
                 this.$emit('resized', item, newSize);
             }
         },

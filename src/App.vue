@@ -13,22 +13,32 @@
             </div>
         </div>
         <div id="content">
-            <button @click="addItem">Add an item</button>
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
-            <input type="checkbox" v-model="responsive"/> Responsive
             <div style="margin-top: 10px;margin-bottom: 10px;">
                 Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNum"/>
             </div>
             right margin <input type="number" v-model="margin[0]" />
             bottom margin <input type="number" v-model="margin[1]" />
-            opacity(0 - 10) <input type="number" v-model="opacity">
             background color <input type="text" v-model="bgcolor">
             <button @click="addItem">addItem</button>
             <div id="container">
-                <grid ref="altGrid" ></grid>
+                <grid 
+                    :is-draggable="draggable"
+                    :is-resizable="resizable"
+                    :row-height="rowHeight"
+                    :margin="margin"
+                    :backgroundColor="bgcolor"
+                    :col-num="colNum"
+                    ref="altGrid" ></grid>
             </div>
-            <gridtwo ref="grid2"></gridtwo>
+            <!-- <gridtwo 
+                :is-draggable="draggable"
+                :is-resizable="resizable"
+                :row-height="rowHeight"
+                :margin="margin"
+                :backgroundColor="bgcolor"
+                ref="grid2"></gridtwo> -->
         </div>
     </div>
 </template>
@@ -84,19 +94,15 @@
                 layout: JSON.parse(JSON.stringify(testLayout)),
                 draggable: true,
                 resizable: true,
-                mirrored: false,
-                responsive: true,
                 rowHeight: 150,
                 colNum: 12,
-                index: 0,
                 margin: [3, 3],
-                opacity: 100,
                 bgcolor: '#eee'
             }
         },
         mounted: function () {
             this.$refs.altGrid.setLayout(this.layout);
-            this.$refs.grid2.setLayout(this.layout);
+            // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
             clicked: function(index) {
