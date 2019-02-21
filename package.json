@@ -1,6 +1,6 @@
 {
   "name": "alt-vue-grid-layout",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "A draggable and resizable grid layout, as a Vue component.",
   "keywords": [
     "grid",
@@ -43,6 +43,8 @@
     "vue": "^2.5.17",
     "vue-template-compiler": "^2.5.17"
   },
-  "pre-push": ["build-lib"],
+  "pre-push": [
+    "build-lib"
+  ],
   "license": "MIT"
 }
