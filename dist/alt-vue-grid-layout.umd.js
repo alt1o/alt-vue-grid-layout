@@ -173,6 +173,27 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 /***/ }),
 
+/***/ "0bfb":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 21.2.5.3 get RegExp.prototype.flags
+var anObject = __webpack_require__("cb7c");
+module.exports = function () {
+  var that = anObject(this);
+  var result = '';
+  if (that.global) result += 'g';
+  if (that.ignoreCase) result += 'i';
+  if (that.multiline) result += 'm';
+  if (that.unicode) result += 'u';
+  if (that.sticky) result += 'y';
+  return result;
+};
+
+
+/***/ }),
+
 /***/ "0d58":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -647,6 +668,14 @@ function toComment(sourceMap) {
 
 /***/ }),
 
+/***/ "2621":
+/***/ (function(module, exports) {
+
+exports.f = Object.getOwnPropertySymbols;
+
+
+/***/ }),
+
 /***/ "2aba":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -825,6 +854,18 @@ module.exports = __webpack_require__("9e1e") ? function (object, key, value) {
   object[key] = value;
   return object;
 };
+
+
+/***/ }),
+
+/***/ "3846":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 21.2.5.3 get RegExp.prototype.flags()
+if (__webpack_require__("9e1e") && /./g.flags != 'g') __webpack_require__("86cc").f(RegExp.prototype, 'flags', {
+  configurable: true,
+  get: __webpack_require__("0bfb")
+});
 
 
 /***/ }),
@@ -1626,6 +1667,81 @@ module.exports = function (it, S) {
   if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
 };
+
+
+/***/ }),
+
+/***/ "6b54":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+__webpack_require__("3846");
+var anObject = __webpack_require__("cb7c");
+var $flags = __webpack_require__("0bfb");
+var DESCRIPTORS = __webpack_require__("9e1e");
+var TO_STRING = 'toString';
+var $toString = /./[TO_STRING];
+
+var define = function (fn) {
+  __webpack_require__("2aba")(RegExp.prototype, TO_STRING, fn, true);
+};
+
+// 21.2.5.14 RegExp.prototype.toString()
+if (__webpack_require__("79e5")(function () { return $toString.call({ source: 'a', flags: 'b' }) != '/a/b'; })) {
+  define(function toString() {
+    var R = anObject(this);
+    return '/'.concat(R.source, '/',
+      'flags' in R ? R.flags : !DESCRIPTORS && R instanceof RegExp ? $flags.call(R) : undefined);
+  });
+// FF44- RegExp#toString has a wrong name
+} else if ($toString.name != TO_STRING) {
+  define(function toString() {
+    return $toString.call(this);
+  });
+}
+
+
+/***/ }),
+
+/***/ "7333":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 19.1.2.1 Object.assign(target, source, ...)
+var getKeys = __webpack_require__("0d58");
+var gOPS = __webpack_require__("2621");
+var pIE = __webpack_require__("52a7");
+var toObject = __webpack_require__("4bf8");
+var IObject = __webpack_require__("626a");
+var $assign = Object.assign;
+
+// should work with symbols and should have deterministic property order (V8 bug)
+module.exports = !$assign || __webpack_require__("79e5")(function () {
+  var A = {};
+  var B = {};
+  // eslint-disable-next-line no-undef
+  var S = Symbol();
+  var K = 'abcdefghijklmnopqrst';
+  A[S] = 7;
+  K.split('').forEach(function (k) { B[k] = k; });
+  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
+}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+  var T = toObject(target);
+  var aLen = arguments.length;
+  var index = 1;
+  var getSymbols = gOPS.f;
+  var isEnum = pIE.f;
+  while (aLen > index) {
+    var S = IObject(arguments[index++]);
+    var keys = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S);
+    var length = keys.length;
+    var j = 0;
+    var key;
+    while (length > j) if (isEnum.call(S, key = keys[j++])) T[key] = S[key];
+  } return T;
+} : $assign;
 
 
 /***/ }),
@@ -3503,6 +3619,17 @@ exports.push([module.i, "\n.vue-grid-item{-webkit-transition:all .2s ease;transi
 
 /***/ }),
 
+/***/ "f751":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.3.1 Object.assign(target, source)
+var $export = __webpack_require__("5ca1");
+
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__("7333") });
+
+
+/***/ }),
+
 /***/ "fab2":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3566,12 +3693,15 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=398a6fe2&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight,"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"draggable":item.draggable,"resizable":item.resizable},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[_c('button',{on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]),_c(item.type,{tag:"component",attrs:{"item-info":item}})],1)}))}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=8b32530c&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight,"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"is-draggable":_vm.getPropsValue(item.isDraggable, _vm.isDraggable, _vm.defVal.isDraggable),"is-resizable":_vm.getPropsValue(item.isResizable, _vm.isResizable, _vm.defVal.isResizable),"min-h":item.minH || _vm.defVal.minH,"max-h":item.maxH || _vm.defVal.maxH,"min-w":item.minW || _vm.defVal.minW,"max-w":item.maxW || _vm.defVal.maxW},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[_c('button',{on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]),_c(item.type,{tag:"component",attrs:{"item-info":item}})],1)}))}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=398a6fe2&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=8b32530c&
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
+var es6_object_assign = __webpack_require__("f751");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
@@ -5984,13 +6114,31 @@ var Widget_component = normalizeComponent(
 
 Widget_component.options.__file = "Widget.vue"
 /* harmony default export */ var Widget = (Widget_component.exports);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
+var es6_regexp_to_string = __webpack_require__("6b54");
+
 // CONCATENATED MODULE: ./src/utils/util.js
+
+// 深拷贝
 function deepCopy() {
   return JSON.parse(JSON.stringify(arguments.length <= 0 ? undefined : arguments[0]));
+} // 获取变量类型
+
+function getVariType(vari) {
+  return Object.prototype.toString.call(vari).slice(8, -1).toLowerCase();
+} // 判断值是否为 undefined 或 null
+
+function isNil(val) {
+  return val === undefined || val === null;
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
 
 
+
+//
+//
+//
+//
 //
 //
 //
@@ -6059,7 +6207,12 @@ function deepCopy() {
       type: Number,
       default: Infinity
     },
-    margin: [10, 10],
+    margin: {
+      type: Array,
+      default: function _default() {
+        return [10, 10];
+      }
+    },
     // 元素的右边距和下边距
     verticalCompact: {
       // 是否自动向上填充
@@ -6076,34 +6229,35 @@ function deepCopy() {
       type: Number,
       default: 12
     },
-    dragIgnoreFrom: {
-      // 在这些元素上不会触发拖拽事件
-      type: String,
-      default: 'a, button'
-    },
-    dragAllowFrom: {
-      type: String,
-      default: 'a, button'
-    },
-    resizeIgnoreFrom: {
-      type: String,
-      default: 'a, button'
-    },
     backgroundColor: {
       type: String,
-      default: 'rgba(255,255,255,1)'
+      default: 'rgba(200,200,200,1)'
     }
   },
   data: function data() {
     return {
-      layout: [] // 布局源数据
-
+      layout: [],
+      // 布局源数据
+      defVal: {
+        minH: 1,
+        minW: 1,
+        // maxH: Infinity,
+        maxH: 4,
+        maxW: 4,
+        isDraggable: true,
+        isResizable: true
+      }
     };
   },
   mounted: function mounted() {
     this.index = this.layout.length;
   },
   methods: {
+    getPropsValue: function getPropsValue(itemValue, globalValue, defaultValue) {
+      if (!isNil(itemValue)) return itemValue;
+      if (!isNil(globalValue)) return globalValue;
+      return defaultValue;
+    },
     setLayout: function setLayout(layout) {
       this.layout = deepCopy(layout);
     },
@@ -6111,34 +6265,28 @@ function deepCopy() {
     closeWidget: function closeWidget(index) {
       this.layout.splice(index, 1);
     },
-    addItem: function addItem() {
-      // let self = this;
-      //console.log("### LENGTH: " + this.layout.length);
-      var item = {
-        "x": 0,
-        "y": 0,
-        "w": 2,
-        "h": 2,
-        "i": this.index + "",
-        whatever: "bbb"
+    addItem: function addItem(opts) {
+      var defOpts = {
+        x: 0,
+        y: 0,
+        w: 2,
+        h: 2,
+        i: this.index + ''
       };
+      var item = Object.assign(defOpts, opts);
       this.index++;
       this.layout.push(item);
     },
     move: function move(item) {
-      // console.log("MOVE i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
       this.$emit('move', item);
     },
     resize: function resize(item, newSize) {
-      // console.log("RESIZE i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
       this.$emit('resize', item, newSize);
     },
     moved: function moved(item) {
-      // console.log("### MOVED i=" + item.i + ", X=" + item.x + ", Y=" + item.y);
       this.$emit('moved', item);
     },
     resized: function resized(item, newSize) {
-      // console.log("### RESIZED i=" + item.i + ", H=" + item.h + ", W=" + item.w + ", H(px)=" + newSize.height + ", W(px)=" + newSize.width);
       this.$emit('resized', item, newSize);
     }
   }

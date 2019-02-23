@@ -20,6 +20,7 @@
   "main": "dist/alt-vue-grid-layout.umd.js",
   "unpkg": "dist/alt-vue-grid-layout.umd.min.js",
   "scripts": {
+    "preinstall": "scripts/pre-install.js",
     "serve": "vue-cli-service serve",
     "build": "rimraf dist && vue-cli-service build",
     "build-lib": "rimraf dist && vue-cli-service build --target lib ./src/index.js",
