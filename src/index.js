@@ -19,5 +19,6 @@ function factory(){
 
 // export default VueGridLayout;
 export default {
-    createGrid: factory
+    createGrid: factory,
+    grid: VueGridLayout
 };
