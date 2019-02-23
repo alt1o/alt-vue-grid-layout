@@ -23,7 +23,8 @@
     "serve": "vue-cli-service serve",
     "build": "rimraf dist && vue-cli-service build",
     "build-lib": "rimraf dist && vue-cli-service build --target lib ./src/index.js",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "add": "git add . && git commit -m 'auto build'"
   },
   "dependencies": {
     "element-resize-detector": "^1.1.10",
@@ -44,7 +45,7 @@
     "webpack-dev-server": "^3.1.11"
   },
   "pre-push": [
-    "build-lib"
+    "build-lib", "add"
   ],
   "license": "MIT"
 }

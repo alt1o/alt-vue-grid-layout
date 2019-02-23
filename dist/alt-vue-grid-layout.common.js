@@ -6325,7 +6325,8 @@ function factory() {
 
 
 /* harmony default export */ var src = ({
-  createGrid: factory
+  createGrid: factory,
+  grid: src_grid
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
