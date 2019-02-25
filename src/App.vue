@@ -32,13 +32,6 @@
                     :col-num="colNum"
                     ref="altGrid" ></grid>
             </div>
-            <!-- <gridtwo 
-                :is-draggable="draggable"
-                :is-resizable="resizable"
-                :row-height="rowHeight"
-                :margin="margin"
-                :backgroundColor="bgcolor"
-                ref="grid2"></gridtwo> -->
         </div>
     </div>
 </template>
@@ -72,7 +65,7 @@
         {"x":0,"y":0,"w":2,"h":2,"i":"0", name:'nihaowxl', type: 'testA', resizable: true, draggable: true},
         {"x":2,"y":0,"w":3,"h":2,"i":"1", type: 'testB', resizable: null, draggable: null},
         {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, draggable: false},
-        {"x":7,"y":0,"w":4,"h":2,"i":"3", resizable: false, draggable: false},
+        {"x":7,"y":0,"w":4,"h":2,"i":"3", cssClass: 'ceshi-class', resizable: false, draggable: false},
         {"x":11,"y":0,"w":1,"h":2,"i":"4", resizable: false, draggable: false},
         {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
         {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
@@ -82,7 +75,6 @@
     export default {
         name: 'app',
         components: {
-            // ResponsiveGridLayout,
             Grid,
             gridtwo
         },
@@ -108,16 +100,6 @@
             clicked: function(index) {
                 this.layout.splice(index, 1);
                 // window.alert("CLICK!");
-            },
-            increaseWidth: function() {
-                let width = document.getElementById("content").offsetWidth;
-                width += 20;
-                document.getElementById("content").style.width = width+"px";
-            },
-            decreaseWidth: function() {
-                let width = document.getElementById("content").offsetWidth;
-                width -= 20;
-                document.getElementById("content").style.width = width+"px";
             },
             removeItem: function(item) {
                 //console.log("### REMOVE " + item.i);

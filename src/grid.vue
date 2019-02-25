@@ -8,7 +8,7 @@
         :use-css-transforms="useCssTransforms"
         :col-num="colNum"
         :margin="margin">
-        <grid-item v-for="(item, index) in layout" :key="item.i"
+        <grid-item v-for="(item, index) in layout" :key="item.i" :class="item.cssClass"
             :x="item.x"
             :y="item.y"
             :w="item.w"
@@ -115,8 +115,13 @@
                 if(!isNil(globalValue)) return globalValue;
                 return defaultValue;
             },
+            // 设置布局layout数组
             setLayout(layout){
                 this.layout = deepCopy(layout);
+            },
+            // 获取布局layout数组数据
+            getLayout(){
+                return deepCopy(this.layout);
             },
             // 关闭组件
             closeWidget: function(index) {
