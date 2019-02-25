@@ -49,15 +49,9 @@
     Grid.addWidgetType('testC', {
         mounted(){
             this.$el.innerHTML += 'heello world'
-        }
-    })
-
-    let gridtwo = GridLayout.createGrid();
-    gridtwo.addWidgetType('testA', testA);
-    gridtwo.addWidgetType('testB', testB);
-    gridtwo.addWidgetType('testC', {
-        mounted(){
-            this.$el.innerHTML += 'heello world2222222222'
+            this.$on('resize', (a, b) => {
+                console.log('components resize', a, b, arguments);
+            })
         }
     })
 
@@ -75,8 +69,7 @@
     export default {
         name: 'app',
         components: {
-            Grid,
-            gridtwo
+            Grid
         },
         props: {
             txt: String
