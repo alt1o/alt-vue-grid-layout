@@ -8,7 +8,7 @@
         :use-css-transforms="useCssTransforms"
         :col-num="colNum"
         :margin="margin">
-        <grid-item v-for="(item, index) in layout" :key="item.i" :class="item.cssClass"
+        <grid-item v-for="(item, index) in layout" :key="item.i" :class="item.gridItemClass"
             :x="item.x"
             :y="item.y"
             :w="item.w"
@@ -26,7 +26,7 @@
             @move="move"
             @resized="resized"
             @moved="moved">
-            <button @click="closeWidget(index)">关闭</button>
+            <button @click="closeWidget(index)" :class="item.closeHandlerClass">关闭</button>
             <component :is="item.type" :item-info="item"></component>
         </grid-item>
     </grid-layout>

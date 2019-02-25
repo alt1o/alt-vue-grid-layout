@@ -5,7 +5,7 @@
          :style="style"
     >
         <slot></slot>
-        <span v-if="resizable" ref="handle" :class="resizableHandleClass"></span>
+        <span v-if="resizable" ref="handle" :class="[resizableHandleClass, item.resizeHandlerClass]"></span>
         <!--<span v-if="draggable" ref="dragHandle" class="vue-draggable-handle"></span>-->
     </div>
 </template>

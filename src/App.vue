@@ -59,7 +59,7 @@
         {"x":0,"y":0,"w":2,"h":2,"i":"0", name:'nihaowxl', type: 'testA', resizable: true, draggable: true},
         {"x":2,"y":0,"w":3,"h":2,"i":"1", type: 'testB', resizable: null, draggable: null},
         {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, draggable: false},
-        {"x":7,"y":0,"w":4,"h":2,"i":"3", cssClass: 'ceshi-class', resizable: false, draggable: false},
+        {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
         {"x":11,"y":0,"w":1,"h":2,"i":"4", resizable: false, draggable: false},
         {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
         {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
