@@ -3693,12 +3693,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=3c4d2c69&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=185dd03a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight,"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"placeholder-class":_vm.placeholderClass,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,class:[_vm.gridItemClass, item.gridItemClass],style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"is-draggable":_vm.getPropsValue(item.isDraggable, _vm.isDraggable, _vm.defVal.isDraggable),"is-resizable":_vm.getPropsValue(item.isResizable, _vm.isResizable, _vm.defVal.isResizable),"min-h":item.minH || _vm.defVal.minH,"max-h":item.maxH || _vm.defVal.maxH,"min-w":item.minW || _vm.defVal.minW,"max-w":item.maxW || _vm.defVal.maxW,"resize-handler-class":_vm.resizeHandlerClass},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[(_vm.getPropsValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, _vm.defVal.isShowOriginCloseBtn))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"item-info":item,"close":_vm.closeWidgetFormItem.bind(this, index, item)}})],1)}))}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=3c4d2c69&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=185dd03a&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__("f751");
@@ -6092,35 +6092,25 @@ var GridLayout_component = normalizeComponent(
 
 GridLayout_component.options.__file = "GridLayout.vue"
 /* harmony default export */ var GridLayout = (GridLayout_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.vue?vue&type=template&id=b92eca9a&
-var Widgetvue_type_template_id_b92eca9a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div')}
-var Widgetvue_type_template_id_b92eca9a_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./src/components/Widget.vue?vue&type=template&id=b92eca9a&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-/* harmony default export */ var Widgetvue_type_script_lang_js_ = ({
-  props: ['itemInfo', 'close']
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=script&lang=js&
+/* harmony default export */ var Widget_rendervue_type_script_lang_js_ = ({
+  props: ['itemInfo', 'close'],
+  template: '<div></div>'
 });
-// CONCATENATED MODULE: ./src/components/Widget.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_Widgetvue_type_script_lang_js_ = (Widgetvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./src/components/Widget.vue
-
+// CONCATENATED MODULE: ./src/components/Widget.render.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_Widget_rendervue_type_script_lang_js_ = (Widget_rendervue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./src/components/Widget.render.vue
+var Widget_render_render, Widget_render_staticRenderFns
 
 
 
 
 /* normalize component */
 
-var Widget_component = normalizeComponent(
-  components_Widgetvue_type_script_lang_js_,
-  Widgetvue_type_template_id_b92eca9a_render,
-  Widgetvue_type_template_id_b92eca9a_staticRenderFns,
+var Widget_render_component = normalizeComponent(
+  components_Widget_rendervue_type_script_lang_js_,
+  Widget_render_render,
+  Widget_render_staticRenderFns,
   false,
   null,
   null,
@@ -6128,8 +6118,36 @@ var Widget_component = normalizeComponent(
   
 )
 
-Widget_component.options.__file = "Widget.vue"
-/* harmony default export */ var Widget = (Widget_component.exports);
+Widget_render_component.options.__file = "Widget.render.vue"
+/* harmony default export */ var Widget_render = (Widget_render_component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.template.vue?vue&type=script&lang=js&
+/* harmony default export */ var Widget_templatevue_type_script_lang_js_ = ({
+  props: ['itemInfo', 'close'],
+  template: '<div></div>'
+});
+// CONCATENATED MODULE: ./src/components/Widget.template.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_Widget_templatevue_type_script_lang_js_ = (Widget_templatevue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./src/components/Widget.template.vue
+var Widget_template_render, Widget_template_staticRenderFns
+
+
+
+
+/* normalize component */
+
+var Widget_template_component = normalizeComponent(
+  components_Widget_templatevue_type_script_lang_js_,
+  Widget_template_render,
+  Widget_template_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+Widget_template_component.options.__file = "Widget.template.vue"
+/* harmony default export */ var Widget_template = (Widget_template_component.exports);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
 var es6_regexp_to_string = __webpack_require__("6b54");
 
@@ -6194,6 +6212,7 @@ function isNil(val) {
 
 
 
+
 /* harmony default export */ var gridvue_type_script_lang_js_ = ({
   name: 'app',
   components: {
@@ -6215,8 +6234,9 @@ function isNil(val) {
   },
   // 添加组件类型处理函数
   _addWidgetType: function _addWidgetType(type, widget) {
+    var parentWidget = widget.template ? Widget_template : Widget_render;
     this.components[type] = _objectSpread({}, widget, {
-      extends: Widget
+      extends: parentWidget
     });
   },
   props: {
