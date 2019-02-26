@@ -40,7 +40,7 @@
 
     import Widget from './components/Widget.vue';
 
-    import { deepCopy, isNil } from './utils/util';
+    import { deepCopy, isNil, getVariType } from './utils/util';
 
     export default {
         name: 'app',
@@ -49,8 +49,19 @@
             GridLayout,
             GridItem,
         },
+        addWidgetType(){
+            let args0 = arguments[0];
+            let type = getVariType(args0);
+            if(type === 'string'){
+                this._addWidgetType(...arguments);
+            } else if(type === 'object'){
+                for(let key in args0){
+                    args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
+                }
+            }
+        },
         // 添加组件类型处理函数
-        addWidgetType(type, widget){
+        _addWidgetType(type, widget){
             this.components[type] = {
                 ...widget,
                 extends: Widget

@@ -48,8 +48,12 @@
 
     let Grid = GridLayout.createGrid();
     // console.log(Grid)
-    Grid.addWidgetType('testA', testA);
-    Grid.addWidgetType('testB', testB);
+    Grid.addWidgetType({
+        'testA': testA,
+        'testB': testB
+    })
+    // Grid.addWidgetType('testA', testA);
+    // Grid.addWidgetType('testB', testB);
     Grid.addWidgetType('testC', {
         mounted(){
             this.$el.innerHTML += 'heello world'
