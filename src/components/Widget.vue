@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    props: ['itemInfo']
+    props: ['itemInfo', 'close']
 }
 </script>
 

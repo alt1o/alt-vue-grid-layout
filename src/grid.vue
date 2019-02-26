@@ -29,7 +29,7 @@
             @resized="resized"
             @moved="moved">
             <button @click="closeWidget(index)" :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
-            <component :is="item.type" :item-info="item"></component>
+            <component :is="item.type" :item-info="item" :close="closeWidgetFormItem.bind(this, index, item)"></component>
         </grid-item>
     </grid-layout>
 </template>
@@ -138,6 +138,9 @@
             this.index = this.layout.length;
         },
         methods: {
+            closeWidgetFormItem(index){
+                this.closeWidget(index)
+            },
             getPropsValue(itemValue, globalValue, defaultValue){
                 if(!isNil(itemValue)) return itemValue;
                 if(!isNil(globalValue)) return globalValue;
