@@ -41,7 +41,8 @@
     import GridItem from './components/GridItem.vue';
     import GridLayout from './components/GridLayout.vue';
 
-    import Widget from './components/Widget.vue';
+    import WidgetRender from './components/Widget.render.vue';
+    import WidgetTemplate from './components/Widget.template.vue';
 
     import { deepCopy, isNil, getVariType } from './utils/util';
 
@@ -65,9 +66,10 @@
         },
         // 添加组件类型处理函数
         _addWidgetType(type, widget){
+            let parentWidget = widget.template ? WidgetTemplate : WidgetRender;
             this.components[type] = {
                 ...widget,
-                extends: Widget
+                extends: parentWidget
             }
         },
         props: {
