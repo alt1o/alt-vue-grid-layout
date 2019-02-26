@@ -28,7 +28,10 @@
             @move="move"
             @resized="resized"
             @moved="moved">
-            <button @click="closeWidget(index)" :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
+            <button 
+                v-if="getPropsValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, defVal.isShowOriginCloseBtn)"
+                @click="closeWidget(index)" 
+                :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
             <component :is="item.type" :item-info="item" :close="closeWidgetFormItem.bind(this, index, item)"></component>
         </grid-item>
     </grid-layout>
@@ -119,6 +122,10 @@
             placeholderClass: { // 拖拽时 placeholder 的class
                 type: String,
                 default: ''
+            },
+            isShowOriginCloseBtn: {
+                type: Boolean,
+                default: true
             }
         },
         data () {
@@ -130,7 +137,8 @@
                     maxH: Infinity, // 默认每个卡片的最大高度
                     maxW: Infinity, // 默认每个卡片的最大宽度
                     isDraggable: true, // 默认每个卡片是否支持拖拽
-                    isResizable: true // 默认每个卡片是否支持设置大小
+                    isResizable: true, // 默认每个卡片是否支持设置大小
+                    isShowOriginCloseBtn: true // 是否显示默认的关闭按钮
                 }
             }
         },
