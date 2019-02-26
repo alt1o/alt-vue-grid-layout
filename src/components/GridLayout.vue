@@ -2,6 +2,7 @@
     <div ref="item" class="vue-grid-layout" :style="mergedStyle">
         <slot></slot>
         <grid-item class="vue-grid-placeholder"
+            :class="placeholderClass"
             v-show="isDragging"
             :x="placeholder.x"
             :y="placeholder.y"
@@ -99,6 +100,10 @@
                 type: Object,
                 default: function(){return{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }},
             },
+            placeholderClass: {
+                type: String,
+                default: ''
+            }
         },
         data: function () {
             return {

@@ -30,6 +30,10 @@
                     :margin="margin"
                     :backgroundColor="bgcolor"
                     :col-num="colNum"
+                    grid-item-class="ceshi-global-item"
+                    close-handler-class="ceshi-global-close"
+                    resize-handler-class="ceshi-global-resize"
+                    placeholder-class="ceshi-global-placeholder"
                     ref="altGrid" ></grid>
             </div>
         </div>

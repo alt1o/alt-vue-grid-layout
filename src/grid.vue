@@ -7,8 +7,9 @@
         :vertical-compact="verticalCompact"
         :use-css-transforms="useCssTransforms"
         :col-num="colNum"
+        :placeholder-class="placeholderClass"
         :margin="margin">
-        <grid-item v-for="(item, index) in layout" :key="item.i" :class="item.gridItemClass"
+        <grid-item v-for="(item, index) in layout" :key="item.i" :class="[gridItemClass, item.gridItemClass]"
             :x="item.x"
             :y="item.y"
             :w="item.w"
@@ -22,11 +23,12 @@
             :min-w="item.minW || defVal.minW"
             :max-w="item.maxW || defVal.maxW"
             :style="{backgroundColor: backgroundColor}"
+            :resize-handler-class="resizeHandlerClass"
             @resize="resize"
             @move="move"
             @resized="resized"
             @moved="moved">
-            <button @click="closeWidget(index)" :class="item.closeHandlerClass">关闭</button>
+            <button @click="closeWidget(index)" :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
             <component :is="item.type" :item-info="item"></component>
         </grid-item>
     </grid-layout>
@@ -87,22 +89,37 @@
                 type: Number,
                 default: 12
             },
-            backgroundColor: {
+            backgroundColor: { // 背景颜色
                 type: String,
                 default: 'rgba(200,200,200,1)'
+            },
+            gridItemClass: { // 每一个卡片的class
+                type: String,
+                default: ''
+            },
+            closeHandlerClass: { // 关闭按钮的class
+                type: String,
+                default: ''
+            },
+            resizeHandlerClass: { // 设置大小按钮的class
+                type: String,
+                default: ''
+            },
+            placeholderClass: { // 拖拽时 placeholder 的class
+                type: String,
+                default: ''
             }
         },
         data () {
             return {
                 layout: [], // 布局源数据
                 defVal: {
-                    minH: 1,
-                    minW: 1,
-                    // maxH: Infinity,
-                    maxH: 4,
-                    maxW: 4,
-                    isDraggable: true,
-                    isResizable: true
+                    minH: 1, // 默认每个卡片的最小高度
+                    minW: 1, // 默认每个卡片的最小宽度
+                    maxH: Infinity, // 默认每个卡片的最大高度
+                    maxW: Infinity, // 默认每个卡片的最大宽度
+                    isDraggable: true, // 默认每个卡片是否支持拖拽
+                    isResizable: true // 默认每个卡片是否支持设置大小
                 }
             }
         },

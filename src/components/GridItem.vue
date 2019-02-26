@@ -5,7 +5,7 @@
          :style="style"
     >
         <slot></slot>
-        <span v-if="resizable" ref="handle" :class="[resizableHandleClass, item.resizeHandlerClass]"></span>
+        <span v-if="resizable" ref="handle" :class="[resizableHandleClass, resizeHandlerClass, item.resizeHandlerClass]"></span>
         <!--<span v-if="draggable" ref="dragHandle" class="vue-draggable-handle"></span>-->
     </div>
 </template>
@@ -162,6 +162,10 @@
             },
             item: {
                 required: true
+            },
+            resizeHandlerClass: {
+                type: String,
+                default: ''
             }
         },
         inject: ["eventBus"],
