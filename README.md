@@ -42,10 +42,10 @@ colNum | Number类型，栅格列数 | 12
 rowHeight | Number类型，每一行的高度 | 150
 maxRows | Number类型，设置布局设计器最大行数 | Infinity
 backgroundColor | String类型，css-like，设置所有卡片的背景颜色和透明度 | 'rgba(255,255,255,0.5)'
-gridItemClass | String类型，统一设置卡片的自定义class | ''
-closeHandlerClass | String类型，统一设置关闭按钮的class | ''
-resizeHandlerClass | String类型，统一设置 拖拽大小的class | ''
-placeholderClass | String类型，统一设置占位符的class | ''
+gridItemClass | String类型，统一设置卡片的自定义class | <空>
+closeHandlerClass | String类型，统一设置关闭按钮的class | <空>
+resizeHandlerClass | String类型，统一设置 拖拽大小的class | <空>
+placeholderClass | String类型，统一设置占位符的class | <空>
 isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.close()来关闭组件 | true
 
 ## 方法

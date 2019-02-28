@@ -3684,12 +3684,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=185dd03a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5fb4d836-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=2a7d7599&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight,"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"placeholder-class":_vm.placeholderClass,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,class:[_vm.gridItemClass, item.gridItemClass],style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"is-draggable":_vm.getPropsValue(item.isDraggable, _vm.isDraggable, _vm.defVal.isDraggable),"is-resizable":_vm.getPropsValue(item.isResizable, _vm.isResizable, _vm.defVal.isResizable),"min-h":item.minH || _vm.defVal.minH,"max-h":item.maxH || _vm.defVal.maxH,"min-w":item.minW || _vm.defVal.minW,"max-w":item.maxW || _vm.defVal.maxW,"resize-handler-class":_vm.resizeHandlerClass},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[(_vm.getPropsValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, _vm.defVal.isShowOriginCloseBtn))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"item-info":item,"close":_vm.closeWidgetFormItem.bind(this, index, item)}})],1)}))}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=185dd03a&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=2a7d7599&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__("f751");
@@ -6339,7 +6339,8 @@ function isNil(val) {
     },
     // 设置布局layout数组
     setLayout: function setLayout(layout) {
-      this.layout = deepCopy(layout);
+      // this.layout = deepCopy(layout);
+      this.layout = layout;
     },
     // 获取布局layout数组数据
     getLayout: function getLayout() {
