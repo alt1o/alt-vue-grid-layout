@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 @click="_close">a组件</h1> 
+        <h1 @click="_close">a组件-包含vue生命周期，以及close事件</h1> 
         <p>{{ itemInfo.name }}</p>
     </div>
 </template>

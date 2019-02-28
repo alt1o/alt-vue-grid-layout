@@ -483,11 +483,11 @@
 
                 if (this.innerW !== pos.w || this.innerH !== pos.h) {
                     // debugger
-                    this.$children[0].$emit("resize", this.item, newSize);
+                    this.$children.length && this.$children[0].$emit("resize", this.item, newSize);
                     this.$emit("resize", this.item, newSize);
                 }
                 if (event.type === "resizeend" && (this.previousW !== this.innerW || this.previousH !== this.innerH)) {
-                    this.$children[0].$emit("resized", this.item, newSize);
+                    this.$children.length && this.$children[0].$emit("resized", this.item, newSize);
                     this.$emit("resized", this.item, newSize);
                 }
                 this.eventBus.$emit("resizeEvent", event.type, this.i, this.innerX, this.innerY, pos.h, pos.w);
@@ -567,12 +567,12 @@
                 this.lastY = y;
 
                 if (this.innerX !== pos.x || this.innerY !== pos.y) {
-                    this.$children[0].$emit("move", this.item);
+                    this.$children.length && this.$children[0].$emit("move", this.item);
                     this.$emit("move", this.item);
                 }
                 if (event.type === "dragend" && (this.previousX !== this.innerX || this.previousY !== this.innerY)) {
-                    this.$children[0].$emit("moved", this.item);
-                    this.$emit("moved", this.item);
+                    this.$children.length && this.$children[0].$emit("moved", this.item);
+                    this.$children.length && this.$emit("moved", this.item);
                 }
                 this.eventBus.$emit("dragEvent", event.type, this.i, pos.x, pos.y, this.innerH, this.innerW);
             },
@@ -745,11 +745,11 @@
                 // this.lastH = y;
 
                 if (this.innerW !== pos.w || this.innerH !== pos.h) {
-                    this.$children[0].$emit("resize", this.item, newSize);
+                    this.$children.length && this.$children[0].$emit("resize", this.item, newSize);
                     this.$emit("resize", this.item, newSize);
                 }
                 if (this.previousW !== pos.w || this.previousH !== pos.h) {
-                    this.$children[0].$emit("resized", this.item, newSize);
+                    this.$children.length && this.$children[0].$emit("resized", this.item, newSize);
                     this.$emit("resized", this.item, newSize);
                     this.eventBus.$emit("resizeEvent", "resizeend", this.i, this.innerX, this.innerY, pos.h, pos.w);
                 }

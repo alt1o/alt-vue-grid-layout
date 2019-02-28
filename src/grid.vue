@@ -43,8 +43,11 @@
 
     import WidgetRender from './components/Widget.render.vue';
     import WidgetTemplate from './components/Widget.template.vue';
+    import WidgetComponent from './components/Widget.vuecomponent.vue';
 
-    import { deepCopy, isNil, getVariType } from './utils/util';
+    import { deepCopy, isNil, getVariType, getVue } from './utils/util';
+    // import Vue from 'vue';
+    let Vue = getVue();
 
     export default {
         name: 'app',
@@ -67,6 +70,10 @@
         // 添加组件类型处理函数
         _addWidgetType(type, widget){
             let parentWidget = widget.template ? WidgetTemplate : WidgetRender;
+            if(widget.super == Vue){
+                this.components[type] = widget.extend(WidgetComponent);
+                return;
+            }
             this.components[type] = {
                 ...widget,
                 extends: parentWidget
@@ -158,8 +165,8 @@
             },
             // 设置布局layout数组
             setLayout(layout){
-                // this.layout = deepCopy(layout);
-                this.layout = layout;
+                this.layout = deepCopy(layout);
+                // this.layout = layout;
             },
             // 获取布局layout数组数据
             getLayout(){

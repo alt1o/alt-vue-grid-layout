@@ -1,3 +1,4 @@
+import Vue from 'vue';
 // 深拷贝
 export function deepCopy(...args){
     return JSON.parse(JSON.stringify(args[0]));
@@ -9,4 +10,11 @@ export function getVariType(vari){
 // 判断值是否为 undefined 或 null
 export function isNil(val){
     return val === undefined || val === null;
+}
+
+export function getVue(){
+    let temp = Vue;
+    if(temp) return temp;
+    if(window.Vue) return window.Vue;
+    return null;
 }
