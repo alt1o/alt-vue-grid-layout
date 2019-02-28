@@ -158,7 +158,8 @@
             },
             // 设置布局layout数组
             setLayout(layout){
-                this.layout = deepCopy(layout);
+                // this.layout = deepCopy(layout);
+                this.layout = layout;
             },
             // 获取布局layout数组数据
             getLayout(){

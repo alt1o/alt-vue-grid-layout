@@ -56,6 +56,7 @@
     // Grid.addWidgetType('testB', testB);
     Grid.addWidgetType('testC', {
         mounted(){
+            console.log('mounted');
             this.$el.innerHTML += 'heello world'
             this.$on('resize', (a, b) => {
                 console.log('components resize', a, b, arguments);
