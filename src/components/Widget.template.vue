@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ['itemInfo', 'close'],
+    props: ['injectedProps'],
     template: '<div></div>'
 }
 </script>

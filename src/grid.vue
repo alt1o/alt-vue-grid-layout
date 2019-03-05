@@ -32,7 +32,7 @@
                 v-if="getPropsValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, defVal.isShowOriginCloseBtn)"
                 @click="closeWidget(index)" 
                 :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
-            <component :is="item.type" :item-info="item" :close="closeWidgetFormItem.bind(this, index, item)"></component>
+            <component :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
         </grid-item>
     </grid-layout>
 </template>
@@ -155,6 +155,14 @@
             this.index = this.layout.length;
         },
         methods: {
+            getPropsForInject(index, item){
+                return {
+                    index: index,
+                    card: item,
+                    close: this.closeWidgetFormItem.bind(this, index, item)
+                }
+            },
+            // 从卡片内部关闭自身
             closeWidgetFormItem(index){
                 this.closeWidget(index)
             },

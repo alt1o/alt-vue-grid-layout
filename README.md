@@ -46,7 +46,7 @@ gridItemClass | String类型，统一设置卡片的自定义class | <空>
 closeHandlerClass | String类型，统一设置关闭按钮的class | <空>
 resizeHandlerClass | String类型，统一设置 拖拽大小的class | <空>
 placeholderClass | String类型，统一设置占位符的class | <空>
-isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.close()来关闭组件 | true
+isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.injectedProps.close()来关闭组件 | true
 
 ## 方法
 
@@ -164,7 +164,7 @@ let type1 = {
         * {Object} newSize 改变后的像素大小，{width: 20px, height: 30px}
 
 ### 组件方法
-组件内部可以通过`this.close()`来关闭当前组件
+组件内部可以通过`this.injectedProps.close()`来关闭当前组件
 
 ### 组件公共属性
-组件内部可以通过`this.itemInfo`获取layout中当前组件的参数
+组件内部可以通过`this.injectedProps.card`获取layout中当前组件的参数

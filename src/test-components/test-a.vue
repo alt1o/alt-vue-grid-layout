@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 @click="_close">a组件-包含vue生命周期，以及close事件</h1> 
-        <p>{{ itemInfo.name }}</p>
+        <p>{{ injectedProps.card.name }}</p>
     </div>
 </template>
 
@@ -9,7 +9,7 @@
 export default {
     methods: {
         _close(){
-            this.close();
+            this.injectedProps.close();
         }
     },
     beforeCreate(){

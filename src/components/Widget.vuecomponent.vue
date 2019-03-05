@@ -1,5 +1,5 @@
 <script>
 export default {
-    props: ['itemInfo', 'close']
+    props: ['injectedProps']
 }
 </script>
