@@ -18,3 +18,15 @@ export function getVue(){
     if(window.Vue) return window.Vue;
     return null;
 }
+
+export function isInteger(num){
+    if(Number.isInteger) return Number.isInteger(num);
+
+    let s = num + '';
+    return !~s.indexOf('.');
+}
+
+export function hasClass(dom, className){
+    let classList = dom.classList;
+    return ~classList.indexOf(className);
+}

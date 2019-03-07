@@ -43,28 +43,28 @@
 <script>
     // import {getDocumentDir, setDocumentDir} from "./helpers/DOM";
     import GridLayout from './index';
-    import testA from './test-components/test-a.vue';
-    import testB from './test-components/test-b.vue';
-    import testD from './test-components/test-d.vue';
+    // import testA from './test-components/test-a.vue';
+    // import testB from './test-components/test-b.vue';
+    // import testD from './test-components/test-d.vue';
 
     let Grid = GridLayout.createGrid();
     // console.log(Grid)
-    Grid.addWidgetType({
-        'testA': testA,
-        'testB': testB
-    })
-    // Grid.addWidgetType('testA', testA);
-    // Grid.addWidgetType('testB', testB);
-    Grid.addWidgetType('testC', {
-        mounted(){
-            console.log('mounted');
-            this.$el.innerHTML += 'heello world'
-            this.$on('resize', (a, b) => {
-                console.log('components resize', a, b, arguments);
-            })
-        }
-    })
-    Grid.addWidgetType('testD', testD);
+    // Grid.addWidgetType({
+    //     'testA': testA,
+    //     'testB': testB
+    // })
+    // // Grid.addWidgetType('testA', testA);
+    // // Grid.addWidgetType('testB', testB);
+    // Grid.addWidgetType('testC', {
+    //     mounted(){
+    //         console.log('mounted');
+    //         this.$el.innerHTML += 'heello world'
+    //         this.$on('resize', (a, b) => {
+    //             console.log('components resize', a, b, arguments);
+    //         })
+    //     }
+    // })
+    // Grid.addWidgetType('testD', testD);
 
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", name:'nihaowxl', type: 'testA', resizable: true, draggable: true},
@@ -72,9 +72,9 @@
         {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, draggable: false},
         {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
         {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, draggable: false},
-        {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
-        {"x":2,"y":5,"w":2,"h":2,"i":"7", resizable: false, draggable: false}
+        // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
+        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, draggable: false}
     ];
 
     export default {
@@ -92,7 +92,7 @@
                 resizable: true,
                 rowHeight: 150,
                 colNum: 12,
-                margin: [3, 3],
+                margin: [1, 1],
                 bgcolor: '#eee'
             }
         },

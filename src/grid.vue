@@ -1,84 +1,26 @@
 <template>
-    <grid-layout
-        :layout.sync="layout"
-        :row-height="rowHeight"
-        :is-draggable="isDraggable"
-        :is-resizable="isResizable"
-        :vertical-compact="verticalCompact"
-        :use-css-transforms="useCssTransforms"
-        :col-num="colNum"
-        :placeholder-class="placeholderClass"
-        :margin="margin">
-        <grid-item v-for="(item, index) in layout" :key="item.i" :class="[gridItemClass, item.gridItemClass]"
-            :x="item.x"
-            :y="item.y"
-            :w="item.w"
-            :h="item.h"
-            :i="item.i"
-            :item="item"
-            :is-draggable="getPropsValue(item.isDraggable, isDraggable, defVal.isDraggable)"
-            :is-resizable="getPropsValue(item.isResizable, isResizable, defVal.isResizable)"
-            :min-h="item.minH || defVal.minH"
-            :max-h="item.maxH || defVal.maxH"
-            :min-w="item.minW || defVal.minW"
-            :max-w="item.maxW || defVal.maxW"
-            :style="{backgroundColor: backgroundColor}"
-            :resize-handler-class="resizeHandlerClass"
-            @resize="resize"
-            @move="move"
-            @resized="resized"
-            @moved="moved">
-            <button 
-                v-if="getPropsValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, defVal.isShowOriginCloseBtn)"
-                @click="closeWidget(index)" 
-                :class="[closeHandlerClass, item.closeHandlerClass]">关闭</button>
-            <component :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
-        </grid-item>
-    </grid-layout>
+    <div 
+        @mousedown="mousedown"
+        @mousemove="mousemove"
+        @mouseup="mouseup"
+        class="alt-grid-container" 
+        :style="containerStyle">
+        <div 
+            v-for="(item, index) in layout"
+            :key="index"
+            :style="getCardStyle(item)"
+            class="alt-grid-item">
+            itemitem
+            <span class="alt-grid-item-resize-handler"></span>
+        </div>
+    </div>
 </template>
 
 <script>
-    import GridItem from './components/GridItem.vue';
-    import GridLayout from './components/GridLayout.vue';
-
-    import WidgetRender from './components/Widget.render.vue';
-    import WidgetTemplate from './components/Widget.template.vue';
-    import WidgetComponent from './components/Widget.vuecomponent.vue';
-
-    import { deepCopy, isNil, getVariType, getVue } from './utils/util';
-    // import Vue from 'vue';
-    let Vue = getVue();
+    import { deepCopy, hasClass } from './utils/util';
 
     export default {
         name: 'app',
-        components: {
-            // ResponsiveGridLayout,
-            GridLayout,
-            GridItem,
-        },
-        addWidgetType(){
-            let args0 = arguments[0];
-            let type = getVariType(args0);
-            if(type === 'string'){
-                this._addWidgetType(...arguments);
-            } else if(type === 'object'){
-                for(let key in args0){
-                    args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
-                }
-            }
-        },
-        // 添加组件类型处理函数
-        _addWidgetType(type, widget){
-            let parentWidget = widget.template ? WidgetTemplate : WidgetRender;
-            if(widget.super == Vue){
-                this.components[type] = widget.extend(WidgetComponent);
-                return;
-            }
-            this.components[type] = {
-                ...widget,
-                extends: parentWidget
-            }
-        },
         props: {
             isDraggable: { // 是否可以拖拽
                 type: Boolean,
@@ -126,7 +68,7 @@
             },
             resizeHandlerClass: { // 设置大小按钮的class
                 type: String,
-                default: ''
+                default: 'alt-grid-item-resize-handler'
             },
             placeholderClass: { // 拖拽时 placeholder 的class
                 type: String,
@@ -148,66 +90,135 @@
                     isDraggable: true, // 默认每个卡片是否支持拖拽
                     isResizable: true, // 默认每个卡片是否支持设置大小
                     isShowOriginCloseBtn: true // 是否显示默认的关闭按钮
-                }
+                },
+                containerHeight: 0, // 容器高度
+                cols: [],
+                cacheComputed: {}
             }
         },
         mounted: function () {
-            this.index = this.layout.length;
+            this.initCols();
+        },
+        watch: {
+            rowHeight(val){
+                this.cell.height = val;
+            }
+        },
+        computed: {
+            containerStyle(){
+                return {
+                    height: this.containerHeight + 'px'
+                }
+            }
         },
         methods: {
-            getPropsForInject(index, item){
-                return {
-                    index: index,
-                    card: item,
-                    close: this.closeWidgetFormItem.bind(this, index, item)
+            // 初始化每个列宽
+            initCols(){
+                let colNum = this.colNum;
+                let cols = this.cols;
+                let containerWidth = this.$el.offsetWidth;
+                let remainder = containerWidth % colNum; // 余数
+                let quotient = Math.floor(containerWidth / colNum); // 商数
+                for(let i = 0; i < colNum; i++){
+                    if(remainder){
+                        cols[i] = quotient + 1;
+                        remainder--;
+                    }else{
+                        cols[i] = quotient;
+                    }
                 }
-            },
-            // 从卡片内部关闭自身
-            closeWidgetFormItem(index){
-                this.closeWidget(index)
-            },
-            getPropsValue(itemValue, globalValue, defaultValue){
-                if(!isNil(itemValue)) return itemValue;
-                if(!isNil(globalValue)) return globalValue;
-                return defaultValue;
             },
             // 设置布局layout数组
             setLayout(layout){
                 this.layout = deepCopy(layout);
                 // this.layout = layout;
             },
-            // 获取布局layout数组数据
-            getLayout(){
-                return deepCopy(this.layout);
-            },
-            // 关闭组件
-            closeWidget: function(index) {
-                this.layout.splice(index, 1);
-            },
-            addItem: function(opts) {
-                let defOpts = {
-                    x: 0,
-                    y: 0,
-                    w: 2,
-                    h: 2,
-                    i: this.index + ''
+            // 设置总容器高度
+            setContainerHeight(y, h){
+                let containerHeight = this.containerHeight;
+                let height = y + h;
+                if(height > containerHeight){
+                    this.containerHeight = height;
                 }
-                let item = Object.assign(defOpts, opts);
-                this.index++;
-                this.layout.push(item);
             },
-            move: function(item){
-                this.$emit('move', item);
+            // 获取卡片大小和位移
+            getCardStyle(item){
+                let x = this.computeColsWidth(0, item.x);
+                let w = this.getCardWidth(item.x, item.x + item.w);
+                let y = item.y * (this.rowHeight + this.margin[1]);
+                let h = item.h * (this.rowHeight + this.margin[1]) - this.margin[1];
+                this.setContainerHeight(y, h);
+                return {
+                    transform: `translate(${x}px,${y}px)`,
+                    width: w + 'px',
+                    height: h + 'px'
+                }
             },
-            resize: function(item, newSize){
-                this.$emit('resize', item, newSize);
+            // 计算卡片的宽度
+            getCardWidth(start, end){
+                let width = this.computeColsWidth(start, end);
+                if(end !== (this.cols.length)){
+                    width -= this.margin[0];
+                }
+                return width;
             },
-            moved: function(item){
-                this.$emit('moved', item);
+            // 计算某几列的宽度
+            computeColsWidth(start, end){
+                let key = start + ';' + end;
+                if(this.cacheComputed[key]) return this.cacheComputed[key];
+                let cols = this.cols;
+                let width = 0;
+                for(let i = start; i < end; i++){
+                    width += cols[i];
+                }
+                this.cacheComputed[key] = width;
+                return width;
             },
-            resized: function(item, newSize){
-                this.$emit('resized', item, newSize);
+            mousedown(evt){
+                console.log('down', evt);
+                if(hasClass(evt.target, this.resizeHandlerClass)){
+                    this.operater = 2
+                } else {
+                    this.operater = 1;
+                }
+            },
+            mousemove(evt){
+                if(this.operater){
+                    console.log('move', evt);
+                }
+            },
+            mouseup(evt){
+                console.log('up', evt);
+                this.operater = 0
             }
-        },
+        }
     }
 </script>
+
+<style>
+.alt-grid-container{
+    position: relative;
+    border: 1px solid red;
+    box-sizing: border-box;
+}
+.alt-grid-container .alt-grid-item{
+    position: absolute;
+    background: gray;
+}
+.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{
+    display: block;
+}
+.alt-grid-container .alt-grid-item-resize-handler{
+    display: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: 1px;
+    bottom: 1px;
+    border-top: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid #000;
+    border-bottom: 5px solid #000;
+    cursor: se-resize;
+}
+</style>
