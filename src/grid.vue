@@ -139,14 +139,7 @@
             // 设置布局layout数组
             setLayout(layout){
                 this.layout = deepCopy(layout);
-                this.initLayoutTree(this.layout);
                 // this.layout = layout;
-            },
-            initLayoutTree(layout){
-                
-                for(let i = 0, j = layout.length; i < j; i++){
-
-                }
             },
             // 设置总容器高度
             setContainerHeight(y, h){
@@ -197,8 +190,10 @@
                 this.operatedItem = {
                     el: target,
                     node: node,
-                    clientX: evt.clientX,
-                    clientY: evt.clientY
+                    startX: evt.clientX,
+                    startY: evt.clientY,
+                    lastX: evt.clientX,
+                    lastY: evt.clientY
                 }
 
                 this.placeholder = {
@@ -218,16 +213,24 @@
                 if(!this.operater) return;
                 let ex = evt.clientX;
                 let ey = evt.clientY;
-                let ox = this.operatedItem.clientX;
-                let oy = this.operatedItem.clientY;
+                let ox = this.operatedItem.lastX;
+                let oy = this.operatedItem.lastY;
+                let sx = this.operatedItem.startX;
+                let sy = this.operatedItem.startY;
                 if(!this.isDrag(ox, oy, ex, ey)) return;
-                this.dragMove(this.operatedItem, ox, oy, ex, ey);
+                this.dragMove(this.operatedItem, sx, sy, ex, ey);
+                this.operatedItem.lastX = ex;
+                this.operatedItem.lastY = ey;
                 // console.log('move', evt);
             },
             mouseup(evt){
                 console.log('up', evt);
+                let item = this.operatedItem;
                 this.operatedItem.node.x = this.placeholder.x;
                 this.operatedItem.node.y = this.placeholder.y;
+                let x = this.computeColsWidth(0, item.node.x);
+                let y = item.node.y * this.rowHeight;
+                item.el.style.transform = `translate(${x}px, ${y}px)`;
                 this.operater = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
@@ -246,11 +249,27 @@
                 let y = node.y * this.rowHeight + deltaY;
                 item.el.style.transform = `translate(${x}px, ${y}px)`;
                 console.log(x, this.computeColsWidth(0, node.x), node.x)
-                if(x < this.computeColsWidth(0, node.x)){
-                    node.x--;
-                } else {
-                    node.x++;
+                let dx = x - this.computeColsWidth(0, item.node.x);
+                let step = this.getMoveCols(dx, item.node.x);
+                console.log(step);
+                node.x = item.node.x + step;
+                // if(x < this.computeColsWidth(0, item.node.x)){
+                //     node.x--;
+                // } else {
+                //     node.x++;
+                // }
+            },
+            getMoveCols(dx, startCol){
+                let flag = dx < 0 ? '-' : '+';
+                let absDx = Math.abs(dx);
+                let i = 0;
+                let c = startCol;
+                while(absDx > 0){
+                    absDx -= (this.cols[c - 1] || 0);
+                    c--;
+                    i++;
                 }
+                return parseInt(flag + i);
             }
         }
     }
