@@ -262,6 +262,7 @@
             getMoveCols(dx, startCol){
                 let flag = dx < 0 ? '-' : '+';
                 let absDx = Math.abs(dx);
+                if(absDx < 5) return 0;
                 let i = 0;
                 let c = startCol;
                 while(absDx > 0){
