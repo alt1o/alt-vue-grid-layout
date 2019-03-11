@@ -3684,12 +3684,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=92d0e4ea&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight,"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"placeholder-class":_vm.placeholderClass,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,class:[_vm.gridItemClass, item.gridItemClass],style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"is-draggable":_vm.getPropsValue(item.isDraggable, _vm.isDraggable, _vm.defVal.isDraggable),"is-resizable":_vm.getPropsValue(item.isResizable, _vm.isResizable, _vm.defVal.isResizable),"min-h":item.minH || _vm.defVal.minH,"max-h":item.maxH || _vm.defVal.maxH,"min-w":item.minW || _vm.defVal.minW,"max-w":item.maxW || _vm.defVal.maxW,"resize-handler-class":_vm.resizeHandlerClass},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[(_vm.getPropsValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, _vm.defVal.isShowOriginCloseBtn))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}})],1)}))}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=d1a6d3b6&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('grid-layout',{attrs:{"layout":_vm.layout,"row-height":_vm.rowHeight - _vm.margin[1],"is-draggable":_vm.isDraggable,"is-resizable":_vm.isResizable,"vertical-compact":_vm.verticalCompact,"use-css-transforms":_vm.useCssTransforms,"col-num":_vm.colNum,"placeholder-class":_vm.placeholderClass,"margin":_vm.margin},on:{"update:layout":function($event){_vm.layout=$event}}},_vm._l((_vm.layout),function(item,index){return _c('grid-item',{key:item.i,class:[_vm.gridItemClass, item.gridItemClass],style:({backgroundColor: _vm.backgroundColor}),attrs:{"x":item.x,"y":item.y,"w":item.w,"h":item.h,"i":item.i,"item":item,"is-draggable":_vm.getPropsValue(item.isDraggable, _vm.isDraggable, _vm.defVal.isDraggable),"is-resizable":_vm.getPropsValue(item.isResizable, _vm.isResizable, _vm.defVal.isResizable),"min-h":item.minH || _vm.defVal.minH,"max-h":item.maxH || _vm.defVal.maxH,"min-w":item.minW || _vm.defVal.minW,"max-w":item.maxW || _vm.defVal.maxW,"resize-handler-class":_vm.resizeHandlerClass},on:{"resize":_vm.resize,"move":_vm.move,"resized":_vm.resized,"moved":_vm.moved}},[(_vm.getPropsValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, _vm.defVal.isShowOriginCloseBtn))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(index)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}})],1)}))}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=92d0e4ea&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=d1a6d3b6&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.assign.js
 var es6_object_assign = __webpack_require__("f751");
@@ -3697,12 +3697,12 @@ var es6_object_assign = __webpack_require__("f751");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=6eb5b460&
-var GridItemvue_type_template_id_6eb5b460_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-item",class:{ 'vue-resizable' : _vm.resizable, 'resizing' : _vm.isResizing, 'vue-draggable-dragging' : _vm.isDragging, 'cssTransforms' : _vm.useCssTransforms, 'render-rtl' : _vm.renderRtl, 'disable-userselect': _vm.isDragging, 'no-touch': _vm.isAndroid },style:(_vm.style)},[_vm._t("default"),(_vm.resizable)?_c('span',{ref:"handle",class:[_vm.resizableHandleClass, _vm.resizeHandlerClass, _vm.item.resizeHandlerClass]}):_vm._e()],2)}
-var GridItemvue_type_template_id_6eb5b460_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=a092aa00&
+var GridItemvue_type_template_id_a092aa00_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-item",class:{ 'vue-resizable' : _vm.resizable, 'resizing' : _vm.isResizing, 'vue-draggable-dragging' : _vm.isDragging, 'cssTransforms' : _vm.useCssTransforms, 'render-rtl' : _vm.renderRtl, 'disable-userselect': _vm.isDragging, 'no-touch': _vm.isAndroid },style:(_vm.style)},[_vm._t("default"),(_vm.resizable)?_c('span',{ref:"handle",class:[_vm.resizableHandleClass, _vm.resizeHandlerClass, _vm.item.resizeHandlerClass]}):_vm._e()],2)}
+var GridItemvue_type_template_id_a092aa00_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=6eb5b460&
+// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=a092aa00&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
 var es6_regexp_replace = __webpack_require__("a481");
@@ -4792,6 +4792,8 @@ var interact = __webpack_require__("fb3a");
     this.interactObj.unset(); // destroy interact intance
   },
   mounted: function mounted() {
+    var _this2 = this;
+
     this.cols = this.$parent.colNum;
     this.rowHeight = this.$parent.rowHeight;
     this.containerWidth = this.$parent.width !== null ? this.$parent.width : 100;
@@ -4812,6 +4814,9 @@ var interact = __webpack_require__("fb3a");
 
     this.useCssTransforms = this.$parent.useCssTransforms;
     this.createStyle();
+    this.$nextTick(function () {
+      _this2.$children.length && _this2.$children[0].$emit("load", _this2.item);
+    });
   },
   watch: {
     isDraggable: function isDraggable() {
@@ -4947,6 +4952,8 @@ var interact = __webpack_require__("fb3a");
       this.style = style;
     },
     handleResize: function handleResize(event) {
+      var _this3 = this;
+
       var position = getControlPosition(event); // Get the current drag point from the event. This is used as the offset.
 
       if (position == null) return; // not possible but satisfies flow
@@ -5039,13 +5046,18 @@ var interact = __webpack_require__("fb3a");
       }
 
       if (event.type === "resizeend" && (this.previousW !== this.innerW || this.previousH !== this.innerH)) {
-        this.$children.length && this.$children[0].$emit("resized", this.item, newSize);
-        this.$emit("resized", this.item, newSize);
+        this.$nextTick(function () {
+          _this3.$children.length && _this3.$children[0].$emit("resized", _this3.item, newSize);
+
+          _this3.$emit("resized", _this3.item, newSize);
+        });
       }
 
       this.eventBus.$emit("resizeEvent", event.type, this.i, this.innerX, this.innerY, pos.h, pos.w);
     },
     handleDrag: function handleDrag(event) {
+      var _this4 = this;
+
       if (this.isResizing) return;
       var position = getControlPosition(event); // Get the current drag point from the event. This is used as the offset.
 
@@ -5140,8 +5152,11 @@ var interact = __webpack_require__("fb3a");
       }
 
       if (event.type === "dragend" && (this.previousX !== this.innerX || this.previousY !== this.innerY)) {
-        this.$children.length && this.$children[0].$emit("moved", this.item);
-        this.$children.length && this.$emit("moved", this.item);
+        this.$nextTick(function () {
+          _this4.$children.length && _this4.$children[0].$emit("moved", _this4.item);
+
+          _this4.$emit("moved", _this4.item);
+        });
       }
 
       this.eventBus.$emit("dragEvent", event.type, this.i, pos.x, pos.y, this.innerH, this.innerW);
@@ -5288,6 +5303,8 @@ var interact = __webpack_require__("fb3a");
       }
     },
     autoSize: function autoSize() {
+      var _this5 = this;
+
       // ok here we want to calculate if a resize is needed
       this.previousW = this.innerW;
       this.previousH = this.innerH;
@@ -5321,13 +5338,19 @@ var interact = __webpack_require__("fb3a");
 
 
       if (this.innerW !== pos.w || this.innerH !== pos.h) {
-        this.$children.length && this.$children[0].$emit("resize", this.item, newSize);
-        this.$emit("resize", this.item, newSize);
+        this.$nextTick(function () {
+          _this5.$children.length && _this5.$children[0].$emit("resize", _this5.item, newSize);
+
+          _this5.$emit("resize", _this5.item, newSize);
+        });
       }
 
       if (this.previousW !== pos.w || this.previousH !== pos.h) {
-        this.$children.length && this.$children[0].$emit("resized", this.item, newSize);
-        this.$emit("resized", this.item, newSize);
+        this.$nextTick(function () {
+          _this5.$children.length && _this5.$children[0].$emit("resized", _this5.item, newSize);
+
+          _this5.$emit("resized", _this5.item, newSize);
+        });
         this.eventBus.$emit("resizeEvent", "resizeend", this.i, this.innerX, this.innerY, pos.h, pos.w);
       }
     }
@@ -5444,8 +5467,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   components_GridItemvue_type_script_lang_js_,
-  GridItemvue_type_template_id_6eb5b460_render,
-  GridItemvue_type_template_id_6eb5b460_staticRenderFns,
+  GridItemvue_type_template_id_a092aa00_render,
+  GridItemvue_type_template_id_a092aa00_staticRenderFns,
   false,
   null,
   null,

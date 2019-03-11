@@ -1,7 +1,7 @@
 <template>
     <grid-layout
         :layout.sync="layout"
-        :row-height="rowHeight"
+        :row-height="rowHeight - margin[1]"
         :is-draggable="isDraggable"
         :is-resizable="isResizable"
         :vertical-compact="verticalCompact"
