@@ -6,8 +6,13 @@
         class="alt-grid-container" 
         :style="containerStyle">
         <div 
+            :style="getCardStyle(placeholder)"
+            class="alt-grid-item-drag-placeholder">
+        </div>
+        <div 
             v-for="(item, index) in layout"
             :key="index"
+            :dg-id="index"
             :style="getCardStyle(item)"
             class="alt-grid-item">
             itemitem
@@ -93,7 +98,10 @@
                 },
                 containerHeight: 0, // 容器高度
                 cols: [],
-                cacheComputed: {}
+                cacheComputed: {},
+                placeholder: null, // 拖拽的placeholder
+                operater: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
+                operatedItem: null // 当前被操作的元素的状态
             }
         },
         mounted: function () {
@@ -116,7 +124,7 @@
             initCols(){
                 let colNum = this.colNum;
                 let cols = this.cols;
-                let containerWidth = this.$el.offsetWidth;
+                let containerWidth = this.$el.clientWidth;
                 let remainder = containerWidth % colNum; // 余数
                 let quotient = Math.floor(containerWidth / colNum); // 商数
                 for(let i = 0; i < colNum; i++){
@@ -131,7 +139,14 @@
             // 设置布局layout数组
             setLayout(layout){
                 this.layout = deepCopy(layout);
+                this.initLayoutTree(this.layout);
                 // this.layout = layout;
+            },
+            initLayoutTree(layout){
+                
+                for(let i = 0, j = layout.length; i < j; i++){
+
+                }
             },
             // 设置总容器高度
             setContainerHeight(y, h){
@@ -143,10 +158,11 @@
             },
             // 获取卡片大小和位移
             getCardStyle(item){
+                if(!item) return {};
                 let x = this.computeColsWidth(0, item.x);
                 let w = this.getCardWidth(item.x, item.x + item.w);
-                let y = item.y * (this.rowHeight + this.margin[1]);
-                let h = item.h * (this.rowHeight + this.margin[1]) - this.margin[1];
+                let y = item.y * this.rowHeight;
+                let h = item.h * this.rowHeight - this.margin[1];
                 this.setContainerHeight(y, h);
                 return {
                     transform: `translate(${x}px,${y}px)`,
@@ -175,21 +191,66 @@
                 return width;
             },
             mousedown(evt){
-                console.log('down', evt);
-                if(hasClass(evt.target, this.resizeHandlerClass)){
-                    this.operater = 2
+                let target = evt.target;
+                if(!hasClass(target, 'alt-grid-item')) return;
+                let node = this.getNode(target);
+                this.operatedItem = {
+                    el: target,
+                    node: node,
+                    clientX: evt.clientX,
+                    clientY: evt.clientY
+                }
+
+                this.placeholder = {
+                    x: node.x,
+                    y: node.y,
+                    w: node.w,
+                    h: node.h
+                };
+                // console.log('down', evt, this.operatedItem);
+                if(hasClass(target, this.resizeHandlerClass)){
+                    this.operater = 2;
                 } else {
                     this.operater = 1;
                 }
             },
             mousemove(evt){
-                if(this.operater){
-                    console.log('move', evt);
-                }
+                if(!this.operater) return;
+                let ex = evt.clientX;
+                let ey = evt.clientY;
+                let ox = this.operatedItem.clientX;
+                let oy = this.operatedItem.clientY;
+                if(!this.isDrag(ox, oy, ex, ey)) return;
+                this.dragMove(this.operatedItem, ox, oy, ex, ey);
+                // console.log('move', evt);
             },
             mouseup(evt){
                 console.log('up', evt);
-                this.operater = 0
+                this.operatedItem.node.x = this.placeholder.x;
+                this.operatedItem.node.y = this.placeholder.y;
+                this.operater = 0;
+                this.operatedItem = null;
+                this.placeholder = null;
+            },
+            isDrag(ox, oy, ex, ey){
+                return Math.abs(ox - ex) > 5 || Math.abs(oy - ey) > 5;
+            },
+            getNode(target){
+                return this.layout[target.getAttribute('dg-id')]
+            },
+            dragMove(item, ox, oy, ex, ey){
+                let node = this.placeholder;
+                let deltaX = ex - ox;
+                let deltaY = ey - oy;
+                let x = this.computeColsWidth(0, item.node.x) + deltaX;
+                let y = node.y * this.rowHeight + deltaY;
+                item.el.style.transform = `translate(${x}px, ${y}px)`;
+                console.log(x, this.computeColsWidth(0, node.x), node.x)
+                if(x < this.computeColsWidth(0, node.x)){
+                    node.x--;
+                } else {
+                    node.x++;
+                }
             }
         }
     }
@@ -220,5 +281,11 @@
     border-right: 5px solid #000;
     border-bottom: 5px solid #000;
     cursor: se-resize;
+}
+.alt-grid-item-drag-placeholder{
+    position: absolute;
+    width: 0;
+    height: 0;
+    background: red;
 }
 </style>

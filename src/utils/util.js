@@ -27,6 +27,6 @@ export function isInteger(num){
 }
 
 export function hasClass(dom, className){
-    let classList = dom.classList;
-    return ~classList.indexOf(className);
+    let domClassName = dom.className;
+    return ~domClassName.indexOf(className);
 }
