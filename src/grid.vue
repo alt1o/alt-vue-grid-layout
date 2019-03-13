@@ -13,7 +13,7 @@
             v-for="(item, index) in layout"
             :key="index"
             :dg-id="index"
-            :style="getCardStyle(item)"
+            :style="item.style"
             class="alt-grid-item">
             itemitem
             <span class="alt-grid-item-resize-handler"></span>
@@ -101,15 +101,32 @@
                 cacheComputed: {},
                 placeholder: null, // 拖拽的placeholder
                 operater: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
-                operatedItem: null // 当前被操作的元素的状态
+                operatedItem: null, // 当前被操作的元素的状态
+                containerWidth: 0
             }
         },
         mounted: function () {
-            this.initCols();
+            // this.initCols();
+            this.listenContainerWidthChange();
+        },
+        destroyed(){
+            window.cancelAnimationFrame(this.cancelAnimationFrame);
         },
         watch: {
             rowHeight(val){
                 this.cell.height = val;
+            },
+            cols(val, old){
+                console.log(val, old);
+                this.cacheComputed = {};
+                this.$nextTick(() => {
+                    this.layout.forEach((item) => {
+                        let style = this.getCardStyle(item);
+                        console.log(style);
+                        this.$set(item, 'style', style);
+                        // item.style = style;
+                    })
+                })
             }
         },
         computed: {
@@ -120,13 +137,24 @@
             }
         },
         methods: {
+            listenContainerWidthChange(){
+                // debugger;
+                this.initCols();
+                window.requestAnimationFrame(this.listenContainerWidthChange);
+            },
             // 初始化每个列宽
             initCols(){
-                let colNum = this.colNum;
-                let cols = this.cols;
                 let containerWidth = this.$el.clientWidth;
+                if(this.containerWidth && this.containerWidth === containerWidth){
+                    return;
+                }
+                this.containerWidth = containerWidth;
+                let colNum = this.colNum;
+                let cols = [];
+                // let containerWidth = this.$el.clientWidth;
                 let remainder = containerWidth % colNum; // 余数
                 let quotient = Math.floor(containerWidth / colNum); // 商数
+                console.log(this.$el, containerWidth, remainder, quotient)
                 for(let i = 0; i < colNum; i++){
                     if(remainder){
                         cols[i] = quotient + 1;
@@ -135,6 +163,7 @@
                         cols[i] = quotient;
                     }
                 }
+                this.cols = cols;
             },
             // 设置布局layout数组
             setLayout(layout){
@@ -157,11 +186,12 @@
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
                 this.setContainerHeight(y, h);
-                return {
-                    transform: `translate(${x}px,${y}px)`,
-                    width: w + 'px',
-                    height: h + 'px'
-                }
+                return `transform: translate(${x}px,${y}px);width:${w}px;height:${h}px;`;
+                // return {
+                //     transform: `translate(${x}px,${y}px)`,
+                //     width: w + 'px',
+                //     height: h + 'px'
+                // }
             },
             // 计算卡片的宽度
             getCardWidth(start, end){
@@ -182,6 +212,9 @@
                 }
                 this.cacheComputed[key] = width;
                 return width;
+            },
+            computeRowsHeight(start, end){
+                return (end - start) * this.rowHeight;
             },
             mousedown(evt){
                 let target = evt.target;
@@ -226,11 +259,13 @@
             mouseup(evt){
                 console.log('up', evt);
                 let item = this.operatedItem;
-                this.operatedItem.node.x = this.placeholder.x;
-                this.operatedItem.node.y = this.placeholder.y;
-                let x = this.computeColsWidth(0, item.node.x);
-                let y = item.node.y * this.rowHeight;
-                item.el.style.transform = `translate(${x}px, ${y}px)`;
+                if(item){
+                    item.node.x = this.placeholder.x;
+                    item.node.y = this.placeholder.y;
+                    let x = this.computeColsWidth(0, item.node.x);
+                    let y = item.node.y * this.rowHeight;
+                    item.el.style.transform = `translate(${x}px, ${y}px)`;
+                }
                 this.operater = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
@@ -246,13 +281,16 @@
                 let deltaX = ex - ox;
                 let deltaY = ey - oy;
                 let x = this.computeColsWidth(0, item.node.x) + deltaX;
-                let y = node.y * this.rowHeight + deltaY;
+                let y = item.node.y * this.rowHeight + deltaY;
                 item.el.style.transform = `translate(${x}px, ${y}px)`;
                 console.log(x, this.computeColsWidth(0, node.x), node.x)
                 let dx = x - this.computeColsWidth(0, item.node.x);
-                let step = this.getMoveCols(dx, item.node.x);
-                console.log(step);
-                node.x = item.node.x + step;
+                let dy = y - this.computeRowsHeight(0, item.node.y)
+                let stepX = this.getMoveCols(dx, item.node.x);
+                let stepY = this.getMoveRows(dy, item.node.y);
+                console.log(stepX);
+                node.x = item.node.x + stepX;
+                node.y = item.node.y + stepY;
                 // if(x < this.computeColsWidth(0, item.node.x)){
                 //     node.x--;
                 // } else {
@@ -268,6 +306,17 @@
                 while(absDx > 0){
                     absDx -= (this.cols[c - 1] || 0);
                     c--;
+                    i++;
+                }
+                return parseInt(flag + i);
+            },
+            getMoveRows(dy){
+                let flag = dy < 0 ? '-' : '+';
+                let absDy = Math.abs(dy);
+                if(absDy < 5) return 0;
+                let i = 0;
+                while(absDy > 0){
+                    absDy -= this.rowHeight;
                     i++;
                 }
                 return parseInt(flag + i);
