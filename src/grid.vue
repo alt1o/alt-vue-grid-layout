@@ -186,7 +186,7 @@
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
                 this.setContainerHeight(y, h);
-                return `transform: translate(${x}px,${y}px);width:${w}px;height:${h}px;`;
+                return `transform: translate3d(${x}px,${y}px,0);width:${w}px;height:${h}px;`;
                 // return {
                 //     transform: `translate(${x}px,${y}px)`,
                 //     width: w + 'px',
@@ -264,7 +264,7 @@
                     item.node.y = this.placeholder.y;
                     let x = this.computeColsWidth(0, item.node.x);
                     let y = item.node.y * this.rowHeight;
-                    item.el.style.transform = `translate(${x}px, ${y}px)`;
+                    item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 }
                 this.operater = 0;
                 this.operatedItem = null;
@@ -282,7 +282,7 @@
                 let deltaY = ey - oy;
                 let x = this.computeColsWidth(0, item.node.x) + deltaX;
                 let y = item.node.y * this.rowHeight + deltaY;
-                item.el.style.transform = `translate(${x}px, ${y}px)`;
+                item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 console.log(x, this.computeColsWidth(0, node.x), node.x)
                 let dx = x - this.computeColsWidth(0, item.node.x);
                 let dy = y - this.computeRowsHeight(0, item.node.y)

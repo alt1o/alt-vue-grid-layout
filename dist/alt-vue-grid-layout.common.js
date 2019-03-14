@@ -1977,7 +1977,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative;border:1px solid red;-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative;border:1px solid red;-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}", ""]);
 
 // exports
 
@@ -3688,12 +3688,15 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=e9c47ace&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(_vm.getCardStyle(item))},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])}))}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=3c8b6b94&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(item.style),attrs:{"dg-id":index}},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=e9c47ace&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=3c8b6b94&
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
+var web_dom_iterable = __webpack_require__("ac6a");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
@@ -3737,11 +3740,17 @@ function isInteger(num) {
   return !~s.indexOf('.');
 }
 function hasClass(dom, className) {
-  var classList = dom.classList;
-  return ~classList.indexOf(className);
+  var domClassName = dom.className;
+  return ~domClassName.indexOf(className);
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
 
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3859,15 +3868,42 @@ function hasClass(dom, className) {
       containerHeight: 0,
       // 容器高度
       cols: [],
-      cacheComputed: {}
+      cacheComputed: {},
+      placeholder: null,
+      // 拖拽的placeholder
+      operater: 0,
+      // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
+      operatedItem: null,
+      // 当前被操作的元素的状态
+      containerWidth: 0
     };
   },
   mounted: function mounted() {
-    this.initCols();
+    // this.initCols();
+    this.listenContainerWidthChange();
+  },
+  destroyed: function destroyed() {
+    window.cancelAnimationFrame(this.cancelAnimationFrame);
   },
   watch: {
     rowHeight: function rowHeight(val) {
       this.cell.height = val;
+    },
+    cols: function cols(val, old) {
+      var _this = this;
+
+      console.log(val, old);
+      this.cacheComputed = {};
+      this.$nextTick(function () {
+        _this.layout.forEach(function (item) {
+          var style = _this.getCardStyle(item);
+
+          console.log(style);
+
+          _this.$set(item, 'style', style); // item.style = style;
+
+        });
+      });
     }
   },
   computed: {
@@ -3878,14 +3914,28 @@ function hasClass(dom, className) {
     }
   },
   methods: {
+    listenContainerWidthChange: function listenContainerWidthChange() {
+      // debugger;
+      this.initCols();
+      window.requestAnimationFrame(this.listenContainerWidthChange);
+    },
     // 初始化每个列宽
     initCols: function initCols() {
+      var containerWidth = this.$el.clientWidth;
+
+      if (this.containerWidth && this.containerWidth === containerWidth) {
+        return;
+      }
+
+      this.containerWidth = containerWidth;
       var colNum = this.colNum;
-      var cols = this.cols;
-      var containerWidth = this.$el.offsetWidth;
+      var cols = []; // let containerWidth = this.$el.clientWidth;
+
       var remainder = containerWidth % colNum; // 余数
 
       var quotient = Math.floor(containerWidth / colNum); // 商数
+
+      console.log(this.$el, containerWidth, remainder, quotient);
 
       for (var i = 0; i < colNum; i++) {
         if (remainder) {
@@ -3895,6 +3945,8 @@ function hasClass(dom, className) {
           cols[i] = quotient;
         }
       }
+
+      this.cols = cols;
     },
     // 设置布局layout数组
     setLayout: function setLayout(layout) {
@@ -3911,16 +3963,17 @@ function hasClass(dom, className) {
     },
     // 获取卡片大小和位移
     getCardStyle: function getCardStyle(item) {
+      if (!item) return {};
       var x = this.computeColsWidth(0, item.x);
       var w = this.getCardWidth(item.x, item.x + item.w);
-      var y = item.y * (this.rowHeight + this.margin[1]);
-      var h = item.h * (this.rowHeight + this.margin[1]) - this.margin[1];
+      var y = item.y * this.rowHeight;
+      var h = item.h * this.rowHeight - this.margin[1];
       this.setContainerHeight(y, h);
-      return {
-        transform: "translate(".concat(x, "px,").concat(y, "px)"),
-        width: w + 'px',
-        height: h + 'px'
-      };
+      return "transform: translate(".concat(x, "px,").concat(y, "px);width:").concat(w, "px;height:").concat(h, "px;"); // return {
+      //     transform: `translate(${x}px,${y}px)`,
+      //     width: w + 'px',
+      //     height: h + 'px'
+      // }
     },
     // 计算卡片的宽度
     getCardWidth: function getCardWidth(start, end) {
@@ -3946,23 +3999,116 @@ function hasClass(dom, className) {
       this.cacheComputed[key] = width;
       return width;
     },
+    computeRowsHeight: function computeRowsHeight(start, end) {
+      return (end - start) * this.rowHeight;
+    },
     mousedown: function mousedown(evt) {
-      console.log('down', evt);
+      var target = evt.target;
+      if (!hasClass(target, 'alt-grid-item')) return;
+      var node = this.getNode(target);
+      this.operatedItem = {
+        el: target,
+        node: node,
+        startX: evt.clientX,
+        startY: evt.clientY,
+        lastX: evt.clientX,
+        lastY: evt.clientY
+      };
+      this.placeholder = {
+        x: node.x,
+        y: node.y,
+        w: node.w,
+        h: node.h
+      }; // console.log('down', evt, this.operatedItem);
 
-      if (hasClass(evt.target, this.resizeHandlerClass)) {
+      if (hasClass(target, this.resizeHandlerClass)) {
         this.operater = 2;
       } else {
         this.operater = 1;
       }
     },
     mousemove: function mousemove(evt) {
-      if (this.operater) {
-        console.log('move', evt);
-      }
+      if (!this.operater) return;
+      var ex = evt.clientX;
+      var ey = evt.clientY;
+      var ox = this.operatedItem.lastX;
+      var oy = this.operatedItem.lastY;
+      var sx = this.operatedItem.startX;
+      var sy = this.operatedItem.startY;
+      if (!this.isDrag(ox, oy, ex, ey)) return;
+      this.dragMove(this.operatedItem, sx, sy, ex, ey);
+      this.operatedItem.lastX = ex;
+      this.operatedItem.lastY = ey; // console.log('move', evt);
     },
     mouseup: function mouseup(evt) {
       console.log('up', evt);
+      var item = this.operatedItem;
+
+      if (item) {
+        item.node.x = this.placeholder.x;
+        item.node.y = this.placeholder.y;
+        var x = this.computeColsWidth(0, item.node.x);
+        var y = item.node.y * this.rowHeight;
+        item.el.style.transform = "translate(".concat(x, "px, ").concat(y, "px)");
+      }
+
       this.operater = 0;
+      this.operatedItem = null;
+      this.placeholder = null;
+    },
+    isDrag: function isDrag(ox, oy, ex, ey) {
+      return Math.abs(ox - ex) > 5 || Math.abs(oy - ey) > 5;
+    },
+    getNode: function getNode(target) {
+      return this.layout[target.getAttribute('dg-id')];
+    },
+    dragMove: function dragMove(item, ox, oy, ex, ey) {
+      var node = this.placeholder;
+      var deltaX = ex - ox;
+      var deltaY = ey - oy;
+      var x = this.computeColsWidth(0, item.node.x) + deltaX;
+      var y = item.node.y * this.rowHeight + deltaY;
+      item.el.style.transform = "translate(".concat(x, "px, ").concat(y, "px)");
+      console.log(x, this.computeColsWidth(0, node.x), node.x);
+      var dx = x - this.computeColsWidth(0, item.node.x);
+      var dy = y - this.computeRowsHeight(0, item.node.y);
+      var stepX = this.getMoveCols(dx, item.node.x);
+      var stepY = this.getMoveRows(dy, item.node.y);
+      console.log(stepX);
+      node.x = item.node.x + stepX;
+      node.y = item.node.y + stepY; // if(x < this.computeColsWidth(0, item.node.x)){
+      //     node.x--;
+      // } else {
+      //     node.x++;
+      // }
+    },
+    getMoveCols: function getMoveCols(dx, startCol) {
+      var flag = dx < 0 ? '-' : '+';
+      var absDx = Math.abs(dx);
+      if (absDx < 5) return 0;
+      var i = 0;
+      var c = startCol;
+
+      while (absDx > 0) {
+        absDx -= this.cols[c - 1] || 0;
+        c--;
+        i++;
+      }
+
+      return parseInt(flag + i);
+    },
+    getMoveRows: function getMoveRows(dy) {
+      var flag = dy < 0 ? '-' : '+';
+      var absDy = Math.abs(dy);
+      if (absDy < 5) return 0;
+      var i = 0;
+
+      while (absDy > 0) {
+        absDy -= this.rowHeight;
+        i++;
+      }
+
+      return parseInt(flag + i);
     }
   }
 });
@@ -4103,9 +4249,6 @@ var es6_array_iterator = __webpack_require__("cadf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
 var es6_object_keys = __webpack_require__("456d");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
-var web_dom_iterable = __webpack_require__("ac6a");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");
