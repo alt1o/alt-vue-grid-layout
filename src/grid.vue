@@ -22,8 +22,10 @@
 </template>
 
 <script>
-    import { deepCopy, hasClass } from './utils/util';
-
+    import { deepCopy, hasClass, findParentThoughEvtPath } from './utils/util';
+    import watchBoxSize from './utils/watch-box-size.js'
+    import Coordinate from './utils/coordinate'
+    import coorTest from './utils/coordinate.test.js'
     export default {
         name: 'app',
         props: {
@@ -100,33 +102,56 @@
                 cols: [],
                 cacheComputed: {},
                 placeholder: null, // 拖拽的placeholder
-                operater: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
+                operator: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
                 operatedItem: null, // 当前被操作的元素的状态
-                containerWidth: 0
+                containerWidth: 0,
+                boxWatchHandler: null,
+                coors: null,
+                reRenderCount: 0,
+                timer: null,
+                animation: null,
+                animationHandler: null
             }
         },
         mounted: function () {
-            // this.initCols();
-            this.listenContainerWidthChange();
+            this.initCols();
+            this.boxWatchHandler = new watchBoxSize(this.$el, () => {
+                this.initCols();
+            })
         },
         destroyed(){
-            window.cancelAnimationFrame(this.cancelAnimationFrame);
+            this.boxWatchHandler.destroy();
         },
         watch: {
             rowHeight(val){
                 this.cell.height = val;
             },
-            cols(val, old){
-                console.log(val, old);
+            cols(){
                 this.cacheComputed = {};
                 this.$nextTick(() => {
                     this.layout.forEach((item) => {
                         let style = this.getCardStyle(item);
-                        console.log(style);
                         this.$set(item, 'style', style);
                         // item.style = style;
                     })
                 })
+            },
+            reRenderCount(){
+                if(this.timer) clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    this.layout.forEach((item) => {
+                        let style = this.getCardStyle(item);
+                        this.$set(item, 'style', style);
+                        // item.style = style;
+                    })
+                }, 10);
+                // this.$nextTick(() => {
+                //     this.layout.forEach((item) => {
+                //         let style = this.getCardStyle(item);
+                //         this.$set(item, 'style', style);
+                //         // item.style = style;
+                //     })
+                // })
             }
         },
         computed: {
@@ -137,11 +162,6 @@
             }
         },
         methods: {
-            listenContainerWidthChange(){
-                // debugger;
-                this.initCols();
-                window.requestAnimationFrame(this.listenContainerWidthChange);
-            },
             // 初始化每个列宽
             initCols(){
                 let containerWidth = this.$el.clientWidth;
@@ -154,7 +174,6 @@
                 // let containerWidth = this.$el.clientWidth;
                 let remainder = containerWidth % colNum; // 余数
                 let quotient = Math.floor(containerWidth / colNum); // 商数
-                console.log(this.$el, containerWidth, remainder, quotient)
                 for(let i = 0; i < colNum; i++){
                     if(remainder){
                         cols[i] = quotient + 1;
@@ -167,8 +186,16 @@
             },
             // 设置布局layout数组
             setLayout(layout){
-                this.layout = deepCopy(layout);
+                // this.layout = deepCopy(layout);
                 // this.layout = layout;
+                console.log(deepCopy)
+                if(!this.coors){
+                    this.coors = new Coordinate();
+                }
+                this.coors.batchAddItem(layout);
+                coorTest(this, layout);
+                
+                this.layout = this.coors.getAllItems();
             },
             // 设置总容器高度
             setContainerHeight(y, h){
@@ -218,15 +245,26 @@
             },
             mousedown(evt){
                 let target = evt.target;
-                if(!hasClass(target, 'alt-grid-item')) return;
-                let node = this.getNode(target);
+                let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+                if(hasClass(target, this.resizeHandlerClass)){
+                    this.operator = 2;
+                }
+                if(targetCard && !this.operator){
+                    this.operator = 1;
+                }
+                if(!targetCard && !this.operator) return;
+                // if(!hasClass(target, 'alt-grid-item')) return;
+                let node = this.getNode(targetCard);
+                let translate = targetCard.style.transform.match(/\((\d*)px, (\d*)px/);
                 this.operatedItem = {
-                    el: target,
+                    el: targetCard,
                     node: node,
                     startX: evt.clientX,
                     startY: evt.clientY,
-                    lastX: evt.clientX,
-                    lastY: evt.clientY
+                    cacheTranslate: {
+                        x: parseInt(translate[1]),
+                        y: parseInt(translate[2])
+                    }
                 }
 
                 this.placeholder = {
@@ -236,25 +274,22 @@
                     h: node.h
                 };
                 // console.log('down', evt, this.operatedItem);
-                if(hasClass(target, this.resizeHandlerClass)){
-                    this.operater = 2;
-                } else {
-                    this.operater = 1;
-                }
+                // if(hasClass(target, this.resizeHandlerClass)){
+                //     this.operator = 2;
+                // } else {
+                //     this.operator = 1;
+                // }
             },
             mousemove(evt){
-                if(!this.operater) return;
+                console.log('mouse move');
+                if(!this.operator) return;
                 let ex = evt.clientX;
                 let ey = evt.clientY;
-                let ox = this.operatedItem.lastX;
-                let oy = this.operatedItem.lastY;
                 let sx = this.operatedItem.startX;
                 let sy = this.operatedItem.startY;
-                if(!this.isDrag(ox, oy, ex, ey)) return;
-                this.dragMove(this.operatedItem, sx, sy, ex, ey);
-                this.operatedItem.lastX = ex;
-                this.operatedItem.lastY = ey;
-                // console.log('move', evt);
+                if(this.operator === 1){
+                    this.dragMove(this.operatedItem, sx, sy, ex, ey);
+                }
             },
             mouseup(evt){
                 console.log('up', evt);
@@ -266,7 +301,7 @@
                     let y = item.node.y * this.rowHeight;
                     item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 }
-                this.operater = 0;
+                this.operator = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
             },
@@ -276,48 +311,57 @@
             getNode(target){
                 return this.layout[target.getAttribute('dg-id')]
             },
-            dragMove(item, ox, oy, ex, ey){
+            dragMove(item, sx, sy, ex, ey){
+                console.log('drag move');
                 let node = this.placeholder;
-                let deltaX = ex - ox;
-                let deltaY = ey - oy;
-                let x = this.computeColsWidth(0, item.node.x) + deltaX;
-                let y = item.node.y * this.rowHeight + deltaY;
-                item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                console.log(x, this.computeColsWidth(0, node.x), node.x)
-                let dx = x - this.computeColsWidth(0, item.node.x);
-                let dy = y - this.computeRowsHeight(0, item.node.y)
+                let dx = ex - sx;
+                let dy = ey - sy;
                 let stepX = this.getMoveCols(dx, item.node.x);
                 let stepY = this.getMoveRows(dy, item.node.y);
-                console.log(stepX);
+                console.log('calc over step');
+                this.coors.moveItemTo(node, {
+                    x: item.node.x + stepX,
+                    y: item.node.y + stepY
+                })
                 node.x = item.node.x + stepX;
                 node.y = item.node.y + stepY;
-                // if(x < this.computeColsWidth(0, item.node.x)){
-                //     node.x--;
-                // } else {
-                //     node.x++;
-                // }
+                let x = item.cacheTranslate.x + dx;
+                let y = item.cacheTranslate.y + dy;
+                item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                this.reRenderCount++;
+                // if(this.reRenderCount === 20) debugger;
             },
             getMoveCols(dx, startCol){
+                if(startCol <= 0 && dx < 0) return 0;
+                console.log('get move cols: %d; startCol: %d', dx, startCol);
                 let flag = dx < 0 ? '-' : '+';
                 let absDx = Math.abs(dx);
-                if(absDx < 5) return 0;
+                if(absDx < 15) return 0;
                 let i = 0;
                 let c = startCol;
                 while(absDx > 0){
+                    console.log('absDx: %d; col: %d;', absDx, c);
                     absDx -= (this.cols[c - 1] || 0);
                     c--;
                     i++;
+                    if(c <= 0) break;
                 }
                 return parseInt(flag + i);
             },
-            getMoveRows(dy){
+            getMoveRows(dy, startRow){
+                if(startRow <= 0 && dy < 0) return 0;
+                console.log('get move rows: %d; startRow: %d', dy, startRow);
                 let flag = dy < 0 ? '-' : '+';
                 let absDy = Math.abs(dy);
-                if(absDy < 5) return 0;
+                if(absDy < this.rowHeight/2) return 0;
                 let i = 0;
+                let row = startRow;
                 while(absDy > 0){
+                    console.log('absDy: %d; row: %d', absDy, row);
                     absDy -= this.rowHeight;
                     i++;
+                    row--;
+                    if(row <= 0) break;
                 }
                 return parseInt(flag + i);
             }

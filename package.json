@@ -20,6 +20,7 @@
   "main": "dist/alt-vue-grid-layout.umd.js",
   "unpkg": "dist/alt-vue-grid-layout.umd.min.js",
   "scripts": {
+    "test": "jest",
     "serve": "vue-cli-service serve",
     "build": "rimraf dist && vue-cli-service build",
     "build-lib": "rimraf dist && vue-cli-service build --target lib ./src/index.js",
@@ -34,7 +35,10 @@
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-standard": "^3.0.1",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-jest": "^24.5.0",
     "babel-plugin-transform-flow-comments": "^6.7.0",
+    "jest": "^24.5.0",
     "node-sass": "^4.9.0",
     "pre-push": "^0.1.1",
     "rimraf": "^2.6.2",
@@ -46,5 +50,10 @@
   "pre-push": [
     "build-lib"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    }
+  }
 }
