@@ -50,3 +50,12 @@ export function findParentThoughEvtPath(evtPath, parentClass, stopClass){
     }
     return null;
 }
+
+export function getFirstSetValue(){
+    let args = arguments;
+    let l = args.length;
+    for(let i = 0; i < l; i++){
+        if(!isNil(args[i])) return args[i];
+    }
+    return args[l - 1];
+}

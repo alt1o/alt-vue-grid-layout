@@ -23,7 +23,12 @@
 </template>
 
 <script>
-    import { deepCopy, hasClass, findParentThoughEvtPath } from './utils/util';
+    import { 
+        deepCopy,
+        hasClass,
+        findParentThoughEvtPath,
+        getFirstSetValue
+    } from './utils/util';
     import watchBoxSize from './utils/watch-box-size.js'
     import Coordinate from './utils/coordinate'
     import coorTest from './utils/coordinate.test.js'
@@ -265,16 +270,29 @@
             mousedown(evt){
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+                let node = this.getNode(targetCard);
                 if(hasClass(target, this.resizeHandlerClass)){
+                    if(!getFirstSetValue(
+                        node.isResizable, 
+                        this.isResizable, 
+                        this.defVal.isResizable)){
+                        return;
+                    }
                     this.operator = 2; // resize
                     targetCard.style.zIndex = 1;
                 }
                 if(targetCard && !this.operator){
+                    if(!getFirstSetValue(
+                        node.isDraggable, 
+                        this.isDraggable, 
+                        this.defVal.isDraggable)){
+                        return;
+                    }
                     this.operator = 1; // 拖拽
                 }
                 if(!targetCard && !this.operator) return;
                 // if(!hasClass(target, 'alt-grid-item')) return;
-                let node = this.getNode(targetCard);
+                
                 let targetCardStyle = targetCard.style;
                 let translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
                 this.operatedItem = {
@@ -374,12 +392,17 @@
                 let dy = ey - sy;
                 let stepX = this.getMoveCols(dx, item.node.x + item.node.w);
                 let stepY = this.getMoveRows(dy, item.node.y + item.node.h);
-                this.coors.resizeItem(node, {
+                let size = this.getItemLegalSize(item.node, {
                     w: item.node.w + stepX,
                     h: item.node.h + stepY
                 })
-                node.w = item.node.w + stepX;
-                node.h = item.node.h + stepY;
+                console.log('resize', size.w, size.h)
+                this.coors.resizeItem(node, {
+                    w: size.w,
+                    h: size.h
+                })
+                node.w = size.w;
+                node.h = size.h;
                 let w = item.cacheStyle.w + dx;
                 let h = item.cacheStyle.h + dy;
                 item.el.style.width = w + 'px';
@@ -426,6 +449,32 @@
                     let distributeItem = this.coors.addItem(item);
                     this.layout.push(distributeItem);
                     this.reRenderCount++;
+                }
+            },
+            getItemLegalSize(item, size){
+                
+                let minH = getFirstSetValue(item.minH, this.defVal.minH);
+                let minW = getFirstSetValue(item.minW, this.defVal.minW);
+                let maxH = getFirstSetValue(item.maxH, this.defVal.maxH);
+                let maxW = getFirstSetValue(item.maxW, this.defVal.maxW);
+                let h = size.h;
+                let w = size.w;
+                console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
+                if(size.h <= minH){
+                    h = minH;
+                }
+                if(size.h >= maxH){
+                    h = maxH;
+                }
+                if(size.w <= minW){
+                    w = minW;
+                }
+                if(size.w >= maxW){
+                    w = maxW;
+                }
+                return {
+                    h: h,
+                    w: w
                 }
             }
         }
