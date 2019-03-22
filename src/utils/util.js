@@ -30,8 +30,10 @@ export function isInteger(num){
 
 // 判断是否含有某个class
 export function hasClass(dom, className){
+    let reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
     let domClassName = dom.className;
-    return ~domClassName.indexOf(className);
+    return reg.test(domClassName);
+    // return ~domClassName.indexOf(className);
 }
 
 // 从event.path中遍历查找包含某个class的元素

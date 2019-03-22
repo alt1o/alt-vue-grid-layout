@@ -4,6 +4,7 @@
         @mousemove="mousemove"
         @mouseup="mouseup"
         class="alt-grid-container" 
+        :class="operatorClass"
         :style="containerStyle">
         <div 
             :style="getCardStyle(placeholder)"
@@ -152,6 +153,16 @@
                 //         // item.style = style;
                 //     })
                 // })
+            },
+            margin(){
+                this.cacheComputed = {};
+                this.$nextTick(() => {
+                    this.layout.forEach((item) => {
+                        let style = this.getCardStyle(item);
+                        this.$set(item, 'style', style);
+                        // item.style = style;
+                    })
+                })
             }
         },
         computed: {
@@ -159,6 +170,9 @@
                 return {
                     height: this.containerHeight + 'px'
                 }
+            },
+            operatorClass(){
+                return this.operator ? 'alt-grid-container-operating' : '';
             }
         },
         methods: {
@@ -193,9 +207,10 @@
                     this.coors = new Coordinate();
                 }
                 this.coors.batchAddItem(layout);
-                coorTest(this, layout);
                 
                 this.layout = this.coors.getAllItems();
+
+                coorTest(this, this.layout);
             },
             // 设置总容器高度
             setContainerHeight(y, h){
@@ -247,23 +262,26 @@
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
                 if(hasClass(target, this.resizeHandlerClass)){
-                    this.operator = 2;
+                    this.operator = 2; // resize
                 }
                 if(targetCard && !this.operator){
-                    this.operator = 1;
+                    this.operator = 1; // 拖拽
                 }
                 if(!targetCard && !this.operator) return;
                 // if(!hasClass(target, 'alt-grid-item')) return;
                 let node = this.getNode(targetCard);
-                let translate = targetCard.style.transform.match(/\((\d*)px, (\d*)px/);
+                let targetCardStyle = targetCard.style;
+                let translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
                 this.operatedItem = {
                     el: targetCard,
                     node: node,
                     startX: evt.clientX,
                     startY: evt.clientY,
-                    cacheTranslate: {
+                    cacheStyle: {
                         x: parseInt(translate[1]),
-                        y: parseInt(translate[2])
+                        y: parseInt(translate[2]),
+                        w: parseInt(targetCardStyle.width.match(/\d+/)[0]),
+                        h: parseInt(targetCardStyle.height.match(/\d+/)[0]),
                     }
                 }
 
@@ -289,18 +307,33 @@
                 let sy = this.operatedItem.startY;
                 if(this.operator === 1){
                     this.dragMove(this.operatedItem, sx, sy, ex, ey);
+                } else if(this.operator === 2){
+                    this.resizeMove(this.operatedItem, sx, sy, ex, ey);
                 }
             },
             mouseup(evt){
                 console.log('up', evt);
                 let item = this.operatedItem;
                 if(item){
-                    item.node.x = this.placeholder.x;
-                    item.node.y = this.placeholder.y;
-                    let x = this.computeColsWidth(0, item.node.x);
-                    let y = item.node.y * this.rowHeight;
-                    item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                    // item.node.x = this.placeholder.x;
+                    // item.node.y = this.placeholder.y;
+                    // let x = this.computeColsWidth(0, item.node.x);
+                    // let y = item.node.y * this.rowHeight;
+                    // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+
+                    if(this.operator === 1){
+                        item.node.x = this.placeholder.x;
+                        item.node.y = this.placeholder.y;
+                    }else if(this.operator === 2){
+                        item.node.w = this.placeholder.w;
+                        item.node.h = this.placeholder.h;
+                    }
+                    item.el.style = this.getCardStyle(item.node);
+
+                    this.coors.removeItem(this.placeholder);
+                    this.coors.addItem(this.operatedItem.node);
                 }
+                
                 this.operator = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
@@ -325,11 +358,32 @@
                 })
                 node.x = item.node.x + stepX;
                 node.y = item.node.y + stepY;
-                let x = item.cacheTranslate.x + dx;
-                let y = item.cacheTranslate.y + dy;
+                let x = item.cacheStyle.x + dx;
+                let y = item.cacheStyle.y + dy;
                 item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 this.reRenderCount++;
+                console.log('reRenderCount', this.reRenderCount);
                 // if(this.reRenderCount === 20) debugger;
+            },
+            resizeMove(item, sx, sy, ex, ey){
+                console.log('resize move');
+                let node = this.placeholder;
+                let dx = ex - sx;
+                let dy = ey - sy;
+                let stepX = this.getMoveCols(dx, item.node.x);
+                let stepY = this.getMoveRows(dy, item.node.y);
+                this.coors.resizeItem(node, {
+                    w: item.node.w + stepX,
+                    h: item.node.h + stepY
+                })
+                node.w = item.node.w + stepX;
+                node.h = item.node.h + stepY;
+                let w = item.cacheStyle.w + dx;
+                let h = item.cacheStyle.h + dy;
+                item.el.style.width = w + 'px';
+                item.el.style.height = h + 'px';
+                this.reRenderCount++;
+                console.log('reRenderCount', this.reRenderCount);
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
@@ -400,5 +454,8 @@
     width: 0;
     height: 0;
     background: red;
+}
+.alt-grid-container-operating{
+    user-select: none;
 }
 </style>

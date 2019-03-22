@@ -32,7 +32,7 @@
                     :col-num="colNum"
                     grid-item-class="ceshi-global-item"
                     close-handler-class="ceshi-global-close"
-                    resize-handler-class="ceshi-global-resize"
+                    resize-handler-class="alt-grid-item-resize-handler"
                     placeholder-class="ceshi-global-placeholder"
                     ref="altGrid" ></grid>
             </div>

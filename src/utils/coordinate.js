@@ -186,7 +186,56 @@ class Coordinate {
         item.y = target.y;
 
         this.addItem(item);
-        console.log(JSON.parse(JSON.stringify(this.coors)));
+        this.moveAllItemUp();
+        console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+        console.log('----- move end -----');
+    }
+
+    resizeItem(item, target){
+        console.log('---- resize start ------');
+        if(item.w === target.w && item.h === target.h){
+            console.log('---- resize no move end -----');
+            return;
+        }
+        console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
+        this.removeItem(item);
+        
+        let belowItems = this.findFirstItemInEveryColsAtRect({
+            x: item.x,
+            y: item.y + item.h,
+            w: item.w,
+            h: 1
+        });
+        for(let i = 0; i < belowItems.length; i++){
+            this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
+        }
+
+        let flag = this.checkItemPositionIsLegal({
+            x: item.x,
+            y: item.y,
+            w: target.w,
+            h: target.h
+        }, this.coors);
+        if(!flag){
+            let targetBelowItems = this.findFirstItemInEveryColsAtRect({
+                x: item.x,
+                y: item.y,
+                h: target.h,
+                w: target.w
+            })
+            console.log('move down items: %d', targetBelowItems.length);
+            // console.table(targetBelowItems);
+            for(let i = 0; i < targetBelowItems.length; i++){
+                this.moveItemDown(targetBelowItems[i], item.y - targetBelowItems[i].y + target.h);
+            }
+        }
+
+        item.w = target.w;
+        item.h = target.h;
+
+        this.addItem(item);
+        this.moveAllItemUp();
+        console.log('coors', JSON.parse(JSON.stringify(this.coors)));
         console.log('----- move end -----');
     }
 
@@ -246,6 +295,13 @@ class Coordinate {
 
         for(let i = 0; i < belowItems.length; i++){
             this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]))
+        }
+    }
+    // 暂时移动完成之后全部都moveUp一下
+    moveAllItemUp(){
+        let itemList = this.getAllItems();
+        for(let i = 0, j = itemList.length; i < j; i++){
+            this.moveItemUp(itemList[i], this.getMoveUpRows(itemList[i]));
         }
     }
 
