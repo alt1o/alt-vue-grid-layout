@@ -873,6 +873,56 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 /***/ }),
 
+/***/ "3b2b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__("7726");
+var inheritIfRequired = __webpack_require__("5dbc");
+var dP = __webpack_require__("86cc").f;
+var gOPN = __webpack_require__("9093").f;
+var isRegExp = __webpack_require__("aae3");
+var $flags = __webpack_require__("0bfb");
+var $RegExp = global.RegExp;
+var Base = $RegExp;
+var proto = $RegExp.prototype;
+var re1 = /a/g;
+var re2 = /a/g;
+// "new" creates a new object, old webkit buggy here
+var CORRECT_NEW = new $RegExp(re1) !== re1;
+
+if (__webpack_require__("9e1e") && (!CORRECT_NEW || __webpack_require__("79e5")(function () {
+  re2[__webpack_require__("2b4c")('match')] = false;
+  // RegExp constructor can alter flags and IsRegExp works correct with @@match
+  return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
+}))) {
+  $RegExp = function RegExp(p, f) {
+    var tiRE = this instanceof $RegExp;
+    var piRE = isRegExp(p);
+    var fiU = f === undefined;
+    return !tiRE && piRE && p.constructor === $RegExp && fiU ? p
+      : inheritIfRequired(CORRECT_NEW
+        ? new Base(piRE && !fiU ? p.source : p, f)
+        : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f)
+      , tiRE ? this : proto, $RegExp);
+  };
+  var proxy = function (key) {
+    key in $RegExp || dP($RegExp, key, {
+      configurable: true,
+      get: function () { return Base[key]; },
+      set: function (it) { Base[key] = it; }
+    });
+  };
+  for (var keys = gOPN(Base), i = 0; keys.length > i;) proxy(keys[i++]);
+  proto.constructor = $RegExp;
+  $RegExp.prototype = proto;
+  __webpack_require__("2aba")(global, 'RegExp', $RegExp);
+}
+
+__webpack_require__("7a56")('RegExp');
+
+
+/***/ }),
+
 /***/ "41a0":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -934,6 +984,23 @@ module.exports = function (bitmap, value) {
     value: value
   };
 };
+
+
+/***/ }),
+
+/***/ "4917":
+/***/ (function(module, exports, __webpack_require__) {
+
+// @@match logic
+__webpack_require__("214f")('match', 1, function (defined, MATCH, $match) {
+  // 21.1.3.11 String.prototype.match(regexp)
+  return [function match(regexp) {
+    'use strict';
+    var O = defined(this);
+    var fn = regexp == undefined ? undefined : regexp[MATCH];
+    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+  }, $match];
+});
 
 
 /***/ }),
@@ -1739,6 +1806,27 @@ module.exports = function (exec) {
 
 /***/ }),
 
+/***/ "7a56":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var global = __webpack_require__("7726");
+var dP = __webpack_require__("86cc");
+var DESCRIPTORS = __webpack_require__("9e1e");
+var SPECIES = __webpack_require__("2b4c")('species');
+
+module.exports = function (KEY) {
+  var C = global[KEY];
+  if (DESCRIPTORS && C && !C[SPECIES]) dP.f(C, SPECIES, {
+    configurable: true,
+    get: function () { return this; }
+  });
+};
+
+
+/***/ }),
+
 /***/ "7cdf":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1977,7 +2065,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative;border:1px solid red;-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative;border:1px solid red;-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
 
 // exports
 
@@ -2017,6 +2105,21 @@ var trim = exporter.trim = function (string, TYPE) {
 };
 
 module.exports = exporter;
+
+
+/***/ }),
+
+/***/ "aae3":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.2.8 IsRegExp(argument)
+var isObject = __webpack_require__("d3f4");
+var cof = __webpack_require__("2d95");
+var MATCH = __webpack_require__("2b4c")('match');
+module.exports = function (it) {
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+};
 
 
 /***/ }),
@@ -3688,18 +3791,24 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=3c8b6b94&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(item.style),attrs:{"dg-id":index}},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=1edcecc8&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(item.style),attrs:{"dg-id":index}},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=3c8b6b94&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=1edcecc8&
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
+var es6_regexp_match = __webpack_require__("4917");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.constructor.js
+var es6_regexp_constructor = __webpack_require__("3b2b");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.is-integer.js
 var es6_number_is_integer = __webpack_require__("7cdf");
@@ -3715,6 +3824,7 @@ var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpac
 
 
 
+
  // 深拷贝
 
 function deepCopy() {
@@ -3727,25 +3837,593 @@ function getVariType(vari) {
 
 function isNil(val) {
   return val === undefined || val === null;
-}
+} // 获取vue对象
+
 function getVue() {
   var temp = external_commonjs_vue_commonjs2_vue_root_Vue_default.a;
   if (temp) return temp;
   if (window.Vue) return window.Vue;
   return null;
-}
+} // 判断是否为整数
+
 function isInteger(num) {
   if (Number.isInteger) return Number.isInteger(num);
   var s = num + '';
   return !~s.indexOf('.');
-}
+} // 判断是否含有某个class
+
 function hasClass(dom, className) {
+  var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
   var domClassName = dom.className;
-  return ~domClassName.indexOf(className);
+  return reg.test(domClassName); // return ~domClassName.indexOf(className);
+} // 从event.path中遍历查找包含某个class的元素
+
+function findParentThoughEvtPath(evtPath, parentClass, stopClass) {
+  var dom = null;
+
+  for (var i = 0, l = evtPath.length; i < l; i++) {
+    dom = evtPath[i];
+
+    if (hasClass(dom, parentClass)) {
+      return dom;
+    }
+
+    if (hasClass(dom, stopClass)) {
+      return null;
+    }
+  }
+
+  return null;
+}
+// CONCATENATED MODULE: ./src/utils/watch-box-size.js
+function watchBoxSizeChange(el, handler) {
+  if (!(el instanceof HTMLElement)) {
+    throw new TypeError('第一个参数必须是一个html元素');
+  }
+
+  if (/^(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr|script|style|textarea|title)$/i.test(el.tagName)) {
+    throw new TypeError('不支持当前元素类型，可以尝试使用div');
+  }
+
+  if (typeof handler !== 'function') {
+    throw new TypeError('第二个参数必须是一个函数');
+  }
+
+  this.el = el;
+  this.handler = handler; // 最后一次变动的宽高
+
+  this.lastWidth = el.offsetWidth || 1;
+  this.lastHeight = el.offsetHeight || 1; // 最大宽高
+
+  this.maxWidth = 10000 * this.lastWidth;
+  this.maxHeight = 10000 * this.lastHeight; // 变动宽高
+
+  this.newWidth = 0;
+  this.newHeight = 0;
+  this.expand = document.createElement('div');
+  this.expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
+  this.shrink = this.expand.cloneNode(false);
+  var expandChild = document.createElement('div');
+  expandChild.style.cssText = 'transition:0s;animation:none;';
+  var shrinkChild = expandChild.cloneNode(false);
+  expandChild.style.width = this.maxWidth + 'px';
+  expandChild.style.height = this.maxHeight + 'px';
+  shrinkChild.style.width = '250%';
+  shrinkChild.style.height = '250%';
+  this.expand.appendChild(expandChild);
+  this.shrink.appendChild(shrinkChild);
+  this.el.appendChild(this.expand);
+  this.el.appendChild(this.shrink);
+
+  if (this.expand.offsetParent !== el) {
+    el.style.position = 'relative';
+  }
+
+  this.expand.scrollTop = this.shrink.scrollTop = this.maxHeight;
+  this.expand.scrollLeft = this.shrink.scrollLeft = this.maxWidth;
+  this.bindOnScroll = null;
+  this.addListener();
+}
+
+watchBoxSizeChange.prototype.onScroll = function onScroll() {
+  this.newWidth = this.el.offsetWidth || 1;
+  this.newHeight = this.el.offsetHeight || 1;
+
+  if (this.newWidth !== this.lastWidth || this.newHeight !== this.lastHeight) {
+    requestAnimationFrame(this.onResize.bind(this));
+  }
+
+  this.expand.scrollTop = this.shrink.scrollTop = this.maxHeight;
+  this.expand.scrollLeft = this.shrink.scrollLeft = this.maxWidth;
+};
+
+watchBoxSizeChange.prototype.onResize = function onResize() {
+  this.lastWidth = this.newWidth;
+  this.lastHeight = this.newHeight;
+  this.handler(this.lastWidth, this.lastHeight);
+};
+
+watchBoxSizeChange.prototype.addListener = function addListener() {
+  this.bindOnScroll = this.onScroll.bind(this);
+  this.expand.addEventListener('scroll', this.bindOnScroll, false);
+  this.shrink.addEventListener('scroll', this.bindOnScroll, false);
+};
+
+watchBoxSizeChange.prototype.removeListener = function removeListener() {
+  this.expand.removeEventListener('scroll', this.bindOnScroll, false);
+  this.shrink.removeEventListener('scroll', this.bindOnScroll, false);
+};
+
+watchBoxSizeChange.prototype.destroy = function destroy() {
+  this.removeListener();
+  this.el.removeChild(this.expand);
+  this.el.removeChild(this.shrink);
+};
+
+/* harmony default export */ var watch_box_size = (watchBoxSizeChange);
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/classCallCheck.js
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/createClass.js
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+// CONCATENATED MODULE: ./src/utils/coordinate.js
+
+
+
+var coordinate_Coordinate =
+/*#__PURE__*/
+function () {
+  function Coordinate() {
+    _classCallCheck(this, Coordinate);
+
+    this.coors = [];
+  }
+
+  _createClass(Coordinate, [{
+    key: "addItem",
+    value: function addItem() {
+      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
+
+      if (!this.isNotNegative(item.x) || !this.isNotNegative(item.y) || !this.isPositiveNumer(item.w) || !this.isPositiveNumer(item.h) || !this.checkItemPositionIsLegal(item, this.coors)) {
+        var distributePos = this.distributeItemPosition(item, this.getAllItems());
+        item.x = distributePos.x;
+        item.y = distributePos.y;
+        item.w = distributePos.w;
+        item.h = distributePos.h;
+      }
+
+      var x = item.x;
+      var y = item.y;
+      var w = item.w;
+      var h = item.h;
+
+      for (var i = y; i < y + h; i++) {
+        if (this.isNil(this.coors[i])) this.coors[i] = [];
+
+        for (var j = x; j < x + w; j++) {
+          if (this.isNil(this.coors[i][j])) {
+            this.coors[i][j] = item;
+          }
+        }
+      } // console.log(this.coors);
+
+
+      return item;
+    }
+  }, {
+    key: "batchAddItem",
+    value: function batchAddItem(list) {
+      for (var i = 0; i < list.length; i++) {
+        this.addItem(list[i]);
+      }
+    }
+  }, {
+    key: "getAllItems",
+    value: function getAllItems() {
+      var items = [];
+      var tempRow = null;
+      var tempItem = null;
+
+      for (var i = 0; i < this.coors.length; i++) {
+        tempRow = this.coors[i];
+
+        for (var j = 0; j < tempRow.length; j++) {
+          tempItem = tempRow[j];
+          if (this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
+          items.push(tempItem);
+        }
+      }
+
+      return items;
+    } // 检查位置是否合法
+
+  }, {
+    key: "checkItemPositionIsLegal",
+    value: function checkItemPositionIsLegal(item, coors) {
+      var x = item.x;
+      var y = item.y;
+      var w = item.w;
+      var h = item.h;
+
+      for (var i = y; i < y + h; i++) {
+        if (this.isNil(coors[i])) continue;
+
+        for (var j = x; j < x + w; j++) {
+          if (!this.isNil(coors[i][j])) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    } // 分配元素位置
+
+  }, {
+    key: "distributeItemPosition",
+    value: function distributeItemPosition(item, itemList) {
+      var x = this.isPositiveNumer(item.x) ? item.x : 0;
+      var y = this.isPositiveNumer(item.y) ? item.y : 0;
+      var w = this.isPositiveNumer(item.w) ? item.w : 1;
+      var h = this.isPositiveNumer(item.h) ? item.h : 1;
+      var colsHeight = [];
+      var tempItem = null;
+      var tempY = 0;
+
+      for (var i = 0, j = itemList.length; i < j; i++) {
+        tempItem = itemList[i];
+        tempY = tempItem.y + tempItem.h;
+
+        for (var m = tempItem.x; m < tempItem.x + tempItem.w; m++) {
+          if (tempY > (colsHeight[m] || 0)) {
+            colsHeight[m] = tempY;
+          }
+        }
+      }
+
+      var index = this.getMinPeek(colsHeight, w);
+      x = ~index ? index : 0;
+      y = colsHeight[x] || 0;
+      return {
+        x: x,
+        y: y,
+        w: w,
+        h: h
+      };
+    } // 获取最下部分可以插入位置
+
+  }, {
+    key: "getMinPeek",
+    value: function getMinPeek(arr, w) {
+      var index = -1;
+      var value = 10000;
+
+      for (var i = 0; i < arr.length - w; i++) {
+        var flag = true;
+        var item = arr[i];
+
+        for (var j = i + 1; j < i + w; j++) {
+          if (item < arr[j]) {
+            flag = false;
+            break;
+          }
+        }
+
+        if (flag && item < value) {
+          value = item;
+          index = i;
+        }
+      }
+
+      return index;
+    } // 删除元素
+
+  }, {
+    key: "removeItem",
+    value: function removeItem(item) {
+      console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
+      var x = item.x;
+      var y = item.y;
+      var w = item.w;
+      var h = item.h;
+
+      for (var i = y; i < y + h; i++) {
+        if (this.isNil(this.coors[y])) continue;
+
+        for (var j = x; j < x + w; j++) {
+          this.coors[i][j] = null;
+        }
+      }
+    }
+  }, {
+    key: "moveItemTo",
+    value: function moveItemTo(item, target) {
+      console.log('------- move start ------');
+
+      if (item.x === target.x && item.y === target.y) {
+        console.log('---- no move end ------');
+        return;
+      }
+
+      console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
+      this.removeItem(item);
+      var belowItems = this.findFirstItemInEveryColsAtRect({
+        x: item.x,
+        y: item.y + item.h,
+        w: item.w,
+        h: 1
+      });
+
+      for (var i = 0; i < belowItems.length; i++) {
+        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
+      }
+
+      var flag = this.checkItemPositionIsLegal({
+        x: target.x,
+        y: target.y,
+        w: item.w,
+        h: item.h
+      }, this.coors);
+
+      if (!flag) {
+        var targetBelowItems = this.findFirstItemInEveryColsAtRect({
+          x: target.x,
+          y: target.y,
+          h: item.h,
+          w: item.w
+        });
+        console.log('move down items: %d', targetBelowItems.length); // console.table(targetBelowItems);
+
+        for (var _i = 0; _i < targetBelowItems.length; _i++) {
+          this.moveItemDown(targetBelowItems[_i], target.y - targetBelowItems[_i].y + item.h);
+        }
+      }
+
+      item.x = target.x;
+      item.y = target.y;
+      this.addItem(item);
+      this.moveAllItemUp();
+      console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+      console.log('----- move end -----');
+    }
+  }, {
+    key: "resizeItem",
+    value: function resizeItem(item, target) {
+      console.log('---- resize start ------');
+
+      if (item.w === target.w && item.h === target.h) {
+        console.log('---- resize no move end -----');
+        return;
+      }
+
+      console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
+      this.removeItem(item);
+      var belowItems = this.findFirstItemInEveryColsAtRect({
+        x: item.x,
+        y: item.y + item.h,
+        w: item.w,
+        h: 1
+      });
+
+      for (var i = 0; i < belowItems.length; i++) {
+        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
+      }
+
+      var flag = this.checkItemPositionIsLegal({
+        x: item.x,
+        y: item.y,
+        w: target.w,
+        h: target.h
+      }, this.coors);
+
+      if (!flag) {
+        var targetBelowItems = this.findFirstItemInEveryColsAtRect({
+          x: item.x,
+          y: item.y,
+          h: target.h,
+          w: target.w
+        });
+        console.log('move down items: %d', targetBelowItems.length); // console.table(targetBelowItems);
+
+        for (var _i2 = 0; _i2 < targetBelowItems.length; _i2++) {
+          this.moveItemDown(targetBelowItems[_i2], item.y - targetBelowItems[_i2].y + target.h);
+        }
+      }
+
+      item.w = target.w;
+      item.h = target.h;
+      this.addItem(item);
+      this.moveAllItemUp();
+      console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+      console.log('----- move end -----');
+    } // 查找某个区域位置的每一列的第一个元素
+
+  }, {
+    key: "findFirstItemInEveryColsAtRect",
+    value: function findFirstItemInEveryColsAtRect(pos) {
+      var x = pos.x;
+      var y = pos.y;
+      var w = pos.w;
+      var h = pos.h;
+      var items = [];
+      var tempRow = null;
+      var tempItem = null;
+
+      for (var i = x; i < x + w; i++) {
+        for (var j = y; j < y + h; j++) {
+          tempRow = this.coors[j];
+          if (this.isNil(tempRow)) continue;
+          tempItem = tempRow[i];
+          if (this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
+          items.push(tempItem);
+          break;
+        }
+      }
+
+      return items;
+    }
+  }, {
+    key: "getMoveUpRows",
+    value: function getMoveUpRows(item) {
+      var coors = this.coors;
+      var upperRows = 0;
+
+      for (var i = item.y - 1; i >= 0; i--) {
+        for (var j = item.x; j < item.x + item.w; j++) {
+          if (!this.isNil(coors[i][j])) return upperRows;
+        }
+
+        upperRows++;
+      }
+
+      return upperRows;
+    } // 上移元素
+
+  }, {
+    key: "moveItemUp",
+    value: function moveItemUp(item, size) {
+      console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+      if (!size) return;
+      this.removeItem(item);
+      var belowItems = this.findFirstItemInEveryColsAtRect({
+        x: item.x,
+        y: item.y + item.h,
+        h: 1,
+        w: item.w
+      });
+      item.y -= size;
+      this.addItem(item);
+
+      for (var i = 0; i < belowItems.length; i++) {
+        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
+      }
+    } // 暂时移动完成之后全部都moveUp一下
+
+  }, {
+    key: "moveAllItemUp",
+    value: function moveAllItemUp() {
+      var itemList = this.getAllItems();
+
+      for (var i = 0, j = itemList.length; i < j; i++) {
+        this.moveItemUp(itemList[i], this.getMoveUpRows(itemList[i]));
+      }
+    } // 下移元素
+
+  }, {
+    key: "moveItemDown",
+    value: function moveItemDown(item, size) {
+      console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+      if (!size) return;
+      this.removeItem(item);
+      var belowItems = this.findFirstItemInEveryColsAtRect({
+        x: item.x,
+        y: item.y,
+        h: item.h + size,
+        w: item.w
+      });
+      console.log('move down items: %d', belowItems.length);
+
+      for (var i = 0; i < belowItems.length; i++) {
+        this.moveItemDown(belowItems[i], size);
+      }
+
+      item.y += size;
+      this.addItem(item);
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.coors = [];
+    } // 判断是否是正整数
+
+  }, {
+    key: "isPositiveNumer",
+    value: function isPositiveNumer(num) {
+      if (this.isNil(num)) return false;
+      return num > 0;
+    } // 判断是否为非负数 也就是 大于等于0
+
+  }, {
+    key: "isNotNegative",
+    value: function isNotNegative(num) {
+      if (this.isNil(num)) return false;
+      return num >= 0;
+    }
+  }, {
+    key: "isNil",
+    value: function isNil(vari) {
+      return vari === undefined || vari === null;
+    }
+  }]);
+
+  return Coordinate;
+}();
+
+/* harmony default export */ var coordinate = (coordinate_Coordinate);
+// CONCATENATED MODULE: ./src/utils/coordinate.test.js
+function autoMove(that, layout) {
+  that.coors.moveItemTo(layout[6], {
+    x: layout[6].x,
+    y: layout[6].y - 1
+  });
+
+  for (var i = 4; i > 0; i--) {
+    that.coors.moveItemTo(layout[3], {
+      x: layout[3].x - 1,
+      y: layout[3].y
+    });
+  }
+
+  for (var _i = 4; _i > 0; _i--) {
+    that.coors.moveItemTo(layout[3], {
+      x: layout[3].x + 1,
+      y: layout[3].y
+    });
+  }
+
+  that.coors.moveItemTo(layout[0], {
+    x: layout[0].x + 1,
+    y: layout[0].y
+  });
+  that.coors.moveItemTo(layout[0], {
+    x: layout[0].x + 1,
+    y: layout[0].y
+  }); // that.coors.moveItemTo(layout[2], {
+  //     x: layout[2].x - 1,
+  //     y: layout[2].y
+  // })
+  // that.coors.moveItemTo(layout[2], {
+  //     x: layout[2].x - 1,
+  //     y: layout[2].y
+  // })
+  // for(let i = 3; i > 0; i--){
+  //     that.coors.moveItemTo(layout[3], {
+  //         x: layout[3].x - 1,
+  //         y: layout[3].y
+  //     })
+  // }
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
 
 
+
 //
 //
 //
@@ -3769,6 +4447,10 @@ function hasClass(dom, className) {
 //
 //
 //
+//
+
+
+
 
 /* harmony default export */ var gridvue_type_script_lang_js_ = ({
   name: 'app',
@@ -3871,36 +4553,75 @@ function hasClass(dom, className) {
       cacheComputed: {},
       placeholder: null,
       // 拖拽的placeholder
-      operater: 0,
+      operator: 0,
       // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
       operatedItem: null,
       // 当前被操作的元素的状态
-      containerWidth: 0
+      containerWidth: 0,
+      boxWatchHandler: null,
+      coors: null,
+      reRenderCount: 0,
+      timer: null,
+      animation: null,
+      animationHandler: null
     };
   },
   mounted: function mounted() {
-    // this.initCols();
-    this.listenContainerWidthChange();
+    var _this = this;
+
+    this.initCols();
+    this.boxWatchHandler = new watch_box_size(this.$el, function () {
+      _this.initCols();
+    });
   },
   destroyed: function destroyed() {
-    window.cancelAnimationFrame(this.cancelAnimationFrame);
+    this.boxWatchHandler.destroy();
   },
   watch: {
     rowHeight: function rowHeight(val) {
       this.cell.height = val;
     },
-    cols: function cols(val, old) {
-      var _this = this;
+    cols: function cols() {
+      var _this2 = this;
 
-      console.log(val, old);
       this.cacheComputed = {};
       this.$nextTick(function () {
-        _this.layout.forEach(function (item) {
-          var style = _this.getCardStyle(item);
+        _this2.layout.forEach(function (item) {
+          var style = _this2.getCardStyle(item);
 
-          console.log(style);
+          _this2.$set(item, 'style', style); // item.style = style;
 
-          _this.$set(item, 'style', style); // item.style = style;
+        });
+      });
+    },
+    reRenderCount: function reRenderCount() {
+      var _this3 = this;
+
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(function () {
+        _this3.layout.forEach(function (item) {
+          var style = _this3.getCardStyle(item);
+
+          _this3.$set(item, 'style', style); // item.style = style;
+
+        });
+      }, 10); // this.$nextTick(() => {
+      //     this.layout.forEach((item) => {
+      //         let style = this.getCardStyle(item);
+      //         this.$set(item, 'style', style);
+      //         // item.style = style;
+      //     })
+      // })
+    },
+    margin: function margin() {
+      var _this4 = this;
+
+      this.cacheComputed = {};
+      this.$nextTick(function () {
+        _this4.layout.forEach(function (item) {
+          var style = _this4.getCardStyle(item);
+
+          _this4.$set(item, 'style', style); // item.style = style;
 
         });
       });
@@ -3911,14 +4632,12 @@ function hasClass(dom, className) {
       return {
         height: this.containerHeight + 'px'
       };
+    },
+    operatorClass: function operatorClass() {
+      return this.operator ? 'alt-grid-container-operating' : '';
     }
   },
   methods: {
-    listenContainerWidthChange: function listenContainerWidthChange() {
-      // debugger;
-      this.initCols();
-      window.requestAnimationFrame(this.listenContainerWidthChange);
-    },
     // 初始化每个列宽
     initCols: function initCols() {
       var containerWidth = this.$el.clientWidth;
@@ -3935,8 +4654,6 @@ function hasClass(dom, className) {
 
       var quotient = Math.floor(containerWidth / colNum); // 商数
 
-      console.log(this.$el, containerWidth, remainder, quotient);
-
       for (var i = 0; i < colNum; i++) {
         if (remainder) {
           cols[i] = quotient + 1;
@@ -3950,7 +4667,17 @@ function hasClass(dom, className) {
     },
     // 设置布局layout数组
     setLayout: function setLayout(layout) {
-      this.layout = deepCopy(layout); // this.layout = layout;
+      // this.layout = deepCopy(layout);
+      // this.layout = layout;
+      console.log(deepCopy);
+
+      if (!this.coors) {
+        this.coors = new coordinate();
+      }
+
+      this.coors.batchAddItem(layout);
+      this.layout = this.coors.getAllItems();
+      autoMove(this, this.layout);
     },
     // 设置总容器高度
     setContainerHeight: function setContainerHeight(y, h) {
@@ -3969,7 +4696,7 @@ function hasClass(dom, className) {
       var y = item.y * this.rowHeight;
       var h = item.h * this.rowHeight - this.margin[1];
       this.setContainerHeight(y, h);
-      return "transform: translate(".concat(x, "px,").concat(y, "px);width:").concat(w, "px;height:").concat(h, "px;"); // return {
+      return "transform: translate3d(".concat(x, "px,").concat(y, "px,0);width:").concat(w, "px;height:").concat(h, "px;"); // return {
       //     transform: `translate(${x}px,${y}px)`,
       //     width: w + 'px',
       //     height: h + 'px'
@@ -4004,15 +4731,32 @@ function hasClass(dom, className) {
     },
     mousedown: function mousedown(evt) {
       var target = evt.target;
-      if (!hasClass(target, 'alt-grid-item')) return;
-      var node = this.getNode(target);
+      var targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+
+      if (hasClass(target, this.resizeHandlerClass)) {
+        this.operator = 2; // resize
+      }
+
+      if (targetCard && !this.operator) {
+        this.operator = 1; // 拖拽
+      }
+
+      if (!targetCard && !this.operator) return; // if(!hasClass(target, 'alt-grid-item')) return;
+
+      var node = this.getNode(targetCard);
+      var targetCardStyle = targetCard.style;
+      var translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
       this.operatedItem = {
-        el: target,
+        el: targetCard,
         node: node,
         startX: evt.clientX,
         startY: evt.clientY,
-        lastX: evt.clientX,
-        lastY: evt.clientY
+        cacheStyle: {
+          x: parseInt(translate[1]),
+          y: parseInt(translate[2]),
+          w: parseInt(targetCardStyle.width.match(/\d+/)[0]),
+          h: parseInt(targetCardStyle.height.match(/\d+/)[0])
+        }
       };
       this.placeholder = {
         x: node.x,
@@ -4020,39 +4764,50 @@ function hasClass(dom, className) {
         w: node.w,
         h: node.h
       }; // console.log('down', evt, this.operatedItem);
-
-      if (hasClass(target, this.resizeHandlerClass)) {
-        this.operater = 2;
-      } else {
-        this.operater = 1;
-      }
+      // if(hasClass(target, this.resizeHandlerClass)){
+      //     this.operator = 2;
+      // } else {
+      //     this.operator = 1;
+      // }
     },
     mousemove: function mousemove(evt) {
-      if (!this.operater) return;
+      console.log('mouse move');
+      if (!this.operator) return;
       var ex = evt.clientX;
       var ey = evt.clientY;
-      var ox = this.operatedItem.lastX;
-      var oy = this.operatedItem.lastY;
       var sx = this.operatedItem.startX;
       var sy = this.operatedItem.startY;
-      if (!this.isDrag(ox, oy, ex, ey)) return;
-      this.dragMove(this.operatedItem, sx, sy, ex, ey);
-      this.operatedItem.lastX = ex;
-      this.operatedItem.lastY = ey; // console.log('move', evt);
+
+      if (this.operator === 1) {
+        this.dragMove(this.operatedItem, sx, sy, ex, ey);
+      } else if (this.operator === 2) {
+        this.resizeMove(this.operatedItem, sx, sy, ex, ey);
+      }
     },
     mouseup: function mouseup(evt) {
       console.log('up', evt);
       var item = this.operatedItem;
 
       if (item) {
-        item.node.x = this.placeholder.x;
-        item.node.y = this.placeholder.y;
-        var x = this.computeColsWidth(0, item.node.x);
-        var y = item.node.y * this.rowHeight;
-        item.el.style.transform = "translate(".concat(x, "px, ").concat(y, "px)");
+        // item.node.x = this.placeholder.x;
+        // item.node.y = this.placeholder.y;
+        // let x = this.computeColsWidth(0, item.node.x);
+        // let y = item.node.y * this.rowHeight;
+        // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        if (this.operator === 1) {
+          item.node.x = this.placeholder.x;
+          item.node.y = this.placeholder.y;
+        } else if (this.operator === 2) {
+          item.node.w = this.placeholder.w;
+          item.node.h = this.placeholder.h;
+        }
+
+        item.el.style = this.getCardStyle(item.node);
+        this.coors.removeItem(this.placeholder);
+        this.coors.addItem(this.operatedItem.node);
       }
 
-      this.operater = 0;
+      this.operator = 0;
       this.operatedItem = null;
       this.placeholder = null;
     },
@@ -4062,50 +4817,80 @@ function hasClass(dom, className) {
     getNode: function getNode(target) {
       return this.layout[target.getAttribute('dg-id')];
     },
-    dragMove: function dragMove(item, ox, oy, ex, ey) {
+    dragMove: function dragMove(item, sx, sy, ex, ey) {
+      console.log('drag move');
       var node = this.placeholder;
-      var deltaX = ex - ox;
-      var deltaY = ey - oy;
-      var x = this.computeColsWidth(0, item.node.x) + deltaX;
-      var y = item.node.y * this.rowHeight + deltaY;
-      item.el.style.transform = "translate(".concat(x, "px, ").concat(y, "px)");
-      console.log(x, this.computeColsWidth(0, node.x), node.x);
-      var dx = x - this.computeColsWidth(0, item.node.x);
-      var dy = y - this.computeRowsHeight(0, item.node.y);
+      var dx = ex - sx;
+      var dy = ey - sy;
       var stepX = this.getMoveCols(dx, item.node.x);
       var stepY = this.getMoveRows(dy, item.node.y);
-      console.log(stepX);
+      console.log('calc over step');
+      this.coors.moveItemTo(node, {
+        x: item.node.x + stepX,
+        y: item.node.y + stepY
+      });
       node.x = item.node.x + stepX;
-      node.y = item.node.y + stepY; // if(x < this.computeColsWidth(0, item.node.x)){
-      //     node.x--;
-      // } else {
-      //     node.x++;
-      // }
+      node.y = item.node.y + stepY;
+      var x = item.cacheStyle.x + dx;
+      var y = item.cacheStyle.y + dy;
+      item.el.style.transform = "translate3d(".concat(x, "px, ").concat(y, "px, 0)");
+      this.reRenderCount++;
+      console.log('reRenderCount', this.reRenderCount); // if(this.reRenderCount === 20) debugger;
+    },
+    resizeMove: function resizeMove(item, sx, sy, ex, ey) {
+      console.log('resize move');
+      var node = this.placeholder;
+      var dx = ex - sx;
+      var dy = ey - sy;
+      var stepX = this.getMoveCols(dx, item.node.x);
+      var stepY = this.getMoveRows(dy, item.node.y);
+      this.coors.resizeItem(node, {
+        w: item.node.w + stepX,
+        h: item.node.h + stepY
+      });
+      node.w = item.node.w + stepX;
+      node.h = item.node.h + stepY;
+      var w = item.cacheStyle.w + dx;
+      var h = item.cacheStyle.h + dy;
+      item.el.style.width = w + 'px';
+      item.el.style.height = h + 'px';
+      this.reRenderCount++;
+      console.log('reRenderCount', this.reRenderCount);
     },
     getMoveCols: function getMoveCols(dx, startCol) {
+      if (startCol <= 0 && dx < 0) return 0;
+      console.log('get move cols: %d; startCol: %d', dx, startCol);
       var flag = dx < 0 ? '-' : '+';
       var absDx = Math.abs(dx);
-      if (absDx < 5) return 0;
+      if (absDx < 15) return 0;
       var i = 0;
       var c = startCol;
 
       while (absDx > 0) {
+        console.log('absDx: %d; col: %d;', absDx, c);
         absDx -= this.cols[c - 1] || 0;
         c--;
         i++;
+        if (c <= 0) break;
       }
 
       return parseInt(flag + i);
     },
-    getMoveRows: function getMoveRows(dy) {
+    getMoveRows: function getMoveRows(dy, startRow) {
+      if (startRow <= 0 && dy < 0) return 0;
+      console.log('get move rows: %d; startRow: %d', dy, startRow);
       var flag = dy < 0 ? '-' : '+';
       var absDy = Math.abs(dy);
-      if (absDy < 5) return 0;
+      if (absDy < this.rowHeight / 2) return 0;
       var i = 0;
+      var row = startRow;
 
       while (absDy > 0) {
+        console.log('absDy: %d; row: %d', absDy, row);
         absDy -= this.rowHeight;
         i++;
+        row--;
+        if (row <= 0) break;
       }
 
       return parseInt(flag + i);

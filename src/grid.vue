@@ -124,10 +124,16 @@
             this.boxWatchHandler.destroy();
         },
         watch: {
-            rowHeight(val){
-                this.cell.height = val;
+            rowHeight(val, oldVal){
+                console.log('row height change: %d -> %d', oldVal, val);
+                this.reRenderCount++;
+            },
+            colNum(){
+                console.log('change col number');
+                this.initCols();
             },
             cols(){
+                console.log('cols change');
                 this.cacheComputed = {};
                 this.$nextTick(() => {
                     this.layout.forEach((item) => {
@@ -146,13 +152,6 @@
                         // item.style = style;
                     })
                 }, 10);
-                // this.$nextTick(() => {
-                //     this.layout.forEach((item) => {
-                //         let style = this.getCardStyle(item);
-                //         this.$set(item, 'style', style);
-                //         // item.style = style;
-                //     })
-                // })
             },
             margin(){
                 this.cacheComputed = {};
@@ -178,8 +177,11 @@
         methods: {
             // 初始化每个列宽
             initCols(){
+                console.log('init cols');
                 let containerWidth = this.$el.clientWidth;
-                if(this.containerWidth && this.containerWidth === containerWidth){
+                if(this.colNum === this.cols.length &&
+                    this.containerWidth && 
+                    this.containerWidth === containerWidth){
                     return;
                 }
                 this.containerWidth = containerWidth;
@@ -210,7 +212,9 @@
                 
                 this.layout = this.coors.getAllItems();
 
-                coorTest(this, this.layout);
+                if(/_env=dev/.test(window.location.search)){
+                    coorTest(this, this.layout);
+                }
             },
             // 设置总容器高度
             setContainerHeight(y, h){
@@ -263,6 +267,7 @@
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
                 if(hasClass(target, this.resizeHandlerClass)){
                     this.operator = 2; // resize
+                    targetCard.style.zIndex = 1;
                 }
                 if(targetCard && !this.operator){
                     this.operator = 1; // 拖拽
@@ -299,8 +304,8 @@
                 // }
             },
             mousemove(evt){
-                console.log('mouse move');
                 if(!this.operator) return;
+                console.log('mouse move');
                 let ex = evt.clientX;
                 let ey = evt.clientY;
                 let sx = this.operatedItem.startX;
@@ -338,9 +343,6 @@
                 this.operatedItem = null;
                 this.placeholder = null;
             },
-            isDrag(ox, oy, ex, ey){
-                return Math.abs(ox - ex) > 5 || Math.abs(oy - ey) > 5;
-            },
             getNode(target){
                 return this.layout[target.getAttribute('dg-id')]
             },
@@ -370,8 +372,8 @@
                 let node = this.placeholder;
                 let dx = ex - sx;
                 let dy = ey - sy;
-                let stepX = this.getMoveCols(dx, item.node.x);
-                let stepY = this.getMoveRows(dy, item.node.y);
+                let stepX = this.getMoveCols(dx, item.node.x + item.node.w);
+                let stepY = this.getMoveRows(dy, item.node.y + item.node.h);
                 this.coors.resizeItem(node, {
                     w: item.node.w + stepX,
                     h: item.node.h + stepY
@@ -418,6 +420,13 @@
                     if(row <= 0) break;
                 }
                 return parseInt(flag + i);
+            },
+            addItem(item){
+                if(this.coors){
+                    let distributeItem = this.coors.addItem(item);
+                    this.layout.push(distributeItem);
+                    this.reRenderCount++;
+                }
             }
         }
     }

@@ -47,6 +47,7 @@ class Coordinate {
         let tempItem = null;
         for(let i = 0; i < this.coors.length; i++){
             tempRow = this.coors[i];
+            if(this.isNil(tempRow)) continue;
             for(let j = 0; j < tempRow.length; j++){
                 tempItem = tempRow[j];
                 if(this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
@@ -109,6 +110,10 @@ class Coordinate {
 
     // 获取最下部分可以插入位置
     getMinPeek(arr, w){
+        if(w === 1){
+            let minVal = Math.min.apply(null, arr);
+            return arr.indexOf(minVal);
+        }
         let index = -1;
         let value = 10000;
         for(let i = 0; i < arr.length - w; i++){
@@ -268,6 +273,10 @@ class Coordinate {
         let coors = this.coors;
         let upperRows = 0;
         for(let i = item.y - 1; i >= 0; i--){
+            if(this.isNil(coors[i])){
+                upperRows++;
+                continue;
+            }
             for(let j = item.x; j < item.x + item.w; j++){
                 if(!this.isNil(coors[i][j])) return upperRows;
             }

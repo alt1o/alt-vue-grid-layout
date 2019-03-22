@@ -16,7 +16,7 @@
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
             <div style="margin-top: 10px;margin-bottom: 10px;">
-                Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNum"/>
+                Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNumStr"/>
             </div>
             right margin <input type="number" v-model="margin[0]" />
             bottom margin <input type="number" v-model="margin[1]" />
@@ -26,7 +26,7 @@
                 <grid 
                     :is-draggable="draggable"
                     :is-resizable="resizable"
-                    :row-height="rowHeight"
+                    :row-height="Number(rowHeight)"
                     :margin="margin"
                     :backgroundColor="bgcolor"
                     :col-num="colNum"
@@ -91,9 +91,15 @@
                 draggable: true,
                 resizable: true,
                 rowHeight: 150,
+                colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
                 bgcolor: '#eee'
+            }
+        },
+        watch: {
+            colNumStr(val){
+                this.colNum = Number(val) || 12;
             }
         },
         mounted: function () {
