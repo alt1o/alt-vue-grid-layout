@@ -862,6 +862,23 @@ if (__webpack_require__("9e1e") && /./g.flags != 'g') __webpack_require__("86cc"
 
 /***/ }),
 
+/***/ "386d":
+/***/ (function(module, exports, __webpack_require__) {
+
+// @@search logic
+__webpack_require__("214f")('search', 1, function (defined, SEARCH, $search) {
+  // 21.1.3.15 String.prototype.search(regexp)
+  return [function search(regexp) {
+    'use strict';
+    var O = defined(this);
+    var fn = regexp == undefined ? undefined : regexp[SEARCH];
+    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
+  }, $search];
+});
+
+
+/***/ }),
+
 /***/ "38fd":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3800,15 +3817,18 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=1edcecc8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=4cb2c359&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(item.style),attrs:{"dg-id":index}},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=1edcecc8&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=4cb2c359&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.search.js
+var es6_regexp_search = __webpack_require__("386d");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
@@ -4053,6 +4073,7 @@ function () {
 
       for (var i = 0; i < this.coors.length; i++) {
         tempRow = this.coors[i];
+        if (this.isNil(tempRow)) continue;
 
         for (var j = 0; j < tempRow.length; j++) {
           tempItem = tempRow[j];
@@ -4121,6 +4142,11 @@ function () {
   }, {
     key: "getMinPeek",
     value: function getMinPeek(arr, w) {
+      if (w === 1) {
+        var minVal = Math.min.apply(null, arr);
+        return arr.indexOf(minVal);
+      }
+
       var index = -1;
       var value = 10000;
 
@@ -4295,6 +4321,11 @@ function () {
       var upperRows = 0;
 
       for (var i = item.y - 1; i >= 0; i--) {
+        if (this.isNil(coors[i])) {
+          upperRows++;
+          continue;
+        }
+
         for (var j = item.x; j < item.x + item.w; j++) {
           if (!this.isNil(coors[i][j])) return upperRows;
         }
@@ -4414,22 +4445,26 @@ function autoMove(that, layout) {
   that.coors.moveItemTo(layout[0], {
     x: layout[0].x + 1,
     y: layout[0].y
-  }); // that.coors.moveItemTo(layout[2], {
-  //     x: layout[2].x - 1,
-  //     y: layout[2].y
-  // })
-  // that.coors.moveItemTo(layout[2], {
-  //     x: layout[2].x - 1,
-  //     y: layout[2].y
-  // })
-  // for(let i = 3; i > 0; i--){
-  //     that.coors.moveItemTo(layout[3], {
-  //         x: layout[3].x - 1,
-  //         y: layout[3].y
-  //     })
-  // }
+  });
+  that.coors.moveItemTo(layout[2], {
+    x: layout[2].x - 1,
+    y: layout[2].y
+  });
+
+  for (var _i2 = 4; _i2 > 0; _i2--) {
+    that.coors.moveItemTo(layout[3], {
+      x: layout[3].x - 1,
+      y: layout[3].y
+    });
+  }
+
+  that.coors.moveItemTo(layout[3], {
+    x: layout[3].x,
+    y: layout[3].y + 1
+  });
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
+
 
 
 
@@ -4587,12 +4622,18 @@ function autoMove(that, layout) {
     this.boxWatchHandler.destroy();
   },
   watch: {
-    rowHeight: function rowHeight(val) {
-      this.cell.height = val;
+    rowHeight: function rowHeight(val, oldVal) {
+      console.log('row height change: %d -> %d', oldVal, val);
+      this.reRenderCount++;
+    },
+    colNum: function colNum() {
+      console.log('change col number');
+      this.initCols();
     },
     cols: function cols() {
       var _this2 = this;
 
+      console.log('cols change');
       this.cacheComputed = {};
       this.$nextTick(function () {
         _this2.layout.forEach(function (item) {
@@ -4614,13 +4655,7 @@ function autoMove(that, layout) {
           _this3.$set(item, 'style', style); // item.style = style;
 
         });
-      }, 10); // this.$nextTick(() => {
-      //     this.layout.forEach((item) => {
-      //         let style = this.getCardStyle(item);
-      //         this.$set(item, 'style', style);
-      //         // item.style = style;
-      //     })
-      // })
+      }, 10);
     },
     margin: function margin() {
       var _this4 = this;
@@ -4649,9 +4684,10 @@ function autoMove(that, layout) {
   methods: {
     // 初始化每个列宽
     initCols: function initCols() {
+      console.log('init cols');
       var containerWidth = this.$el.clientWidth;
 
-      if (this.containerWidth && this.containerWidth === containerWidth) {
+      if (this.colNum === this.cols.length && this.containerWidth && this.containerWidth === containerWidth) {
         return;
       }
 
@@ -4686,7 +4722,10 @@ function autoMove(that, layout) {
 
       this.coors.batchAddItem(layout);
       this.layout = this.coors.getAllItems();
-      autoMove(this, this.layout);
+
+      if (/_env=dev/.test(window.location.search)) {
+        autoMove(this, this.layout);
+      }
     },
     // 设置总容器高度
     setContainerHeight: function setContainerHeight(y, h) {
@@ -4744,6 +4783,8 @@ function autoMove(that, layout) {
 
       if (hasClass(target, this.resizeHandlerClass)) {
         this.operator = 2; // resize
+
+        targetCard.style.zIndex = 1;
       }
 
       if (targetCard && !this.operator) {
@@ -4780,8 +4821,8 @@ function autoMove(that, layout) {
       // }
     },
     mousemove: function mousemove(evt) {
-      console.log('mouse move');
       if (!this.operator) return;
+      console.log('mouse move');
       var ex = evt.clientX;
       var ey = evt.clientY;
       var sx = this.operatedItem.startX;
@@ -4820,9 +4861,6 @@ function autoMove(that, layout) {
       this.operatedItem = null;
       this.placeholder = null;
     },
-    isDrag: function isDrag(ox, oy, ex, ey) {
-      return Math.abs(ox - ex) > 5 || Math.abs(oy - ey) > 5;
-    },
     getNode: function getNode(target) {
       return this.layout[target.getAttribute('dg-id')];
     },
@@ -4851,8 +4889,8 @@ function autoMove(that, layout) {
       var node = this.placeholder;
       var dx = ex - sx;
       var dy = ey - sy;
-      var stepX = this.getMoveCols(dx, item.node.x);
-      var stepY = this.getMoveRows(dy, item.node.y);
+      var stepX = this.getMoveCols(dx, item.node.x + item.node.w);
+      var stepY = this.getMoveRows(dy, item.node.y + item.node.h);
       this.coors.resizeItem(node, {
         w: item.node.w + stepX,
         h: item.node.h + stepY
@@ -4903,6 +4941,13 @@ function autoMove(that, layout) {
       }
 
       return parseInt(flag + i);
+    },
+    addItem: function addItem(item) {
+      if (this.coors) {
+        var distributeItem = this.coors.addItem(item);
+        this.layout.push(distributeItem);
+        this.reRenderCount++;
+      }
     }
   }
 });
