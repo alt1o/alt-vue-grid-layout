@@ -8,16 +8,25 @@
         :style="containerStyle">
         <div 
             :style="getCardStyle(placeholder)"
-            class="alt-grid-item-drag-placeholder">
+            class="alt-grid-item-drag-placeholder"
+            :class="placeholderClass">
         </div>
         <div 
             v-for="(item, index) in layout"
             :key="index"
             :dg-id="index"
             :style="item.style"
-            class="alt-grid-item">
-            itemitem
-            <span class="alt-grid-item-resize-handler"></span>
+            class="alt-grid-item"
+            :class="[gridItemClass, item.gridItemClass]">
+            <button 
+                v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
+                :class="[closeHandlerClass, item.closeHandlerClass]" 
+                @click="closeWidget(item)">关闭</button>
+            <component :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
+            <span 
+                v-if="getFirstSetValue(item.isResizable, isResizable, true)"
+                class="alt-grid-item-resize-handler"
+                :class="[resizeHandlerClass, item.resizeHandlerClass]"></span>
         </div>
     </div>
 </template>
@@ -27,13 +36,45 @@
         deepCopy,
         hasClass,
         findParentThoughEvtPath,
-        getFirstSetValue
+        getFirstSetValue,
+        getVue,
+        getVariType
     } from './utils/util';
     import watchBoxSize from './utils/watch-box-size.js'
     import Coordinate from './utils/coordinate'
     import coorTest from './utils/coordinate.test.js'
+
+    import WidgetRender from './components/Widget.render.vue';
+    import WidgetTemplate from './components/Widget.template.vue';
+    import WidgetComponent from './components/Widget.vuecomponent.vue';
+
+    let Vue = getVue();
+
     export default {
         name: 'app',
+        addWidgetType(){
+            let args0 = arguments[0];
+            let type = getVariType(args0);
+            if(type === 'string'){
+                this._addWidgetType(...arguments);
+            } else if(type === 'object'){
+                for(let key in args0){
+                    args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
+                }
+            }
+        },
+        // 添加组件类型处理函数
+        _addWidgetType(type, widget){
+            let parentWidget = widget.template ? WidgetTemplate : WidgetRender;
+            if(widget.super == Vue){
+                this.components[type] = widget.extend(WidgetComponent);
+                return;
+            }
+            this.components[type] = {
+                ...widget,
+                extends: parentWidget
+            }
+        },
         props: {
             isDraggable: { // 是否可以拖拽
                 type: Boolean,
@@ -180,6 +221,16 @@
             }
         },
         methods: {
+            getFirstSetValue(){
+                return getFirstSetValue(arguments);
+            },
+            getPropsForInject(index, item){
+                return {
+                    index: index,
+                    card: item,
+                    close: this.closeWidget.bind(this, item)
+                }
+            },
             // 初始化每个列宽
             initCols(){
                 console.log('init cols');
@@ -476,6 +527,13 @@
                     h: h,
                     w: w
                 }
+            },
+            closeWidget(item){
+                console.log(this.layout, this.layout.indexOf(item));
+                this.coors.removeItem(item);
+                this.coors.moveAllItemUp();
+                this.layout.splice(this.layout.indexOf(item), 1);
+                this.reRenderCount++;
             }
         }
     }
