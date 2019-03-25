@@ -69,12 +69,12 @@
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
         {"x":2,"y":0,"w":3,"h":2,"i":"1", type: 'testB', resizable: null, isDraggable: null},
-        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, isDraggable: false},
+        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, isDraggable: true},
         {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
-        {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: false},
+        {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: true},
         // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: false},
-        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: false}
+        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true}
     ];
 
     export default {
@@ -140,7 +140,7 @@
 
 <style>
     #container {
-        height: 500px;
+        /* height: 500px; */
         overflow: auto;
     }
 </style>
