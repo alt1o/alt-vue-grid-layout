@@ -74,7 +74,7 @@
         {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: true},
         // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
         {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
-        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true}
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true, isShowOriginCloseBtn: false}
     ];
 
     export default {
@@ -94,7 +94,7 @@
                 colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
-                bgcolor: '#eee'
+                bgcolor: 'rgba(0,  0, 0, 0.5)'
             }
         },
         watch: {

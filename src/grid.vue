@@ -208,6 +208,9 @@
                         // item.style = style;
                     })
                 })
+            },
+            backgroundColor(){
+                this.reRenderCount++;
             }
         },
         computed: {
@@ -222,7 +225,7 @@
         },
         methods: {
             getFirstSetValue(){
-                return getFirstSetValue(arguments);
+                return getFirstSetValue(...arguments);
             },
             getPropsForInject(index, item){
                 return {
@@ -288,7 +291,7 @@
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
                 this.setContainerHeight(y, h);
-                return `transform: translate3d(${x}px,${y}px,0);width:${w}px;height:${h}px;`;
+                return `transform: translate3d(${x}px,${y}px,0);width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
                 // return {
                 //     transform: `translate(${x}px,${y}px)`,
                 //     width: w + 'px',
@@ -321,6 +324,7 @@
             mousedown(evt){
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+                if(!targetCard) return;
                 let node = this.getNode(targetCard);
                 if(hasClass(target, this.resizeHandlerClass)){
                     if(!getFirstSetValue(
@@ -542,8 +546,8 @@
 <style>
 .alt-grid-container{
     position: relative;
-    border: 1px solid red;
-    box-sizing: border-box;
+    /* border: 1px solid red; */
+    /* box-sizing: border-box; */
 }
 .alt-grid-container .alt-grid-item{
     position: absolute;

@@ -155,6 +155,7 @@ class Coordinate {
             return;
         }
         console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
+        console.log('test get move up rows', this.getMoveUpRows(item));
         this.removeItem(item);
         
         let belowItems = this.findFirstItemInEveryColsAtRect({
@@ -191,7 +192,7 @@ class Coordinate {
         item.y = target.y;
 
         this.addItem(item);
-        this.moveAllItemUp();
+        // this.moveAllItemUp();
         console.log('coors', JSON.parse(JSON.stringify(this.coors)));
         console.log('----- move end -----');
     }

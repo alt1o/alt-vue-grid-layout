@@ -3808,12 +3808,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=4cb2c359&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",style:(item.style),attrs:{"dg-id":index}},[_vm._v("\n        itemitem\n        "),_c('span',{staticClass:"alt-grid-item-resize-handler"})])})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=eee08a6c&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":index}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=4cb2c359&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=eee08a6c&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3894,6 +3894,16 @@ function findParentThoughEvtPath(evtPath, parentClass, stopClass) {
   }
 
   return null;
+}
+function util_getFirstSetValue() {
+  var args = arguments;
+  var l = args.length;
+
+  for (var i = 0; i < l; i++) {
+    if (!isNil(args[i])) return args[i];
+  }
+
+  return args[l - 1];
 }
 // CONCATENATED MODULE: ./src/utils/watch-box-size.js
 function watchBoxSizeChange(el, handler) {
@@ -4454,11 +4464,209 @@ function autoMove(that, layout) {
     y: layout[3].y + 1
   });
 }
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=template&id=616f0908&
+var Widget_rendervue_type_template_id_616f0908_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div')}
+var Widget_rendervue_type_template_id_616f0908_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./src/components/Widget.render.vue?vue&type=template&id=616f0908&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+/* harmony default export */ var Widget_rendervue_type_script_lang_js_ = ({
+  props: ['injectedProps']
+});
+// CONCATENATED MODULE: ./src/components/Widget.render.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_Widget_rendervue_type_script_lang_js_ = (Widget_rendervue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+// CONCATENATED MODULE: ./src/components/Widget.render.vue
+
+
+
+
+
+/* normalize component */
+
+var component = normalizeComponent(
+  components_Widget_rendervue_type_script_lang_js_,
+  Widget_rendervue_type_template_id_616f0908_render,
+  Widget_rendervue_type_template_id_616f0908_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "Widget.render.vue"
+/* harmony default export */ var Widget_render = (component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.template.vue?vue&type=script&lang=js&
+/* harmony default export */ var Widget_templatevue_type_script_lang_js_ = ({
+  props: ['injectedProps'],
+  template: '<div></div>'
+});
+// CONCATENATED MODULE: ./src/components/Widget.template.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_Widget_templatevue_type_script_lang_js_ = (Widget_templatevue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./src/components/Widget.template.vue
+var Widget_template_render, Widget_template_staticRenderFns
+
+
+
+
+/* normalize component */
+
+var Widget_template_component = normalizeComponent(
+  components_Widget_templatevue_type_script_lang_js_,
+  Widget_template_render,
+  Widget_template_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+Widget_template_component.options.__file = "Widget.template.vue"
+/* harmony default export */ var Widget_template = (Widget_template_component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.vuecomponent.vue?vue&type=script&lang=js&
+/* harmony default export */ var Widget_vuecomponentvue_type_script_lang_js_ = ({
+  props: ['injectedProps']
+});
+// CONCATENATED MODULE: ./src/components/Widget.vuecomponent.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_Widget_vuecomponentvue_type_script_lang_js_ = (Widget_vuecomponentvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./src/components/Widget.vuecomponent.vue
+var Widget_vuecomponent_render, Widget_vuecomponent_staticRenderFns
+
+
+
+
+/* normalize component */
+
+var Widget_vuecomponent_component = normalizeComponent(
+  components_Widget_vuecomponentvue_type_script_lang_js_,
+  Widget_vuecomponent_render,
+  Widget_vuecomponent_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+Widget_vuecomponent_component.options.__file = "Widget.vuecomponent.vue"
+/* harmony default export */ var Widget_vuecomponent = (Widget_vuecomponent_component.exports);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
 
 
 
 
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4487,8 +4695,37 @@ function autoMove(that, layout) {
 
 
 
+
+
+
+var Vue = getVue();
 /* harmony default export */ var gridvue_type_script_lang_js_ = ({
   name: 'app',
+  addWidgetType: function addWidgetType() {
+    var args0 = arguments[0];
+    var type = getVariType(args0);
+
+    if (type === 'string') {
+      this._addWidgetType.apply(this, arguments);
+    } else if (type === 'object') {
+      for (var key in args0) {
+        args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
+      }
+    }
+  },
+  // 添加组件类型处理函数
+  _addWidgetType: function _addWidgetType(type, widget) {
+    var parentWidget = widget.template ? Widget_template : Widget_render;
+
+    if (widget.super == Vue) {
+      this.components[type] = widget.extend(Widget_vuecomponent);
+      return;
+    }
+
+    this.components[type] = _objectSpread({}, widget, {
+      extends: parentWidget
+    });
+  },
   props: {
     isDraggable: {
       // 是否可以拖拽
@@ -4673,6 +4910,16 @@ function autoMove(that, layout) {
     }
   },
   methods: {
+    getFirstSetValue: function getFirstSetValue() {
+      return util_getFirstSetValue(arguments);
+    },
+    getPropsForInject: function getPropsForInject(index, item) {
+      return {
+        index: index,
+        card: item,
+        close: this.closeWidget.bind(this, item)
+      };
+    },
     // 初始化每个列宽
     initCols: function initCols() {
       console.log('init cols');
@@ -4771,20 +5018,28 @@ function autoMove(that, layout) {
     mousedown: function mousedown(evt) {
       var target = evt.target;
       var targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+      var node = this.getNode(targetCard);
 
       if (hasClass(target, this.resizeHandlerClass)) {
+        if (!util_getFirstSetValue(node.isResizable, this.isResizable, this.defVal.isResizable)) {
+          return;
+        }
+
         this.operator = 2; // resize
 
         targetCard.style.zIndex = 1;
       }
 
       if (targetCard && !this.operator) {
+        if (!util_getFirstSetValue(node.isDraggable, this.isDraggable, this.defVal.isDraggable)) {
+          return;
+        }
+
         this.operator = 1; // 拖拽
       }
 
       if (!targetCard && !this.operator) return; // if(!hasClass(target, 'alt-grid-item')) return;
 
-      var node = this.getNode(targetCard);
       var targetCardStyle = targetCard.style;
       var translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
       this.operatedItem = {
@@ -4882,12 +5137,17 @@ function autoMove(that, layout) {
       var dy = ey - sy;
       var stepX = this.getMoveCols(dx, item.node.x + item.node.w);
       var stepY = this.getMoveRows(dy, item.node.y + item.node.h);
-      this.coors.resizeItem(node, {
+      var size = this.getItemLegalSize(item.node, {
         w: item.node.w + stepX,
         h: item.node.h + stepY
       });
-      node.w = item.node.w + stepX;
-      node.h = item.node.h + stepY;
+      console.log('resize', size.w, size.h);
+      this.coors.resizeItem(node, {
+        w: size.w,
+        h: size.h
+      });
+      node.w = size.w;
+      node.h = size.h;
       var w = item.cacheStyle.w + dx;
       var h = item.cacheStyle.h + dy;
       item.el.style.width = w + 'px';
@@ -4939,6 +5199,47 @@ function autoMove(that, layout) {
         this.layout.push(distributeItem);
         this.reRenderCount++;
       }
+    },
+    getItemLegalSize: function getItemLegalSize(item, size) {
+      var minH = util_getFirstSetValue(item.minH, this.defVal.minH);
+
+      var minW = util_getFirstSetValue(item.minW, this.defVal.minW);
+
+      var maxH = util_getFirstSetValue(item.maxH, this.defVal.maxH);
+
+      var maxW = util_getFirstSetValue(item.maxW, this.defVal.maxW);
+
+      var h = size.h;
+      var w = size.w;
+      console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
+
+      if (size.h <= minH) {
+        h = minH;
+      }
+
+      if (size.h >= maxH) {
+        h = maxH;
+      }
+
+      if (size.w <= minW) {
+        w = minW;
+      }
+
+      if (size.w >= maxW) {
+        w = maxW;
+      }
+
+      return {
+        h: h,
+        w: w
+      };
+    },
+    closeWidget: function closeWidget(item) {
+      console.log(this.layout, this.layout.indexOf(item));
+      this.coors.removeItem(item);
+      this.coors.moveAllItemUp();
+      this.layout.splice(this.layout.indexOf(item), 1);
+      this.reRenderCount++;
     }
   }
 });
@@ -4946,101 +5247,6 @@ function autoMove(that, layout) {
  /* harmony default export */ var src_gridvue_type_script_lang_js_ = (gridvue_type_script_lang_js_); 
 // EXTERNAL MODULE: ./src/grid.vue?vue&type=style&index=0&lang=css&
 var gridvue_type_style_index_0_lang_css_ = __webpack_require__("6817");
-
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
 
 // CONCATENATED MODULE: ./src/grid.vue
 
@@ -5051,7 +5257,7 @@ function normalizeComponent (
 
 /* normalize component */
 
-var component = normalizeComponent(
+var grid_component = normalizeComponent(
   src_gridvue_type_script_lang_js_,
   render,
   staticRenderFns,
@@ -5062,8 +5268,8 @@ var component = normalizeComponent(
   
 )
 
-component.options.__file = "grid.vue"
-/* harmony default export */ var src_grid = (component.exports);
+grid_component.options.__file = "grid.vue"
+/* harmony default export */ var src_grid = (grid_component.exports);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=6eb5b460&
 var GridItemvue_type_template_id_6eb5b460_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-item",class:{ 'vue-resizable' : _vm.resizable, 'resizing' : _vm.isResizing, 'vue-draggable-dragging' : _vm.isDragging, 'cssTransforms' : _vm.useCssTransforms, 'render-rtl' : _vm.renderRtl, 'disable-userselect': _vm.isDragging, 'no-touch': _vm.isAndroid },style:(_vm.style)},[_vm._t("default"),(_vm.resizable)?_c('span',{ref:"handle",class:[_vm.resizableHandleClass, _vm.resizeHandlerClass, _vm.item.resizeHandlerClass]}):_vm._e()],2)}
 var GridItemvue_type_template_id_6eb5b460_staticRenderFns = []
@@ -6928,7 +7134,7 @@ function sortBreakpoints(breakpoints
 // import Vue from 'vue';
 // if(!Vue) Vue = window.Vue;
 
-var Vue = getVue();
+var GridLayoutvue_type_script_lang_js_Vue = getVue();
 
 var elementResizeDetectorMaker = __webpack_require__("eec4");
 
@@ -7069,7 +7275,7 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
     // }
 
 
-    self._provided.eventBus = new Vue();
+    self._provided.eventBus = new GridLayoutvue_type_script_lang_js_Vue();
     self.eventBus = self._provided.eventBus;
     self.eventBus.$on('resizeEvent', self.resizeEventHandler);
     self.eventBus.$on('dragEvent', self.dragEventHandler);
