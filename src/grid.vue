@@ -22,7 +22,7 @@
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item)">关闭</button>
-            <component :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
+            <component :ref="index" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
@@ -43,7 +43,7 @@
     import watchBoxSize from './utils/watch-box-size.js'
     import Coordinate from './utils/coordinate'
     import coorTest from './utils/coordinate.test.js'
-
+ 
     import WidgetRender from './components/Widget.render.vue';
     import WidgetTemplate from './components/Widget.template.vue';
     import WidgetComponent from './components/Widget.vuecomponent.vue';
@@ -325,7 +325,8 @@
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
                 if(!targetCard) return;
-                let node = this.getNode(targetCard);
+                let dragId = this.getDragId(targetCard);
+                let node = this.getNodeByDragId(dragId);
                 if(hasClass(target, this.resizeHandlerClass)){
                     if(!getFirstSetValue(
                         node.isResizable, 
@@ -353,6 +354,8 @@
                 this.operatedItem = {
                     el: targetCard,
                     node: node,
+                    dragId: dragId,
+                    linkEmit: this.$refs[dragId] ? this.$refs[dragId][0].$emit : function(){},
                     startX: evt.clientX,
                     startY: evt.clientY,
                     cacheStyle: {
@@ -416,8 +419,11 @@
                 this.operatedItem = null;
                 this.placeholder = null;
             },
-            getNode(target){
-                return this.layout[target.getAttribute('dg-id')]
+            getNodeByDragId(dragId){
+                return this.layout[dragId];
+            },
+            getDragId(target){
+                return target.getAttribute('dg-id');
             },
             dragMove(item, sx, sy, ex, ey){
                 console.log('drag move');
@@ -437,8 +443,15 @@
                 let y = item.cacheStyle.y + dy;
                 item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 this.reRenderCount++;
-                console.log('reRenderCount', this.reRenderCount);
-                // if(this.reRenderCount === 20) debugger;
+                if(this.$refs[item.dragId]){
+                    this.$refs[item.dragId][0].$emit('move', {
+                        w: node.w,
+                        h: node.h,
+                        x: node.x,
+                        y: node.y
+                    })
+                }
+                console.log('reRenderCount', this.counter.reRenderCount);
             },
             resizeMove(item, sx, sy, ex, ey){
                 console.log('resize move');

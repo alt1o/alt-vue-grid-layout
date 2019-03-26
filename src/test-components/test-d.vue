@@ -17,6 +17,9 @@ export default Vue.extend({
     },
     mounted(){
         console.log('mounted')
+        this.$on('move', function(fff){
+            console.log('move move move', fff)
+        })
     }
 })
 </script>

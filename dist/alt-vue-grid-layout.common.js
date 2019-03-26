@@ -2082,7 +2082,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative;border:1px solid red;-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
 
 // exports
 
@@ -3808,12 +3808,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=eee08a6c&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=674c8c94&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":index}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=eee08a6c&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=674c8c94&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4199,6 +4199,7 @@ function () {
       }
 
       console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
+      console.log('test get move up rows', this.getMoveUpRows(item));
       this.removeItem(item);
       var belowItems = this.findFirstItemInEveryColsAtRect({
         x: item.x,
@@ -4234,8 +4235,8 @@ function () {
 
       item.x = target.x;
       item.y = target.y;
-      this.addItem(item);
-      this.moveAllItemUp();
+      this.addItem(item); // this.moveAllItemUp();
+
       console.log('coors', JSON.parse(JSON.stringify(this.coors)));
       console.log('----- move end -----');
     }
@@ -4420,48 +4421,47 @@ function () {
 /* harmony default export */ var coordinate = (coordinate_Coordinate);
 // CONCATENATED MODULE: ./src/utils/coordinate.test.js
 function autoMove(that, layout) {
+  // that.coors.moveItemTo(layout[6], {
+  //     x: layout[6].x,
+  //     y: layout[6].y - 1
+  // })
+  // for(let i = 4; i > 0; i--){
+  //     that.coors.moveItemTo(layout[3], {
+  //         x: layout[3].x - 1,
+  //         y: layout[3].y
+  //     })
+  // }
+  // for(let i = 4; i > 0; i--){
+  //     that.coors.moveItemTo(layout[3], {
+  //         x: layout[3].x + 1,
+  //         y: layout[3].y
+  //     })
+  // }
+  // that.coors.moveItemTo(layout[0], {
+  //     x: layout[0].x + 1,
+  //     y: layout[0].y
+  // })
+  // that.coors.moveItemTo(layout[0], {
+  //     x: layout[0].x + 1,
+  //     y: layout[0].y
+  // })
+  // that.coors.moveItemTo(layout[2], {
+  //     x: layout[2].x - 1,
+  //     y: layout[2].y
+  // })
+  // for(let i = 4; i > 0; i--){
+  //     that.coors.moveItemTo(layout[3], {
+  //         x: layout[3].x - 1,
+  //         y: layout[3].y
+  //     })
+  // }
+  // that.coors.moveItemTo(layout[3], {
+  //     x: layout[3].x,
+  //     y: layout[3].y + 1
+  // })
   that.coors.moveItemTo(layout[6], {
-    x: layout[6].x,
-    y: layout[6].y - 1
-  });
-
-  for (var i = 4; i > 0; i--) {
-    that.coors.moveItemTo(layout[3], {
-      x: layout[3].x - 1,
-      y: layout[3].y
-    });
-  }
-
-  for (var _i = 4; _i > 0; _i--) {
-    that.coors.moveItemTo(layout[3], {
-      x: layout[3].x + 1,
-      y: layout[3].y
-    });
-  }
-
-  that.coors.moveItemTo(layout[0], {
-    x: layout[0].x + 1,
-    y: layout[0].y
-  });
-  that.coors.moveItemTo(layout[0], {
-    x: layout[0].x + 1,
-    y: layout[0].y
-  });
-  that.coors.moveItemTo(layout[2], {
-    x: layout[2].x - 1,
-    y: layout[2].y
-  });
-
-  for (var _i2 = 4; _i2 > 0; _i2--) {
-    that.coors.moveItemTo(layout[3], {
-      x: layout[3].x - 1,
-      y: layout[3].y
-    });
-  }
-
-  that.coors.moveItemTo(layout[3], {
-    x: layout[3].x,
-    y: layout[3].y + 1
+    x: 2,
+    y: 1
   });
 }
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=template&id=616f0908&
@@ -4897,6 +4897,9 @@ var Vue = getVue();
 
         });
       });
+    },
+    backgroundColor: function backgroundColor() {
+      this.reRenderCount++;
     }
   },
   computed: {
@@ -4911,7 +4914,7 @@ var Vue = getVue();
   },
   methods: {
     getFirstSetValue: function getFirstSetValue() {
-      return util_getFirstSetValue(arguments);
+      return util_getFirstSetValue.apply(void 0, arguments);
     },
     getPropsForInject: function getPropsForInject(index, item) {
       return {
@@ -4982,7 +4985,7 @@ var Vue = getVue();
       var y = item.y * this.rowHeight;
       var h = item.h * this.rowHeight - this.margin[1];
       this.setContainerHeight(y, h);
-      return "transform: translate3d(".concat(x, "px,").concat(y, "px,0);width:").concat(w, "px;height:").concat(h, "px;"); // return {
+      return "transform: translate3d(".concat(x, "px,").concat(y, "px,0);width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";"); // return {
       //     transform: `translate(${x}px,${y}px)`,
       //     width: w + 'px',
       //     height: h + 'px'
@@ -5018,6 +5021,7 @@ var Vue = getVue();
     mousedown: function mousedown(evt) {
       var target = evt.target;
       var targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
+      if (!targetCard) return;
       var node = this.getNode(targetCard);
 
       if (hasClass(target, this.resizeHandlerClass)) {
