@@ -7,6 +7,11 @@
 
 <script>
 export default {
+    data(){
+        return {
+            test: 'test-a-test'
+        }
+    },
     methods: {
         _close(){
             this.injectedProps.close();
@@ -23,6 +28,12 @@ export default {
         },
         mounted(){
             console.log('mounted');
+            this.$on('move', (pos) => {
+                console.log('test-a move:', pos);
+            })
+            this.$on('moved', (pos) => {
+                console.log('test-a moved:', pos);
+            })
         },
         beforeUpdate(){
             console.log('before update');

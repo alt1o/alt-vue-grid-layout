@@ -12,6 +12,7 @@
             :class="placeholderClass">
         </div>
         <div 
+            ref="cards"
             v-for="(item, index) in layout"
             :key="index"
             :dg-id="index"
@@ -48,10 +49,13 @@
     import WidgetTemplate from './components/Widget.template.vue';
     import WidgetComponent from './components/Widget.vuecomponent.vue';
 
+    import altStoreFactory from './store.js'
+
     let Vue = getVue();
 
     export default {
         name: 'app',
+        altStore: altStoreFactory(),
         addWidgetType(){
             let args0 = arguments[0];
             let type = getVariType(args0);
@@ -172,7 +176,14 @@
         watch: {
             rowHeight(val, oldVal){
                 console.log('row height change: %d -> %d', oldVal, val);
-                this.reRenderCount++;
+                // this.reRenderCount++;
+                this.$altStore.commit('log', {
+                    type: 'rowHeight',
+                    action: {
+                        oldVal: oldVal,
+                        newVal: val
+                    }
+                })
             },
             colNum(){
                 console.log('change col number');
@@ -181,13 +192,7 @@
             cols(){
                 console.log('cols change');
                 this.cacheComputed = {};
-                this.$nextTick(() => {
-                    this.layout.forEach((item) => {
-                        let style = this.getCardStyle(item);
-                        this.$set(item, 'style', style);
-                        // item.style = style;
-                    })
-                })
+                this.reRenderStyle();
             },
             reRenderCount(){
                 if(this.timer) clearTimeout(this.timer);
@@ -201,19 +206,24 @@
             },
             margin(){
                 this.cacheComputed = {};
-                this.$nextTick(() => {
-                    this.layout.forEach((item) => {
-                        let style = this.getCardStyle(item);
-                        this.$set(item, 'style', style);
-                        // item.style = style;
-                    })
+                this.reRenderStyle();
+            },
+            backgroundColor(newVal, oldVal){
+                // this.reRenderCount++;
+                this.$altStore.commit('log', {
+                    type: 'backgroundColor',
+                    action: { oldVal,newVal }
                 })
             },
-            backgroundColor(){
-                this.reRenderCount++;
+            'reRenderCountTest.total'(){
+                console.log('reRenderCountTest.total');
+                this.reRenderStyle();
             }
         },
         computed: {
+            reRenderCountTest(){
+                return this.$altStore.state.counter;
+            },
             containerStyle(){
                 return {
                     height: this.containerHeight + 'px'
@@ -224,6 +234,56 @@
             }
         },
         methods: {
+            reRenderStyle(){
+                if(this.timer) clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    this.layout.forEach((item, index) => {
+                        let card = this.$refs.cards[index];
+                        let oldStyle = {
+                            style: card.style,
+                            w: card.style.width,
+                            h: card.style.height,
+                            transform: card.style.transform
+                        };
+                        if(oldStyle.transform){
+                            oldStyle.transform = oldStyle.transform.replace(/\s/g, '');
+                        }
+
+                        let styleRaw = this.getCardStyle(item, true);
+
+                        this.$set(item, 'style', styleRaw.style);
+                        // item.style = style;
+                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform']);
+                        if(status === 'none') return;
+                        this.dispatchEvent(index. status, {
+                            w: item.w,
+                            h: item.h,
+                            x: item.x,
+                            y: item.y
+                        })
+
+                        console.log('create Style:', styleRaw, oldStyle, index);
+                    })
+                }, 10);
+            },
+            getCardRectChangeStatus(arg1, arg2, range){
+                let keys = range || Object.keys(arg1);
+                for(let i = 0, l = keys.length; i < l; i++){
+                    let key = keys[i];
+                    if(arg1[key] === arg2[key]){
+                        if(key === 'w' || key === 'h'){
+                            return 'move';
+                        }
+                        if(key === 'transform'){
+                            return 'resize';
+                        }
+                    }
+                }
+                return 'none';
+            },
+            dispatchEvent(dragId, type, pos){
+                this.$refs[dragId][0].$emit(type, pos);
+            },
             getFirstSetValue(){
                 return getFirstSetValue(...arguments);
             },
@@ -271,6 +331,11 @@
                 
                 this.layout = this.coors.getAllItems();
 
+                this.$altStore.commit('addHistory', {
+                    type: 'posChange',
+                    value: JSON.parse(JSON.stringify(this.layout))
+                })
+
                 if(/_env=dev/.test(window.location.search)){
                     coorTest(this, this.layout);
                 }
@@ -284,14 +349,19 @@
                 }
             },
             // 获取卡片大小和位移
-            getCardStyle(item){
+            getCardStyle(item, raw){
                 if(!item) return {};
                 let x = this.computeColsWidth(0, item.x);
                 let w = this.getCardWidth(item.x, item.x + item.w);
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
                 this.setContainerHeight(y, h);
-                return `transform: translate3d(${x}px,${y}px,0);width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
+                let transform = `transform:translate3d(${x}px,${y}px,0);`;
+                let style = `${transform}width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
+                if(raw){
+                    return { style, x, y, w, h, transform };
+                }
+                return style;
                 // return {
                 //     transform: `translate(${x}px,${y}px)`,
                 //     width: w + 'px',
@@ -409,7 +479,7 @@
                         item.node.w = this.placeholder.w;
                         item.node.h = this.placeholder.h;
                     }
-                    item.el.style = this.getCardStyle(item.node);
+                    this.$set(item.node, 'style', this.getCardStyle(item.node));
 
                     this.coors.removeItem(this.placeholder);
                     this.coors.addItem(this.operatedItem.node);
@@ -418,6 +488,11 @@
                 this.operator = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
+
+                this.$altStore.commit('addHistory', {
+                    type: 'posChange',
+                    value: JSON.parse(JSON.stringify(this.layout))
+                })
             },
             getNodeByDragId(dragId){
                 return this.layout[dragId];
@@ -442,16 +517,11 @@
                 let x = item.cacheStyle.x + dx;
                 let y = item.cacheStyle.y + dy;
                 item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                this.reRenderCount++;
-                if(this.$refs[item.dragId]){
-                    this.$refs[item.dragId][0].$emit('move', {
-                        w: node.w,
-                        h: node.h,
-                        x: node.x,
-                        y: node.y
-                    })
-                }
-                console.log('reRenderCount', this.counter.reRenderCount);
+                // this.reRenderCount++;
+                this.$altStore.commit('log', {
+                    type: 'move'
+                })
+                console.log('reRenderCount', this.reRenderCount);
             },
             resizeMove(item, sx, sy, ex, ey){
                 console.log('resize move');
@@ -475,7 +545,10 @@
                 let h = item.cacheStyle.h + dy;
                 item.el.style.width = w + 'px';
                 item.el.style.height = h + 'px';
-                this.reRenderCount++;
+                // this.reRenderCount++;
+                this.$altStore.commit('log', {
+                    type: 'resize'
+                })
                 console.log('reRenderCount', this.reRenderCount);
             },
             getMoveCols(dx, startCol){
@@ -551,6 +624,27 @@
                 this.coors.moveAllItemUp();
                 this.layout.splice(this.layout.indexOf(item), 1);
                 this.reRenderCount++;
+            },
+            go(num){
+                let layoutCopy = this.$altStore.state.historyStack.go(num).value;
+                for(let i = 0, l = layoutCopy.length; i < l; i++){
+                    let temp = layoutCopy[i];
+                    if(!this.layout[i]){
+                        this.$set(this.layout, i, temp);
+                    }else{
+                        this.layout[i].x = temp.x;
+                        this.layout[i].y = temp.y;
+                        this.layout[i].w = temp.w;
+                        this.layout[i].h = temp.h;
+                    }
+                }
+                this.coors.clear();
+                this.coors.batchAddItem(this.layout, true);
+
+                this.$altStore.commit('log', {
+                    type: 'go',
+                    value: num
+                })
             }
         }
     }

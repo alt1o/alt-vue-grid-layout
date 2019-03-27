@@ -59,3 +59,7 @@ export function getFirstSetValue(){
     }
     return args[l - 1];
 }
+
+export function forEachValue(obj, fn){
+    Object.keys(obj).forEach(key => fn(obj[key], key));
+}

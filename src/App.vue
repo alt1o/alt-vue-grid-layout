@@ -22,6 +22,8 @@
             bottom margin <input type="number" v-model="margin[1]" />
             background color <input type="text" v-model="bgcolor">
             <button @click="addItem">addItem</button>
+            <button @click="go(-1)">goback</button>
+            <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
                     :is-draggable="draggable"
@@ -107,6 +109,9 @@
             // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
+            go: function(num){
+                this.$refs.altGrid.go(num);
+            },
             clicked: function(index) {
                 this.layout.splice(index, 1);
                 // window.alert("CLICK!");

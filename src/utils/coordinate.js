@@ -17,6 +17,12 @@ class Coordinate {
             item.h = distributePos.h;
         }
 
+        this.addItemWithNoCheck(item);
+
+        // console.log(this.coors);
+        return item;
+    }
+    addItemWithNoCheck(item = {}){
         let x = item.x;
         let y = item.y;
         let w = item.w;
@@ -31,14 +37,16 @@ class Coordinate {
             }
         }
 
-        // console.log(this.coors);
         return item;
     }
 
-    batchAddItem(list){
+    batchAddItem(list, checked){
+        let handlerName = checked ? 'addItemWithNoCheck' : 'addItem';
         for(let i = 0; i < list.length; i++){
-            this.addItem(list[i])
+            this[handlerName](list[i])
         }
+
+        return this.coors;
     }
 
     getAllItems(){
