@@ -3808,18 +3808,27 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=674c8c94&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":index}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=87e67b54&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":index}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:index,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=674c8c94&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=87e67b54&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.search.js
 var es6_regexp_search = __webpack_require__("386d");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
+var es6_array_iterator = __webpack_require__("cadf");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
+var es6_object_keys = __webpack_require__("456d");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
+var es6_regexp_replace = __webpack_require__("a481");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
@@ -3841,6 +3850,9 @@ var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
 
 // CONCATENATED MODULE: ./src/utils/util.js
+
+
+
 
 
 
@@ -3904,6 +3916,11 @@ function util_getFirstSetValue() {
   }
 
   return args[l - 1];
+}
+function forEachValue(obj, fn) {
+  Object.keys(obj).forEach(function (key) {
+    return fn(obj[key], key);
+  });
 }
 // CONCATENATED MODULE: ./src/utils/watch-box-size.js
 function watchBoxSizeChange(el, handler) {
@@ -4040,6 +4057,14 @@ function () {
         item.h = distributePos.h;
       }
 
+      this.addItemWithNoCheck(item); // console.log(this.coors);
+
+      return item;
+    }
+  }, {
+    key: "addItemWithNoCheck",
+    value: function addItemWithNoCheck() {
+      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var x = item.x;
       var y = item.y;
       var w = item.w;
@@ -4053,17 +4078,20 @@ function () {
             this.coors[i][j] = item;
           }
         }
-      } // console.log(this.coors);
-
+      }
 
       return item;
     }
   }, {
     key: "batchAddItem",
-    value: function batchAddItem(list) {
+    value: function batchAddItem(list, checked) {
+      var handlerName = checked ? 'addItemWithNoCheck' : 'addItem';
+
       for (var i = 0; i < list.length; i++) {
-        this.addItem(list[i]);
+        this[handlerName](list[i]);
       }
+
+      return this.coors;
     }
   }, {
     key: "getAllItems",
@@ -4652,12 +4680,300 @@ var Widget_vuecomponent_component = normalizeComponent(
 
 Widget_vuecomponent_component.options.__file = "Widget.vuecomponent.vue"
 /* harmony default export */ var Widget_vuecomponent = (Widget_vuecomponent_component.exports);
+// CONCATENATED MODULE: ./src/alt-store/mixin.js
+function mixin(Vue) {
+  Vue.mixin({
+    beforeCreate: altStoreInit
+  });
+
+  function altStoreInit() {
+    var options = this.$options;
+
+    if (options.altStore) {
+      this.$altStore = options.altStore;
+    } else if (options.parent && options.parent.$altStore) {
+      this.$altStore = options.parent.$altStore;
+    }
+  }
+}
+// CONCATENATED MODULE: ./src/alt-store/util.js
+
+
+
+function util_forEachValue(obj, fn) {
+  Object.keys(obj).forEach(function (key) {
+    return fn(obj[key], key);
+  });
+}
+// CONCATENATED MODULE: ./src/alt-store/store.js
+
+
+
+
+
+var Vue;
+var store_AltStore =
+/*#__PURE__*/
+function () {
+  function AltStore(options) {
+    _classCallCheck(this, AltStore);
+
+    this._mutations = Object.create(null);
+    this.initVm(options.state);
+    this.initMutations(options.mutations);
+  }
+
+  _createClass(AltStore, [{
+    key: "commit",
+    value: function commit(type, payload) {
+      var entry = this._mutations[type];
+
+      if (!entry) {
+        console.error('[altStore] unknown commit type.');
+        return;
+      }
+
+      entry.forEach(function (handler) {
+        handler(payload);
+      });
+    }
+  }, {
+    key: "getOriginState",
+    value: function getOriginState() {
+      return this._vm._data.$$state;
+    }
+  }, {
+    key: "initMutations",
+    value: function initMutations(mutations) {
+      var store = this;
+      var state = this.getOriginState();
+      util_forEachValue(mutations, function (handler, key) {
+        var entry = store._mutations[key] || (store._mutations[key] = []);
+        entry.push(function wrapperHandler(payload) {
+          handler.call(store, state, payload);
+        });
+      });
+    }
+  }, {
+    key: "initVm",
+    value: function initVm(state) {
+      var oldVm = this._vm;
+      this._vm = new Vue({
+        data: {
+          $$state: state
+        }
+      });
+
+      if (oldVm) {
+        Vue.nextTick(function () {
+          return oldVm.$destroy();
+        });
+      }
+    }
+  }, {
+    key: "state",
+    get: function get() {
+      return this._vm._data.$$state;
+    },
+    set: function set(v) {
+      console.error('cannot set state directly.');
+    }
+  }]);
+
+  return AltStore;
+}();
+function install(_Vue) {
+  if (Vue && _Vue === Vue) {
+    if (false) {}
+
+    return;
+  }
+
+  Vue = _Vue;
+  mixin(Vue);
+}
+// CONCATENATED MODULE: ./src/alt-store/index.js
+
+/* harmony default export */ var alt_store = ({
+  Store: store_AltStore,
+  install: install
+});
+// CONCATENATED MODULE: ./src/utils/stack.js
+
+
+
+var stack_StackWithDepth =
+/*#__PURE__*/
+function () {
+  function StackWithDepth() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, StackWithDepth);
+
+    this.stack = [];
+    this.maxDepth = options.maxDepth || 10;
+  }
+
+  _createClass(StackWithDepth, [{
+    key: "push",
+    value: function push(param) {
+      if (this.stack.length > this.maxDepth) {
+        this.stack.shift();
+      }
+
+      this.stack.push(param);
+      return this.stack;
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      return this.stack.pop();
+    }
+  }, {
+    key: "peek",
+    value: function peek() {
+      return this.stack[this.stack.length - 1];
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.stack = [];
+    }
+  }, {
+    key: "length",
+    get: function get() {
+      return this.stack.length;
+    },
+    set: function set(num) {
+      console.error('[stackWithDepth] 不能直接设置length属性.');
+    }
+  }]);
+
+  return StackWithDepth;
+}();
+
+
+// CONCATENATED MODULE: ./src/history.js
+
+
+
+
+var history_HistoryStack =
+/*#__PURE__*/
+function () {
+  function HistoryStack() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, HistoryStack);
+
+    this.undo = new stack_StackWithDepth({
+      maxDepth: options.maxDepth
+    });
+    this.redo = new stack_StackWithDepth();
+  }
+
+  _createClass(HistoryStack, [{
+    key: "push",
+    value: function push(params) {
+      this.undo.push(params);
+      this.redo.clear();
+    }
+  }, {
+    key: "go",
+    value: function go(posNumber) {
+      if (posNumber > 0) {
+        return this.goForward(posNumber);
+      } else {
+        return this.goBackward(Math.abs(posNumber));
+      }
+    }
+  }, {
+    key: "goForward",
+    value: function goForward(num) {
+      var empty = {
+        value: []
+      };
+      if (!this.redo.length) return empty;
+
+      while (num--) {
+        var temp = this.redo.pop();
+        this.undo.push(temp);
+      }
+
+      return this.undo.peek() || empty;
+    }
+  }, {
+    key: "goBackward",
+    value: function goBackward(num) {
+      var empty = {
+        value: []
+      };
+      if (!this.undo.length) return empty;
+
+      while (num--) {
+        var temp = this.undo.pop();
+        this.redo.push(temp);
+      }
+
+      return this.undo.peek() || empty;
+    }
+  }]);
+
+  return HistoryStack;
+}();
+
+
+// CONCATENATED MODULE: ./src/store.js
+
+
+
+var store_Vue = getVue();
+store_Vue.use(alt_store);
+function createStore() {
+  return new alt_store.Store({
+    state: {
+      counter: {
+        total: 0,
+        detail: {
+          move: 0,
+          moved: 0,
+          resize: 0,
+          resized: 0
+        }
+      },
+      log: [],
+      historyStack: new history_HistoryStack({
+        maxDepth: 10
+      })
+    },
+    mutations: {
+      log: function log(state, payload) {
+        var type = payload.type;
+
+        if (state.counter.detail[type] === undefined) {
+          store_Vue.set(state.counter.detail, type, 0);
+        }
+
+        state.log.push(payload);
+        state.counter.total++;
+        state.counter.detail[type]++;
+      },
+      addHistory: function addHistory(state, payload) {
+        state.historyStack.push(payload);
+      }
+    }
+  });
+}
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=script&lang=js&
 
 
 
 
 
+
+
+
+//
 //
 //
 //
@@ -4698,9 +5014,11 @@ Widget_vuecomponent_component.options.__file = "Widget.vuecomponent.vue"
 
 
 
-var Vue = getVue();
+
+var gridvue_type_script_lang_js_Vue = getVue();
 /* harmony default export */ var gridvue_type_script_lang_js_ = ({
   name: 'app',
+  altStore: createStore(),
   addWidgetType: function addWidgetType() {
     var args0 = arguments[0];
     var type = getVariType(args0);
@@ -4717,7 +5035,7 @@ var Vue = getVue();
   _addWidgetType: function _addWidgetType(type, widget) {
     var parentWidget = widget.template ? Widget_template : Widget_render;
 
-    if (widget.super == Vue) {
+    if (widget.super == gridvue_type_script_lang_js_Vue) {
       this.components[type] = widget.extend(Widget_vuecomponent);
       return;
     }
@@ -4851,58 +5169,61 @@ var Vue = getVue();
   },
   watch: {
     rowHeight: function rowHeight(val, oldVal) {
-      console.log('row height change: %d -> %d', oldVal, val);
-      this.reRenderCount++;
+      console.log('row height change: %d -> %d', oldVal, val); // this.reRenderCount++;
+
+      this.$altStore.commit('log', {
+        type: 'rowHeight',
+        action: {
+          oldVal: oldVal,
+          newVal: val
+        }
+      });
     },
     colNum: function colNum() {
       console.log('change col number');
       this.initCols();
     },
     cols: function cols() {
-      var _this2 = this;
-
       console.log('cols change');
       this.cacheComputed = {};
-      this.$nextTick(function () {
+      this.reRenderStyle();
+    },
+    reRenderCount: function reRenderCount() {
+      var _this2 = this;
+
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(function () {
         _this2.layout.forEach(function (item) {
           var style = _this2.getCardStyle(item);
 
           _this2.$set(item, 'style', style); // item.style = style;
 
         });
-      });
-    },
-    reRenderCount: function reRenderCount() {
-      var _this3 = this;
-
-      if (this.timer) clearTimeout(this.timer);
-      this.timer = setTimeout(function () {
-        _this3.layout.forEach(function (item) {
-          var style = _this3.getCardStyle(item);
-
-          _this3.$set(item, 'style', style); // item.style = style;
-
-        });
       }, 10);
     },
     margin: function margin() {
-      var _this4 = this;
-
       this.cacheComputed = {};
-      this.$nextTick(function () {
-        _this4.layout.forEach(function (item) {
-          var style = _this4.getCardStyle(item);
-
-          _this4.$set(item, 'style', style); // item.style = style;
-
-        });
+      this.reRenderStyle();
+    },
+    backgroundColor: function backgroundColor(newVal, oldVal) {
+      // this.reRenderCount++;
+      this.$altStore.commit('log', {
+        type: 'backgroundColor',
+        action: {
+          oldVal: oldVal,
+          newVal: newVal
+        }
       });
     },
-    backgroundColor: function backgroundColor() {
-      this.reRenderCount++;
+    'reRenderCountTest.total': function reRenderCountTestTotal() {
+      console.log('reRenderCountTest.total');
+      this.reRenderStyle();
     }
   },
   computed: {
+    reRenderCountTest: function reRenderCountTest() {
+      return this.$altStore.state.counter;
+    },
     containerStyle: function containerStyle() {
       return {
         height: this.containerHeight + 'px'
@@ -4913,6 +5234,66 @@ var Vue = getVue();
     }
   },
   methods: {
+    reRenderStyle: function reRenderStyle() {
+      var _this3 = this;
+
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(function () {
+        _this3.layout.forEach(function (item, index) {
+          var card = _this3.$refs.cards[index];
+          var oldStyle = {
+            style: card.style,
+            w: card.style.width,
+            h: card.style.height,
+            transform: card.style.transform
+          };
+
+          if (oldStyle.transform) {
+            oldStyle.transform = oldStyle.transform.replace(/\s/g, '');
+          }
+
+          var styleRaw = _this3.getCardStyle(item, true);
+
+          _this3.$set(item, 'style', styleRaw.style); // item.style = style;
+
+
+          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform']);
+
+          if (status === 'none') return;
+
+          _this3.dispatchEvent(index.status, {
+            w: item.w,
+            h: item.h,
+            x: item.x,
+            y: item.y
+          });
+
+          console.log('create Style:', styleRaw, oldStyle, index);
+        });
+      }, 10);
+    },
+    getCardRectChangeStatus: function getCardRectChangeStatus(arg1, arg2, range) {
+      var keys = range || Object.keys(arg1);
+
+      for (var i = 0, l = keys.length; i < l; i++) {
+        var key = keys[i];
+
+        if (arg1[key] === arg2[key]) {
+          if (key === 'w' || key === 'h') {
+            return 'move';
+          }
+
+          if (key === 'transform') {
+            return 'resize';
+          }
+        }
+      }
+
+      return 'none';
+    },
+    dispatchEvent: function dispatchEvent(dragId, type, pos) {
+      this.$refs[dragId][0].$emit(type, pos);
+    },
     getFirstSetValue: function getFirstSetValue() {
       return util_getFirstSetValue.apply(void 0, arguments);
     },
@@ -4961,8 +5342,13 @@ var Vue = getVue();
         this.coors = new coordinate();
       }
 
+      this.coors.clear();
       this.coors.batchAddItem(layout);
       this.layout = this.coors.getAllItems();
+      this.$altStore.commit('addHistory', {
+        type: 'posChange',
+        value: JSON.parse(JSON.stringify(this.layout))
+      });
 
       if (/_env=dev/.test(window.location.search)) {
         autoMove(this, this.layout);
@@ -4978,14 +5364,28 @@ var Vue = getVue();
       }
     },
     // 获取卡片大小和位移
-    getCardStyle: function getCardStyle(item) {
+    getCardStyle: function getCardStyle(item, raw) {
       if (!item) return {};
       var x = this.computeColsWidth(0, item.x);
       var w = this.getCardWidth(item.x, item.x + item.w);
       var y = item.y * this.rowHeight;
       var h = item.h * this.rowHeight - this.margin[1];
       this.setContainerHeight(y, h);
-      return "transform: translate3d(".concat(x, "px,").concat(y, "px,0);width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";"); // return {
+      var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
+      var style = "".concat(transform, "width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";");
+
+      if (raw) {
+        return {
+          style: style,
+          x: x,
+          y: y,
+          w: w,
+          h: h,
+          transform: transform
+        };
+      }
+
+      return style; // return {
       //     transform: `translate(${x}px,${y}px)`,
       //     width: w + 'px',
       //     height: h + 'px'
@@ -5022,7 +5422,8 @@ var Vue = getVue();
       var target = evt.target;
       var targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
       if (!targetCard) return;
-      var node = this.getNode(targetCard);
+      var dragId = this.getDragId(targetCard);
+      var node = this.getNodeByDragId(dragId);
 
       if (hasClass(target, this.resizeHandlerClass)) {
         if (!util_getFirstSetValue(node.isResizable, this.isResizable, this.defVal.isResizable)) {
@@ -5045,10 +5446,12 @@ var Vue = getVue();
       if (!targetCard && !this.operator) return; // if(!hasClass(target, 'alt-grid-item')) return;
 
       var targetCardStyle = targetCard.style;
-      var translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
+      var translate = targetCardStyle.transform.match(/\(([-.\d]*)px, ([-.\d]*)px/);
       this.operatedItem = {
         el: targetCard,
         node: node,
+        dragId: dragId,
+        linkEmit: this.$refs[dragId] ? this.$refs[dragId][0].$emit : function () {},
         startX: evt.clientX,
         startY: evt.clientY,
         cacheStyle: {
@@ -5102,7 +5505,7 @@ var Vue = getVue();
           item.node.h = this.placeholder.h;
         }
 
-        item.el.style = this.getCardStyle(item.node);
+        this.$set(item.node, 'style', this.getCardStyle(item.node));
         this.coors.removeItem(this.placeholder);
         this.coors.addItem(this.operatedItem.node);
       }
@@ -5110,9 +5513,16 @@ var Vue = getVue();
       this.operator = 0;
       this.operatedItem = null;
       this.placeholder = null;
+      this.$altStore.commit('addHistory', {
+        type: 'posChange',
+        value: JSON.parse(JSON.stringify(this.layout))
+      });
     },
-    getNode: function getNode(target) {
-      return this.layout[target.getAttribute('dg-id')];
+    getNodeByDragId: function getNodeByDragId(dragId) {
+      return this.layout[dragId];
+    },
+    getDragId: function getDragId(target) {
+      return target.getAttribute('dg-id');
     },
     dragMove: function dragMove(item, sx, sy, ex, ey) {
       console.log('drag move');
@@ -5130,9 +5540,12 @@ var Vue = getVue();
       node.y = item.node.y + stepY;
       var x = item.cacheStyle.x + dx;
       var y = item.cacheStyle.y + dy;
-      item.el.style.transform = "translate3d(".concat(x, "px, ").concat(y, "px, 0)");
-      this.reRenderCount++;
-      console.log('reRenderCount', this.reRenderCount); // if(this.reRenderCount === 20) debugger;
+      item.el.style.transform = "translate3d(".concat(x, "px, ").concat(y, "px, 0)"); // this.reRenderCount++;
+
+      this.$altStore.commit('log', {
+        type: 'move'
+      });
+      console.log('reRenderCount', this.reRenderCount);
     },
     resizeMove: function resizeMove(item, sx, sy, ex, ey) {
       console.log('resize move');
@@ -5155,8 +5568,11 @@ var Vue = getVue();
       var w = item.cacheStyle.w + dx;
       var h = item.cacheStyle.h + dy;
       item.el.style.width = w + 'px';
-      item.el.style.height = h + 'px';
-      this.reRenderCount++;
+      item.el.style.height = h + 'px'; // this.reRenderCount++;
+
+      this.$altStore.commit('log', {
+        type: 'resize'
+      });
       console.log('reRenderCount', this.reRenderCount);
     },
     getMoveCols: function getMoveCols(dx, startCol) {
@@ -5244,6 +5660,29 @@ var Vue = getVue();
       this.coors.moveAllItemUp();
       this.layout.splice(this.layout.indexOf(item), 1);
       this.reRenderCount++;
+    },
+    go: function go(num) {
+      var layoutCopy = this.$altStore.state.historyStack.go(num).value;
+
+      for (var i = 0, l = layoutCopy.length; i < l; i++) {
+        var temp = layoutCopy[i];
+
+        if (!this.layout[i]) {
+          this.$set(this.layout, i, temp);
+        } else {
+          this.layout[i].x = temp.x;
+          this.layout[i].y = temp.y;
+          this.layout[i].w = temp.w;
+          this.layout[i].h = temp.h;
+        }
+      }
+
+      this.coors.clear();
+      this.coors.batchAddItem(this.layout, true);
+      this.$altStore.commit('log', {
+        type: 'go',
+        value: num
+      });
     }
   }
 });
@@ -5280,15 +5719,6 @@ var GridItemvue_type_template_id_6eb5b460_staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=6eb5b460&
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
-var es6_regexp_replace = __webpack_require__("a481");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
-var es6_array_iterator = __webpack_require__("cadf");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
-var es6_object_keys = __webpack_require__("456d");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");

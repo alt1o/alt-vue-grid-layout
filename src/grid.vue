@@ -327,6 +327,7 @@
                 if(!this.coors){
                     this.coors = new Coordinate();
                 }
+                this.coors.clear();
                 this.coors.batchAddItem(layout);
                 
                 this.layout = this.coors.getAllItems();
@@ -420,7 +421,7 @@
                 // if(!hasClass(target, 'alt-grid-item')) return;
                 
                 let targetCardStyle = targetCard.style;
-                let translate = targetCardStyle.transform.match(/\((\d*)px, (\d*)px/);
+                let translate = targetCardStyle.transform.match(/\(([-.\d]*)px, ([-.\d]*)px/);
                 this.operatedItem = {
                     el: targetCard,
                     node: node,
