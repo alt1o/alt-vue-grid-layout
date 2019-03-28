@@ -4159,9 +4159,12 @@ var coordinate_Coordinate =
 /*#__PURE__*/
 function () {
   function Coordinate() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, Coordinate);
 
     this.coors = [];
+    this.maxWidth = options.maxWidth || 0;
   }
 
   _createClass(Coordinate, [{
@@ -4286,6 +4289,14 @@ function () {
         }
       }
 
+      var max = this.maxWidth || colsHeight.length;
+
+      for (var _i = 0; _i < max; _i++) {
+        if (this.isNil(colsHeight[_i])) {
+          colsHeight[_i] = 0;
+        }
+      }
+
       var index = this.getMinPeek(colsHeight, w);
       x = ~index ? index : 0;
       y = colsHeight[x] || 0;
@@ -4384,8 +4395,8 @@ function () {
         }); // console.log('move down items: %d', targetBelowItems.length);
         // console.table(targetBelowItems);
 
-        for (var _i = 0; _i < targetBelowItems.length; _i++) {
-          this.moveItemDown(targetBelowItems[_i], target.y - targetBelowItems[_i].y + item.h);
+        for (var _i2 = 0; _i2 < targetBelowItems.length; _i2++) {
+          this.moveItemDown(targetBelowItems[_i2], target.y - targetBelowItems[_i2].y + item.h);
         }
       }
 
@@ -4433,8 +4444,8 @@ function () {
         }); // console.log('move down items: %d', targetBelowItems.length);
         // console.table(targetBelowItems);
 
-        for (var _i2 = 0; _i2 < targetBelowItems.length; _i2++) {
-          this.moveItemDown(targetBelowItems[_i2], item.y - targetBelowItems[_i2].y + target.h);
+        for (var _i3 = 0; _i3 < targetBelowItems.length; _i3++) {
+          this.moveItemDown(targetBelowItems[_i3], item.y - targetBelowItems[_i3].y + target.h);
         }
       }
 

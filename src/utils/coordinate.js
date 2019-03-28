@@ -1,7 +1,8 @@
 import { getUniqueID } from './util'
 class Coordinate {
-    constructor(){
+    constructor(options = {}){
         this.coors = [];
+        this.maxWidth = options.maxWidth || 0;
     }
 
     addItem(item = {}){
@@ -110,6 +111,14 @@ class Coordinate {
                 if(tempY > (colsHeight[m] || 0)){
                     colsHeight[m] = tempY;
                 }
+            }
+        }
+
+        let max = this.maxWidth || colsHeight.length;
+
+        for(let i = 0; i < max; i++){
+            if(this.isNil(colsHeight[i])){
+                colsHeight[i] = 0;
             }
         }
 
