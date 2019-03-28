@@ -659,6 +659,84 @@ function toComment(sourceMap) {
 
 /***/ }),
 
+/***/ "28a5":
+/***/ (function(module, exports, __webpack_require__) {
+
+// @@split logic
+__webpack_require__("214f")('split', 2, function (defined, SPLIT, $split) {
+  'use strict';
+  var isRegExp = __webpack_require__("aae3");
+  var _split = $split;
+  var $push = [].push;
+  var $SPLIT = 'split';
+  var LENGTH = 'length';
+  var LAST_INDEX = 'lastIndex';
+  if (
+    'abbc'[$SPLIT](/(b)*/)[1] == 'c' ||
+    'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 ||
+    'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 ||
+    '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 ||
+    '.'[$SPLIT](/()()/)[LENGTH] > 1 ||
+    ''[$SPLIT](/.?/)[LENGTH]
+  ) {
+    var NPCG = /()??/.exec('')[1] === undefined; // nonparticipating capturing group
+    // based on es5-shim implementation, need to rework it
+    $split = function (separator, limit) {
+      var string = String(this);
+      if (separator === undefined && limit === 0) return [];
+      // If `separator` is not a regex, use native split
+      if (!isRegExp(separator)) return _split.call(string, separator, limit);
+      var output = [];
+      var flags = (separator.ignoreCase ? 'i' : '') +
+                  (separator.multiline ? 'm' : '') +
+                  (separator.unicode ? 'u' : '') +
+                  (separator.sticky ? 'y' : '');
+      var lastLastIndex = 0;
+      var splitLimit = limit === undefined ? 4294967295 : limit >>> 0;
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      var separatorCopy = new RegExp(separator.source, flags + 'g');
+      var separator2, match, lastIndex, lastLength, i;
+      // Doesn't need flags gy, but they don't hurt
+      if (!NPCG) separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
+      while (match = separatorCopy.exec(string)) {
+        // `separatorCopy.lastIndex` is not reliable cross-browser
+        lastIndex = match.index + match[0][LENGTH];
+        if (lastIndex > lastLastIndex) {
+          output.push(string.slice(lastLastIndex, match.index));
+          // Fix browsers whose `exec` methods don't consistently return `undefined` for NPCG
+          // eslint-disable-next-line no-loop-func
+          if (!NPCG && match[LENGTH] > 1) match[0].replace(separator2, function () {
+            for (i = 1; i < arguments[LENGTH] - 2; i++) if (arguments[i] === undefined) match[i] = undefined;
+          });
+          if (match[LENGTH] > 1 && match.index < string[LENGTH]) $push.apply(output, match.slice(1));
+          lastLength = match[0][LENGTH];
+          lastLastIndex = lastIndex;
+          if (output[LENGTH] >= splitLimit) break;
+        }
+        if (separatorCopy[LAST_INDEX] === match.index) separatorCopy[LAST_INDEX]++; // Avoid an infinite loop
+      }
+      if (lastLastIndex === string[LENGTH]) {
+        if (lastLength || !separatorCopy.test('')) output.push('');
+      } else output.push(string.slice(lastLastIndex));
+      return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
+    };
+  // Chakra, V8
+  } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
+    $split = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : _split.call(this, separator, limit);
+    };
+  }
+  // 21.1.3.17 String.prototype.split(separator, limit)
+  return [function split(separator, limit) {
+    var O = defined(this);
+    var fn = separator == undefined ? undefined : separator[SPLIT];
+    return fn !== undefined ? fn.call(separator, O, limit) : $split.call(String(O), separator, limit);
+  }, $split];
+});
+
+
+/***/ }),
+
 /***/ "2aba":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2082,7 +2160,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
 
 // exports
 
@@ -3808,12 +3886,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=bafc7684&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":index}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:index,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=b450aaa4&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=bafc7684&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=b450aaa4&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3836,6 +3914,9 @@ var web_dom_iterable = __webpack_require__("ac6a");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.split.js
+var es6_regexp_split = __webpack_require__("28a5");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.constructor.js
 var es6_regexp_constructor = __webpack_require__("3b2b");
 
@@ -3850,6 +3931,7 @@ var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
 
 // CONCATENATED MODULE: ./src/utils/util.js
+
 
 
 
@@ -3921,6 +4003,44 @@ function forEachValue(obj, fn) {
   Object.keys(obj).forEach(function (key) {
     return fn(obj[key], key);
   });
+}
+function getIndexOfArrayByAttr(arr, value, attr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (attr) {
+      if (arr[i][attr] === value) return i;
+    } else {
+      if (arr[i] === value) return i;
+    }
+  }
+
+  return -1;
+}
+function getUniqueID(len, radix) {
+  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  var uuid = [],
+      i;
+  radix = radix || chars.length;
+
+  if (len) {
+    // Compact form
+    for (i = 0; i < len; i++) {
+      uuid[i] = chars[0 | Math.random() * radix];
+    }
+  } else {
+    // 参考rfc4122，https://tools.ietf.org/html/rfc4122
+    var r;
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4';
+
+    for (i = 0; i < 36; i++) {
+      if (!uuid[i]) {
+        r = 0 | Math.random() * 16;
+        uuid[i] = chars[i == 19 ? r & 0x3 | 0x8 : r];
+      }
+    }
+  }
+
+  return uuid.join('');
 }
 // CONCATENATED MODULE: ./src/utils/watch-box-size.js
 function watchBoxSizeChange(el, handler) {
@@ -4034,6 +4154,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 
 
+
 var coordinate_Coordinate =
 /*#__PURE__*/
 function () {
@@ -4047,6 +4168,7 @@ function () {
     key: "addItem",
     value: function addItem() {
       var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.appendUniqueID(item);
       console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
 
       if (!this.isNotNegative(item.x) || !this.isNotNegative(item.y) || !this.isPositiveNumer(item.w) || !this.isPositiveNumer(item.h) || !this.checkItemPositionIsLegal(item, this.coors)) {
@@ -4065,6 +4187,7 @@ function () {
     key: "addItemWithNoCheck",
     value: function addItemWithNoCheck() {
       var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.appendUniqueID(item);
       var x = item.x;
       var y = item.y;
       var w = item.w;
@@ -4081,6 +4204,13 @@ function () {
       }
 
       return item;
+    }
+  }, {
+    key: "appendUniqueID",
+    value: function appendUniqueID(item) {
+      if (!item._id) {
+        item._id = getUniqueID();
+      }
     }
   }, {
     key: "batchAddItem",
@@ -5292,7 +5422,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
       return 'none';
     },
     dispatchEvent: function dispatchEvent(dragId, type, pos) {
-      this.$refs[dragId][0].$emit(type, pos);
+      this.$refs[dragId] && this.$refs[dragId][0].$emit(type, pos);
     },
     getFirstSetValue: function getFirstSetValue() {
       return util_getFirstSetValue.apply(void 0, arguments);
@@ -5345,6 +5475,9 @@ var gridvue_type_script_lang_js_Vue = getVue();
       this.coors.clear();
       this.coors.batchAddItem(layout);
       this.layout = this.coors.getAllItems();
+      this.$altStore.commit('log', {
+        type: 'setLayout'
+      });
       this.$altStore.commit('addHistory', {
         type: 'posChange',
         value: JSON.parse(JSON.stringify(this.layout))
@@ -5497,41 +5630,62 @@ var gridvue_type_script_lang_js_Vue = getVue();
         // let x = this.computeColsWidth(0, item.node.x);
         // let y = item.node.y * this.rowHeight;
         // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        if (this.operator === 1) {
-          item.node.x = this.placeholder.x;
-          item.node.y = this.placeholder.y;
-          this.dispatchEvent(item.dragId, 'moved', {
-            x: item.node.x,
-            y: item.node.y,
-            w: item.node.w,
-            h: item.node.h
-          });
-        } else if (this.operator === 2) {
-          item.node.w = this.placeholder.w;
-          item.node.h = this.placeholder.h;
-          this.dispatchEvent(item.dragId, 'resized', {
-            x: item.node.x,
-            y: item.node.y,
-            w: item.node.w,
-            h: item.node.h
-          });
-        }
-
+        // let x = this.placeholder.x;
+        // let y = this.placeholder.y;
+        // let w = this.placeholder.w;
+        // let h = this.placeholder.h;
+        // let node = item.node;
+        this.applyChange();
         this.$set(item.node, 'style', this.getCardStyle(item.node));
         this.coors.removeItem(this.placeholder);
         this.coors.addItem(this.operatedItem.node);
       }
 
-      this.operator = 0;
-      this.operatedItem = null;
-      this.placeholder = null;
+      this.clearDragEnv();
       this.$altStore.commit('addHistory', {
         type: 'posChange',
         value: JSON.parse(JSON.stringify(this.layout))
       });
     },
+    applyChange: function applyChange() {
+      var x = this.placeholder.x;
+      var y = this.placeholder.y;
+      var w = this.placeholder.w;
+      var h = this.placeholder.h;
+      var dragId = this.operatedItem.dragId;
+      var node = this.operatedItem.node;
+
+      if (this.operator === 1) {
+        if (node.x === x && node.y === y) return;
+        node.x = x;
+        node.y = y;
+        this.dispatchEvent(dragId, 'moved', {
+          x: x,
+          y: y,
+          w: node.w,
+          h: node.h
+        });
+      } else if (this.operator === 2) {
+        if (node.w === w && node.h === h) return;
+        node.w = this.placeholder.w;
+        node.h = this.placeholder.h;
+        this.dispatchEvent(dragId, 'resized', {
+          x: node.x,
+          y: node.y,
+          w: w,
+          h: h
+        });
+      }
+    },
+    clearDragEnv: function clearDragEnv() {
+      this.operator = 0;
+      this.operatedItem = null;
+      this.placeholder = null;
+    },
     getNodeByDragId: function getNodeByDragId(dragId) {
-      return this.layout[dragId];
+      var index = getIndexOfArrayByAttr(this.layout, dragId, '_id');
+      if (index === -1) return null;
+      return this.layout[index];
     },
     getDragId: function getDragId(target) {
       return target.getAttribute('dg-id');
@@ -5630,7 +5784,14 @@ var gridvue_type_script_lang_js_Vue = getVue();
         var distributeItem = this.coors.addItem(item);
         this.layout.push(distributeItem);
         this.reRenderCount++;
+        return distributeItem._id;
       }
+    },
+    deleteItem: function deleteItem(id) {
+      return this.closeWidget(id);
+    },
+    getAllItems: function getAllItems() {
+      return this.layout;
     },
     getItemLegalSize: function getItemLegalSize(item, size) {
       var minH = util_getFirstSetValue(item.minH, this.defVal.minH);
@@ -5666,12 +5827,16 @@ var gridvue_type_script_lang_js_Vue = getVue();
         w: w
       };
     },
-    closeWidget: function closeWidget(item) {
+    closeWidget: function closeWidget(_id) {
+      var index = getIndexOfArrayByAttr(this.layout, _id, '_id');
+      if (index === -1) return false;
+      var item = this.layout[index];
       console.log(this.layout, this.layout.indexOf(item));
       this.coors.removeItem(item);
       this.coors.moveAllItemUp();
-      this.layout.splice(this.layout.indexOf(item), 1);
+      this.layout.splice(index, 1);
       this.reRenderCount++;
+      this.clearDragEnv();
     },
     go: function go(num) {
       var layoutCopy = this.$altStore.state.historyStack.go(num).value;
