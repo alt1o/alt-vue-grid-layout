@@ -33,8 +33,7 @@
 </template>
 
 <script>
-    import { 
-        deepCopy,
+    import {
         hasClass,
         findParentThoughEvtPath,
         getFirstSetValue,
@@ -176,7 +175,7 @@
         },
         watch: {
             rowHeight(val, oldVal){
-                console.log('row height change: %d -> %d', oldVal, val);
+                // console.log('row height change: %d -> %d', oldVal, val);
                 // this.reRenderCount++;
                 this.$altStore.commit('log', {
                     type: 'rowHeight',
@@ -187,11 +186,11 @@
                 })
             },
             colNum(){
-                console.log('change col number');
+                // console.log('change col number');
                 this.initCols();
             },
             cols(){
-                console.log('cols change');
+                // console.log('cols change');
                 this.cacheComputed = {};
                 this.reRenderStyle();
             },
@@ -217,7 +216,7 @@
                 })
             },
             'reRenderCountTest.total'(){
-                console.log('reRenderCountTest.total');
+                // console.log('reRenderCountTest.total');
                 this.reRenderStyle();
             }
         },
@@ -263,7 +262,7 @@
                             y: item.y
                         })
 
-                        console.log('create Style:', styleRaw, oldStyle, index);
+                        // console.log('create Style:', styleRaw, oldStyle, index);
                     })
                 }, 10);
             },
@@ -290,14 +289,14 @@
             },
             getPropsForInject(index, item){
                 return {
-                    index: index,
+                    id: item._id,
                     card: item,
-                    close: this.closeWidget.bind(this, item)
+                    close: this.closeWidget.bind(this, item._id)
                 }
             },
             // 初始化每个列宽
             initCols(){
-                console.log('init cols');
+                // // // console.log('init cols');
                 let containerWidth = this.$el.clientWidth;
                 if(this.colNum === this.cols.length &&
                     this.containerWidth && 
@@ -324,14 +323,22 @@
             setLayout(layout){
                 // this.layout = deepCopy(layout);
                 // this.layout = layout;
-                console.log(deepCopy)
+                // // console.log(deepCopy)
                 if(!this.coors){
                     this.coors = new Coordinate();
                 }
                 this.coors.clear();
                 this.coors.batchAddItem(layout);
                 
-                this.layout = this.coors.getAllItems();
+                let layoutOverCalc = this.coors.getAllItems();
+
+                layoutOverCalc.forEach((item) => {
+                    let style = this.getCardStyle(item);
+                    this.$set(item, 'style', style);
+                    // item.style = style;
+                });
+
+                this.layout = layoutOverCalc;
 
                 this.$altStore.commit('log', {
                     type: 'setLayout'
@@ -457,7 +464,7 @@
             },
             mousemove(evt){
                 if(!this.operator) return;
-                console.log('mouse move');
+                // console.log('mouse move');
                 let ex = evt.clientX;
                 let ey = evt.clientY;
                 let sx = this.operatedItem.startX;
@@ -468,8 +475,8 @@
                     this.resizeMove(this.operatedItem, sx, sy, ex, ey);
                 }
             },
-            mouseup(evt){
-                console.log('up', evt);
+            mouseup(){
+                // console.log('up', evt);
                 let item = this.operatedItem;
                 if(item){
                     // item.node.x = this.placeholder.x;
@@ -540,13 +547,14 @@
                 return target.getAttribute('dg-id');
             },
             dragMove(item, sx, sy, ex, ey){
-                console.log('drag move');
+                // console.log('drag move');
                 let node = this.placeholder;
                 let dx = ex - sx;
                 let dy = ey - sy;
                 let stepX = this.getMoveCols(dx, item.node.x);
                 let stepY = this.getMoveRows(dy, item.node.y);
-                console.log('calc over step');
+                // console.log('calc over step');
+                console.log(dx, item.node.x);
                 this.coors.moveItemTo(node, {
                     x: item.node.x + stepX,
                     y: item.node.y + stepY
@@ -560,10 +568,10 @@
                 this.$altStore.commit('log', {
                     type: 'move'
                 })
-                console.log('reRenderCount', this.reRenderCount);
+                // console.log('reRenderCount', this.reRenderCount);
             },
             resizeMove(item, sx, sy, ex, ey){
-                console.log('resize move');
+                // console.log('resize move');
                 let node = this.placeholder;
                 let dx = ex - sx;
                 let dy = ey - sy;
@@ -573,7 +581,7 @@
                     w: item.node.w + stepX,
                     h: item.node.h + stepY
                 })
-                console.log('resize', size.w, size.h)
+                // console.log('resize', size.w, size.h)
                 this.coors.resizeItem(node, {
                     w: size.w,
                     h: size.h
@@ -588,39 +596,52 @@
                 this.$altStore.commit('log', {
                     type: 'resize'
                 })
-                console.log('reRenderCount', this.reRenderCount);
+                // console.log('reRenderCount', this.reRenderCount);
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
-                console.log('get move cols: %d; startCol: %d', dx, startCol);
+                // console.log('get move cols: %d; startCol: %d', dx, startCol);
                 let flag = dx < 0 ? '-' : '+';
                 let absDx = Math.abs(dx);
                 if(absDx < 15) return 0;
                 let i = 0;
                 let c = startCol;
                 while(absDx > 0){
-                    console.log('absDx: %d; col: %d;', absDx, c);
-                    absDx -= (this.cols[c - 1] || 0);
-                    c--;
-                    i++;
-                    if(c <= 0) break;
+                    if(flag === '-'){
+                        c--;
+                        absDx -= (this.cols[c] || 0);
+                        i++;
+                        if(c <= 0) break;
+                    }else{
+                        c++;
+                        absDx -= (this.cols[c] || 0);
+                        i++;
+                        if(c >= this.cols.length) break;
+                    }
+                    
                 }
                 return parseInt(flag + i);
             },
             getMoveRows(dy, startRow){
                 if(startRow <= 0 && dy < 0) return 0;
-                console.log('get move rows: %d; startRow: %d', dy, startRow);
+                // console.log('get move rows: %d; startRow: %d', dy, startRow);
                 let flag = dy < 0 ? '-' : '+';
                 let absDy = Math.abs(dy);
                 if(absDy < this.rowHeight/2) return 0;
                 let i = 0;
                 let row = startRow;
                 while(absDy > 0){
-                    console.log('absDy: %d; row: %d', absDy, row);
-                    absDy -= this.rowHeight;
-                    i++;
-                    row--;
-                    if(row <= 0) break;
+                    // console.log('absDy: %d; row: %d', absDy, row);
+                    if(flag === '-'){
+                        absDy -= this.rowHeight;
+                        i++;
+                        row--;
+                        if(row <= 0) break;
+                    } else {
+                        absDy -= this.rowHeight;
+                        i++;
+                        row++;
+                    }
                 }
                 return parseInt(flag + i);
             },
@@ -646,7 +667,7 @@
                 let maxW = getFirstSetValue(item.maxW, this.defVal.maxW);
                 let h = size.h;
                 let w = size.w;
-                console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
+                // console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
                 if(size.h <= minH){
                     h = minH;
                 }
@@ -668,7 +689,7 @@
                 let index = getIndexOfArrayByAttr(this.layout, _id, '_id');
                 if(index === -1) return false;
                 let item = this.layout[index];
-                console.log(this.layout, this.layout.indexOf(item));
+                // console.log(this.layout, this.layout.indexOf(item));
                 this.coors.removeItem(item);
                 this.coors.moveAllItemUp();
                 this.layout.splice(index, 1);

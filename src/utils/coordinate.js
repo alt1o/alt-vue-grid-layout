@@ -6,7 +6,7 @@ class Coordinate {
 
     addItem(item = {}){
         this.appendUniqueID(item);
-        console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
+        // console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
         if(!this.isNotNegative(item.x) || 
             !this.isNotNegative(item.y) ||
             !this.isPositiveNumer(item.w) ||
@@ -152,7 +152,7 @@ class Coordinate {
 
     // 删除元素
     removeItem(item){
-        console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
+        // console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
         let x = item.x;
         let y = item.y;
         let w = item.w;
@@ -166,13 +166,13 @@ class Coordinate {
     }
 
     moveItemTo(item, target){
-        console.log('------- move start ------');
+        // console.log('------- move start ------');
         if(item.x === target.x && item.y === target.y){
-            console.log('---- no move end ------')
+            // console.log('---- no move end ------')
             return;
         }
-        console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
-        console.log('test get move up rows', this.getMoveUpRows(item));
+        // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
+        // console.log('test get move up rows', this.getMoveUpRows(item));
         this.removeItem(item);
         
         let belowItems = this.findFirstItemInEveryColsAtRect({
@@ -198,7 +198,7 @@ class Coordinate {
                 h: item.h,
                 w: item.w
             })
-            console.log('move down items: %d', targetBelowItems.length);
+            // console.log('move down items: %d', targetBelowItems.length);
             // console.table(targetBelowItems);
             for(let i = 0; i < targetBelowItems.length; i++){
                 this.moveItemDown(targetBelowItems[i], target.y - targetBelowItems[i].y + item.h);
@@ -210,17 +210,17 @@ class Coordinate {
 
         this.addItem(item);
         // this.moveAllItemUp();
-        console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-        console.log('----- move end -----');
+        // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+        // console.log('----- move end -----');
     }
 
     resizeItem(item, target){
-        console.log('---- resize start ------');
+        // console.log('---- resize start ------');
         if(item.w === target.w && item.h === target.h){
-            console.log('---- resize no move end -----');
+            // console.log('---- resize no move end -----');
             return;
         }
-        console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
+        // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
         this.removeItem(item);
         
         let belowItems = this.findFirstItemInEveryColsAtRect({
@@ -246,7 +246,7 @@ class Coordinate {
                 h: target.h,
                 w: target.w
             })
-            console.log('move down items: %d', targetBelowItems.length);
+            // console.log('move down items: %d', targetBelowItems.length);
             // console.table(targetBelowItems);
             for(let i = 0; i < targetBelowItems.length; i++){
                 this.moveItemDown(targetBelowItems[i], item.y - targetBelowItems[i].y + target.h);
@@ -258,8 +258,8 @@ class Coordinate {
 
         this.addItem(item);
         this.moveAllItemUp();
-        console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-        console.log('----- move end -----');
+        // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+        // console.log('----- move end -----');
     }
 
     // 查找某个区域位置的每一列的第一个元素
@@ -306,7 +306,7 @@ class Coordinate {
 
     // 上移元素
     moveItemUp(item, size){
-        console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+        // console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
         if(!size) return;
         this.removeItem(item);
         
@@ -334,7 +334,7 @@ class Coordinate {
 
     // 下移元素
     moveItemDown(item, size){
-        console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+        // console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
         if(!size) return;
         this.removeItem(item);
 
@@ -344,7 +344,7 @@ class Coordinate {
             h: item.h + size,
             w: item.w
         })
-        console.log('move down items: %d', belowItems.length);
+        // console.log('move down items: %d', belowItems.length);
         for(let i = 0; i < belowItems.length; i++){
             this.moveItemDown(belowItems[i], size);
         }

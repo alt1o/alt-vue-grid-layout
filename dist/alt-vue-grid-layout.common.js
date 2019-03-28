@@ -3886,12 +3886,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=b450aaa4&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=58e4a2df&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=b450aaa4&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=58e4a2df&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4168,8 +4168,7 @@ function () {
     key: "addItem",
     value: function addItem() {
       var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.appendUniqueID(item);
-      console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
+      this.appendUniqueID(item); // console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
 
       if (!this.isNotNegative(item.x) || !this.isNotNegative(item.y) || !this.isPositiveNumer(item.w) || !this.isPositiveNumer(item.h) || !this.checkItemPositionIsLegal(item, this.coors)) {
         var distributePos = this.distributeItemPosition(item, this.getAllItems());
@@ -4332,7 +4331,7 @@ function () {
   }, {
     key: "removeItem",
     value: function removeItem(item) {
-      console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
+      // console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
       var x = item.x;
       var y = item.y;
       var w = item.w;
@@ -4349,15 +4348,14 @@ function () {
   }, {
     key: "moveItemTo",
     value: function moveItemTo(item, target) {
-      console.log('------- move start ------');
-
+      // console.log('------- move start ------');
       if (item.x === target.x && item.y === target.y) {
-        console.log('---- no move end ------');
+        // console.log('---- no move end ------')
         return;
-      }
+      } // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
+      // console.log('test get move up rows', this.getMoveUpRows(item));
 
-      console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
-      console.log('test get move up rows', this.getMoveUpRows(item));
+
       this.removeItem(item);
       var belowItems = this.findFirstItemInEveryColsAtRect({
         x: item.x,
@@ -4383,8 +4381,8 @@ function () {
           y: target.y,
           h: item.h,
           w: item.w
-        });
-        console.log('move down items: %d', targetBelowItems.length); // console.table(targetBelowItems);
+        }); // console.log('move down items: %d', targetBelowItems.length);
+        // console.table(targetBelowItems);
 
         for (var _i = 0; _i < targetBelowItems.length; _i++) {
           this.moveItemDown(targetBelowItems[_i], target.y - targetBelowItems[_i].y + item.h);
@@ -4394,21 +4392,19 @@ function () {
       item.x = target.x;
       item.y = target.y;
       this.addItem(item); // this.moveAllItemUp();
-
-      console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-      console.log('----- move end -----');
+      // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+      // console.log('----- move end -----');
     }
   }, {
     key: "resizeItem",
     value: function resizeItem(item, target) {
-      console.log('---- resize start ------');
-
+      // console.log('---- resize start ------');
       if (item.w === target.w && item.h === target.h) {
-        console.log('---- resize no move end -----');
+        // console.log('---- resize no move end -----');
         return;
-      }
+      } // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
 
-      console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
+
       this.removeItem(item);
       var belowItems = this.findFirstItemInEveryColsAtRect({
         x: item.x,
@@ -4434,8 +4430,8 @@ function () {
           y: item.y,
           h: target.h,
           w: target.w
-        });
-        console.log('move down items: %d', targetBelowItems.length); // console.table(targetBelowItems);
+        }); // console.log('move down items: %d', targetBelowItems.length);
+        // console.table(targetBelowItems);
 
         for (var _i2 = 0; _i2 < targetBelowItems.length; _i2++) {
           this.moveItemDown(targetBelowItems[_i2], item.y - targetBelowItems[_i2].y + target.h);
@@ -4445,9 +4441,8 @@ function () {
       item.w = target.w;
       item.h = target.h;
       this.addItem(item);
-      this.moveAllItemUp();
-      console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-      console.log('----- move end -----');
+      this.moveAllItemUp(); // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
+      // console.log('----- move end -----');
     } // 查找某个区域位置的每一列的第一个元素
 
   }, {
@@ -4499,7 +4494,7 @@ function () {
   }, {
     key: "moveItemUp",
     value: function moveItemUp(item, size) {
-      console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+      // console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
       if (!size) return;
       this.removeItem(item);
       var belowItems = this.findFirstItemInEveryColsAtRect({
@@ -4529,7 +4524,7 @@ function () {
   }, {
     key: "moveItemDown",
     value: function moveItemDown(item, size) {
-      console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
+      // console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
       if (!size) return;
       this.removeItem(item);
       var belowItems = this.findFirstItemInEveryColsAtRect({
@@ -4537,8 +4532,7 @@ function () {
         y: item.y,
         h: item.h + size,
         w: item.w
-      });
-      console.log('move down items: %d', belowItems.length);
+      }); // console.log('move down items: %d', belowItems.length);
 
       for (var i = 0; i < belowItems.length; i++) {
         this.moveItemDown(belowItems[i], size);
@@ -5299,8 +5293,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
   },
   watch: {
     rowHeight: function rowHeight(val, oldVal) {
-      console.log('row height change: %d -> %d', oldVal, val); // this.reRenderCount++;
-
+      // console.log('row height change: %d -> %d', oldVal, val);
+      // this.reRenderCount++;
       this.$altStore.commit('log', {
         type: 'rowHeight',
         action: {
@@ -5310,11 +5304,11 @@ var gridvue_type_script_lang_js_Vue = getVue();
       });
     },
     colNum: function colNum() {
-      console.log('change col number');
+      // console.log('change col number');
       this.initCols();
     },
     cols: function cols() {
-      console.log('cols change');
+      // console.log('cols change');
       this.cacheComputed = {};
       this.reRenderStyle();
     },
@@ -5346,7 +5340,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
       });
     },
     'reRenderCountTest.total': function reRenderCountTestTotal() {
-      console.log('reRenderCountTest.total');
+      // console.log('reRenderCountTest.total');
       this.reRenderStyle();
     }
   },
@@ -5396,9 +5390,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
             h: item.h,
             x: item.x,
             y: item.y
-          });
+          }); // console.log('create Style:', styleRaw, oldStyle, index);
 
-          console.log('create Style:', styleRaw, oldStyle, index);
         });
       }, 10);
     },
@@ -5429,14 +5422,14 @@ var gridvue_type_script_lang_js_Vue = getVue();
     },
     getPropsForInject: function getPropsForInject(index, item) {
       return {
-        index: index,
+        id: item._id,
         card: item,
-        close: this.closeWidget.bind(this, item)
+        close: this.closeWidget.bind(this, item._id)
       };
     },
     // 初始化每个列宽
     initCols: function initCols() {
-      console.log('init cols');
+      // // // console.log('init cols');
       var containerWidth = this.$el.clientWidth;
 
       if (this.colNum === this.cols.length && this.containerWidth && this.containerWidth === containerWidth) {
@@ -5464,17 +5457,25 @@ var gridvue_type_script_lang_js_Vue = getVue();
     },
     // 设置布局layout数组
     setLayout: function setLayout(layout) {
+      var _this4 = this;
+
       // this.layout = deepCopy(layout);
       // this.layout = layout;
-      console.log(deepCopy);
-
+      // // console.log(deepCopy)
       if (!this.coors) {
         this.coors = new coordinate();
       }
 
       this.coors.clear();
       this.coors.batchAddItem(layout);
-      this.layout = this.coors.getAllItems();
+      var layoutOverCalc = this.coors.getAllItems();
+      layoutOverCalc.forEach(function (item) {
+        var style = _this4.getCardStyle(item);
+
+        _this4.$set(item, 'style', style); // item.style = style;
+
+      });
+      this.layout = layoutOverCalc;
       this.$altStore.commit('log', {
         type: 'setLayout'
       });
@@ -5607,8 +5608,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
       // }
     },
     mousemove: function mousemove(evt) {
-      if (!this.operator) return;
-      console.log('mouse move');
+      if (!this.operator) return; // console.log('mouse move');
+
       var ex = evt.clientX;
       var ey = evt.clientY;
       var sx = this.operatedItem.startX;
@@ -5620,8 +5621,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
         this.resizeMove(this.operatedItem, sx, sy, ex, ey);
       }
     },
-    mouseup: function mouseup(evt) {
-      console.log('up', evt);
+    mouseup: function mouseup() {
+      // console.log('up', evt);
       var item = this.operatedItem;
 
       if (item) {
@@ -5691,13 +5692,14 @@ var gridvue_type_script_lang_js_Vue = getVue();
       return target.getAttribute('dg-id');
     },
     dragMove: function dragMove(item, sx, sy, ex, ey) {
-      console.log('drag move');
+      // console.log('drag move');
       var node = this.placeholder;
       var dx = ex - sx;
       var dy = ey - sy;
       var stepX = this.getMoveCols(dx, item.node.x);
-      var stepY = this.getMoveRows(dy, item.node.y);
-      console.log('calc over step');
+      var stepY = this.getMoveRows(dy, item.node.y); // console.log('calc over step');
+
+      console.log(dx, item.node.x);
       this.coors.moveItemTo(node, {
         x: item.node.x + stepX,
         y: item.node.y + stepY
@@ -5710,11 +5712,10 @@ var gridvue_type_script_lang_js_Vue = getVue();
 
       this.$altStore.commit('log', {
         type: 'move'
-      });
-      console.log('reRenderCount', this.reRenderCount);
+      }); // console.log('reRenderCount', this.reRenderCount);
     },
     resizeMove: function resizeMove(item, sx, sy, ex, ey) {
-      console.log('resize move');
+      // console.log('resize move');
       var node = this.placeholder;
       var dx = ex - sx;
       var dy = ey - sy;
@@ -5723,8 +5724,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var size = this.getItemLegalSize(item.node, {
         w: item.node.w + stepX,
         h: item.node.h + stepY
-      });
-      console.log('resize', size.w, size.h);
+      }); // console.log('resize', size.w, size.h)
+
       this.coors.resizeItem(node, {
         w: size.w,
         h: size.h
@@ -5738,12 +5739,11 @@ var gridvue_type_script_lang_js_Vue = getVue();
 
       this.$altStore.commit('log', {
         type: 'resize'
-      });
-      console.log('reRenderCount', this.reRenderCount);
+      }); // console.log('reRenderCount', this.reRenderCount);
     },
     getMoveCols: function getMoveCols(dx, startCol) {
-      if (startCol <= 0 && dx < 0) return 0;
-      console.log('get move cols: %d; startCol: %d', dx, startCol);
+      if (startCol <= 0 && dx < 0) return 0; // console.log('get move cols: %d; startCol: %d', dx, startCol);
+
       var flag = dx < 0 ? '-' : '+';
       var absDx = Math.abs(dx);
       if (absDx < 15) return 0;
@@ -5751,18 +5751,24 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var c = startCol;
 
       while (absDx > 0) {
-        console.log('absDx: %d; col: %d;', absDx, c);
-        absDx -= this.cols[c - 1] || 0;
-        c--;
-        i++;
-        if (c <= 0) break;
+        if (flag === '-') {
+          c--;
+          absDx -= this.cols[c] || 0;
+          i++;
+          if (c <= 0) break;
+        } else {
+          c++;
+          absDx -= this.cols[c] || 0;
+          i++;
+          if (c >= this.cols.length) break;
+        }
       }
 
       return parseInt(flag + i);
     },
     getMoveRows: function getMoveRows(dy, startRow) {
-      if (startRow <= 0 && dy < 0) return 0;
-      console.log('get move rows: %d; startRow: %d', dy, startRow);
+      if (startRow <= 0 && dy < 0) return 0; // console.log('get move rows: %d; startRow: %d', dy, startRow);
+
       var flag = dy < 0 ? '-' : '+';
       var absDy = Math.abs(dy);
       if (absDy < this.rowHeight / 2) return 0;
@@ -5770,11 +5776,17 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var row = startRow;
 
       while (absDy > 0) {
-        console.log('absDy: %d; row: %d', absDy, row);
-        absDy -= this.rowHeight;
-        i++;
-        row--;
-        if (row <= 0) break;
+        // console.log('absDy: %d; row: %d', absDy, row);
+        if (flag === '-') {
+          absDy -= this.rowHeight;
+          i++;
+          row--;
+          if (row <= 0) break;
+        } else {
+          absDy -= this.rowHeight;
+          i++;
+          row++;
+        }
       }
 
       return parseInt(flag + i);
@@ -5803,8 +5815,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var maxW = util_getFirstSetValue(item.maxW, this.defVal.maxW);
 
       var h = size.h;
-      var w = size.w;
-      console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
+      var w = size.w; // console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
 
       if (size.h <= minH) {
         h = minH;
@@ -5830,8 +5841,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
     closeWidget: function closeWidget(_id) {
       var index = getIndexOfArrayByAttr(this.layout, _id, '_id');
       if (index === -1) return false;
-      var item = this.layout[index];
-      console.log(this.layout, this.layout.indexOf(item));
+      var item = this.layout[index]; // console.log(this.layout, this.layout.indexOf(item));
+
       this.coors.removeItem(item);
       this.coors.moveAllItemUp();
       this.layout.splice(index, 1);
