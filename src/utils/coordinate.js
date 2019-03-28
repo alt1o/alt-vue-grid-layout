@@ -5,6 +5,10 @@ class Coordinate {
         this.maxWidth = options.maxWidth || 0;
     }
 
+    setMaxWidth(num){
+        this.maxWidth = num;
+    }
+
     addItem(item = {}){
         this.appendUniqueID(item);
         // console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);

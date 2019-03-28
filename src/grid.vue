@@ -185,8 +185,11 @@
                     }
                 })
             },
-            colNum(){
+            colNum(val){
                 // console.log('change col number');
+                if(this.coors){
+                    this.coors.setMaxWidth = parseInt(val);
+                }
                 this.initCols();
             },
             cols(){
@@ -325,7 +328,9 @@
                 // this.layout = layout;
                 // // console.log(deepCopy)
                 if(!this.coors){
-                    this.coors = new Coordinate();
+                    this.coors = new Coordinate({
+                        maxWidth: this.colNum
+                    });
                 }
                 this.coors.clear();
                 this.coors.batchAddItem(layout);
@@ -554,7 +559,6 @@
                 let stepX = this.getMoveCols(dx, item.node.x);
                 let stepY = this.getMoveRows(dy, item.node.y);
                 // console.log('calc over step');
-                console.log(dx, item.node.x);
                 this.coors.moveItemTo(node, {
                     x: item.node.x + stepX,
                     y: item.node.y + stepY

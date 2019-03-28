@@ -3895,12 +3895,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=58e4a2df&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=2c9c843e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=58e4a2df&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=2c9c843e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4177,6 +4177,11 @@ function () {
   }
 
   _createClass(Coordinate, [{
+    key: "setMaxWidth",
+    value: function setMaxWidth(num) {
+      this.maxWidth = num;
+    }
+  }, {
     key: "addItem",
     value: function addItem() {
       var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -5323,8 +5328,12 @@ var gridvue_type_script_lang_js_Vue = getVue();
         }
       });
     },
-    colNum: function colNum() {
+    colNum: function colNum(val) {
       // console.log('change col number');
+      if (this.coors) {
+        this.coors.setMaxWidth = parseInt(val);
+      }
+
       this.initCols();
     },
     cols: function cols() {
@@ -5483,7 +5492,9 @@ var gridvue_type_script_lang_js_Vue = getVue();
       // this.layout = layout;
       // // console.log(deepCopy)
       if (!this.coors) {
-        this.coors = new coordinate();
+        this.coors = new coordinate({
+          maxWidth: this.colNum
+        });
       }
 
       this.coors.clear();
@@ -5719,7 +5730,6 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var stepX = this.getMoveCols(dx, item.node.x);
       var stepY = this.getMoveRows(dy, item.node.y); // console.log('calc over step');
 
-      console.log(dx, item.node.x);
       this.coors.moveItemTo(node, {
         x: item.node.x + stepX,
         y: item.node.y + stepY
