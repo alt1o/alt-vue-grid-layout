@@ -476,9 +476,21 @@
                     if(this.operator === 1){
                         item.node.x = this.placeholder.x;
                         item.node.y = this.placeholder.y;
+                        this.dispatchEvent(item.dragId, 'moved', {
+                            x: item.node.x,
+                            y: item.node.y,
+                            w: item.node.w,
+                            h: item.node.h
+                        })
                     }else if(this.operator === 2){
                         item.node.w = this.placeholder.w;
                         item.node.h = this.placeholder.h;
+                        this.dispatchEvent(item.dragId, 'resized', {
+                            x: item.node.x,
+                            y: item.node.y,
+                            w: item.node.w,
+                            h: item.node.h
+                        })
                     }
                     this.$set(item.node, 'style', this.getCardStyle(item.node));
 
@@ -628,6 +640,7 @@
             },
             go(num){
                 let layoutCopy = this.$altStore.state.historyStack.go(num).value;
+                if(!layoutCopy.length) return;
                 for(let i = 0, l = layoutCopy.length; i < l; i++){
                     let temp = layoutCopy[i];
                     if(!this.layout[i]){
