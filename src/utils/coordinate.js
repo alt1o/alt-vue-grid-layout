@@ -1,9 +1,11 @@
+import { getUniqueID } from './util'
 class Coordinate {
     constructor(){
         this.coors = [];
     }
 
     addItem(item = {}){
+        this.appendUniqueID(item);
         console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
         if(!this.isNotNegative(item.x) || 
             !this.isNotNegative(item.y) ||
@@ -23,6 +25,7 @@ class Coordinate {
         return item;
     }
     addItemWithNoCheck(item = {}){
+        this.appendUniqueID(item);
         let x = item.x;
         let y = item.y;
         let w = item.w;
@@ -38,6 +41,12 @@ class Coordinate {
         }
 
         return item;
+    }
+
+    appendUniqueID(item){
+        if(!item._id){
+            item._id = getUniqueID();
+        }
     }
 
     batchAddItem(list, checked){

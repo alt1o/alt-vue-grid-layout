@@ -3,7 +3,7 @@
         @mousedown="mousedown"
         @mousemove="mousemove"
         @mouseup="mouseup"
-        class="alt-grid-container" 
+        class="alt-grid-container"
         :class="operatorClass"
         :style="containerStyle">
         <div 
@@ -15,15 +15,15 @@
             ref="cards"
             v-for="(item, index) in layout"
             :key="index"
-            :dg-id="index"
+            :dg-id="item._id"
             :style="item.style"
             class="alt-grid-item"
             :class="[gridItemClass, item.gridItemClass]">
             <button 
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
-                @click="closeWidget(item)">关闭</button>
-            <component :ref="index" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
+                @click="closeWidget(item._id)">关闭</button>
+            <component :ref="item._id" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
@@ -39,7 +39,8 @@
         findParentThoughEvtPath,
         getFirstSetValue,
         getVue,
-        getVariType
+        getVariType,
+        getIndexOfArrayByAttr
     } from './utils/util';
     import watchBoxSize from './utils/watch-box-size.js'
     import Coordinate from './utils/coordinate'
@@ -282,7 +283,7 @@
                 return 'none';
             },
             dispatchEvent(dragId, type, pos){
-                this.$refs[dragId][0].$emit(type, pos);
+                this.$refs[dragId] && this.$refs[dragId][0].$emit(type, pos);
             },
             getFirstSetValue(){
                 return getFirstSetValue(...arguments);
@@ -331,6 +332,10 @@
                 this.coors.batchAddItem(layout);
                 
                 this.layout = this.coors.getAllItems();
+
+                this.$altStore.commit('log', {
+                    type: 'setLayout'
+                })
 
                 this.$altStore.commit('addHistory', {
                     type: 'posChange',
@@ -472,43 +477,64 @@
                     // let x = this.computeColsWidth(0, item.node.x);
                     // let y = item.node.y * this.rowHeight;
                     // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-
-                    if(this.operator === 1){
-                        item.node.x = this.placeholder.x;
-                        item.node.y = this.placeholder.y;
-                        this.dispatchEvent(item.dragId, 'moved', {
-                            x: item.node.x,
-                            y: item.node.y,
-                            w: item.node.w,
-                            h: item.node.h
-                        })
-                    }else if(this.operator === 2){
-                        item.node.w = this.placeholder.w;
-                        item.node.h = this.placeholder.h;
-                        this.dispatchEvent(item.dragId, 'resized', {
-                            x: item.node.x,
-                            y: item.node.y,
-                            w: item.node.w,
-                            h: item.node.h
-                        })
-                    }
+                    // let x = this.placeholder.x;
+                    // let y = this.placeholder.y;
+                    // let w = this.placeholder.w;
+                    // let h = this.placeholder.h;
+                    // let node = item.node;
+                    this.applyChange();
+                    
                     this.$set(item.node, 'style', this.getCardStyle(item.node));
 
                     this.coors.removeItem(this.placeholder);
                     this.coors.addItem(this.operatedItem.node);
                 }
-                
-                this.operator = 0;
-                this.operatedItem = null;
-                this.placeholder = null;
+
+                this.clearDragEnv();
 
                 this.$altStore.commit('addHistory', {
                     type: 'posChange',
                     value: JSON.parse(JSON.stringify(this.layout))
                 })
             },
+            applyChange(){
+                let x = this.placeholder.x;
+                let y = this.placeholder.y;
+                let w = this.placeholder.w;
+                let h = this.placeholder.h;
+                let dragId = this.operatedItem.dragId;
+                let node = this.operatedItem.node;
+                if(this.operator === 1){
+                    if(node.x === x && node.y === y) return;
+                    node.x = x;
+                    node.y = y;
+                    this.dispatchEvent(dragId, 'moved', {
+                        x: x,
+                        y: y,
+                        w: node.w,
+                        h: node.h
+                    })
+                }else if(this.operator === 2){
+                    if(node.w === w && node.h === h)  return;
+                    node.w = this.placeholder.w;
+                    node.h = this.placeholder.h;
+                    this.dispatchEvent(dragId, 'resized', {
+                        x: node.x,
+                        y: node.y,
+                        w: w,
+                        h: h
+                    })
+                }
+            },
+            clearDragEnv(){
+                this.operator = 0;
+                this.operatedItem = null;
+                this.placeholder = null;
+            },
             getNodeByDragId(dragId){
-                return this.layout[dragId];
+                let index = getIndexOfArrayByAttr(this.layout, dragId, '_id');
+                if(index === -1) return null;
+                return this.layout[index];
             },
             getDragId(target){
                 return target.getAttribute('dg-id');
@@ -603,7 +629,14 @@
                     let distributeItem = this.coors.addItem(item);
                     this.layout.push(distributeItem);
                     this.reRenderCount++;
+                    return distributeItem._id;
                 }
+            },
+            deleteItem(id){
+                return this.closeWidget(id);
+            },
+            getAllItems(){
+                return this.layout;
             },
             getItemLegalSize(item, size){
                 
@@ -631,12 +664,16 @@
                     w: w
                 }
             },
-            closeWidget(item){
+            closeWidget(_id){
+                let index = getIndexOfArrayByAttr(this.layout, _id, '_id');
+                if(index === -1) return false;
+                let item = this.layout[index];
                 console.log(this.layout, this.layout.indexOf(item));
                 this.coors.removeItem(item);
                 this.coors.moveAllItemUp();
-                this.layout.splice(this.layout.indexOf(item), 1);
+                this.layout.splice(index, 1);
                 this.reRenderCount++;
+                this.clearDragEnv();
             },
             go(num){
                 let layoutCopy = this.$altStore.state.historyStack.go(num).value;
@@ -673,6 +710,9 @@
 .alt-grid-container .alt-grid-item{
     position: absolute;
     background: gray;
+}
+.alt-grid-container.alt-grid-container-operating .alt-grid-item{
+    transition-duration: 100ms;
 }
 .alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{
     display: block;

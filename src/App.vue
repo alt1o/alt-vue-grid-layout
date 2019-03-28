@@ -90,6 +90,7 @@
         data () {
             return {
                 layout: JSON.parse(JSON.stringify(testLayout)),
+                layout2: JSON.parse(JSON.stringify(testLayout)),
                 draggable: true,
                 resizable: true,
                 rowHeight: 150,
@@ -106,6 +107,9 @@
         },
         mounted: function () {
             this.$refs.altGrid.setLayout(this.layout);
+            setTimeout(() => {
+               this.$refs.altGrid.setLayout(this.layout2); 
+            }, 500);
             // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
