@@ -34,7 +34,7 @@ export default class HistoryStack {
 
     goBackward(num){
         let empty = { value: [] };
-        if(!this.undo.length) return empty;
+        if(!this.undo.length || !(this.undo.length - 1)) return empty;
         while(num--){
             let temp = this.undo.pop();
             this.redo.push(temp);

@@ -145,8 +145,8 @@ class Coordinate {
             return arr.indexOf(minVal);
         }
         let index = -1;
-        let value = 10000;
-        for(let i = 0; i < arr.length - w; i++){
+        let value = Infinity;
+        for(let i = 0; i < arr.length - w + 1; i++){
             let flag = true;
             let item = arr[i];
             for(let j = i + 1; j < i + w; j++){

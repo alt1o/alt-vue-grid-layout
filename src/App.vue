@@ -26,6 +26,7 @@
             <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    class="nihao"
                     :is-draggable="draggable"
                     :is-resizable="resizable"
                     :row-height="Number(rowHeight)"
@@ -34,7 +35,7 @@
                     :col-num="colNum"
                     grid-item-class="ceshi-global-item"
                     close-handler-class="ceshi-global-close"
-                    resize-handler-class="alt-grid-item-resize-handler"
+                    resize-handler-class="alt-g-i-r-h-default-style"
                     placeholder-class="ceshi-global-placeholder"
                     ref="altGrid" ></grid>
             </div>
@@ -78,6 +79,10 @@
         {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
         {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
     ];
+    let layout2 = [
+        { x: 0, y: 0, w: 8, h: 6},
+        { x: 0, y: 6, w: 6, h: 6}
+    ]
 
     export default {
         name: 'app',
@@ -89,11 +94,11 @@
         },
         data () {
             return {
-                layout: JSON.parse(JSON.stringify(testLayout)),
+                layout: JSON.parse(JSON.stringify(layout2)),
                 layout2: JSON.parse(JSON.stringify(testLayout)),
                 draggable: true,
                 resizable: true,
-                rowHeight: 150,
+                rowHeight: 50,
                 colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
@@ -108,7 +113,8 @@
         mounted: function () {
             this.$refs.altGrid.setLayout(this.layout);
             setTimeout(() => {
-               this.$refs.altGrid.setLayout(this.layout2); 
+            //    this.$refs.altGrid.setLayout(this.layout2); 
+               this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
             }, 500);
             // this.$refs.grid2.setLayout(this.layout);
         },

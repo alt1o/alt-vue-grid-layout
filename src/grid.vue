@@ -18,7 +18,7 @@
             :dg-id="item._id"
             :style="item.style"
             class="alt-grid-item"
-            :class="[gridItemClass, item.gridItemClass]">
+            :class="[gridItemClass, gridItemClass, item.gridItemClass]">
             <button 
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
@@ -126,7 +126,7 @@
             },
             resizeHandlerClass: { // 设置大小按钮的class
                 type: String,
-                default: 'alt-grid-item-resize-handler'
+                default: 'alt-g-i-r-h-default-style'
             },
             placeholderClass: { // 拖拽时 placeholder 的class
                 type: String,
@@ -350,7 +350,7 @@
                 })
 
                 this.$altStore.commit('addHistory', {
-                    type: 'posChange',
+                    type: 'setLayout',
                     value: JSON.parse(JSON.stringify(this.layout))
                 })
 
@@ -505,7 +505,7 @@
                 this.clearDragEnv();
 
                 this.$altStore.commit('addHistory', {
-                    type: 'posChange',
+                    type: 'move or resize',
                     value: JSON.parse(JSON.stringify(this.layout))
                 })
             },
@@ -654,6 +654,10 @@
                     let distributeItem = this.coors.addItem(item);
                     this.layout.push(distributeItem);
                     this.reRenderCount++;
+                    this.$altStore.commit('addHistory', {
+                        type: 'addItem',
+                        value: JSON.parse(JSON.stringify(this.layout))
+                    });
                     return distributeItem._id;
                 }
             },
@@ -699,21 +703,27 @@
                 this.layout.splice(index, 1);
                 this.reRenderCount++;
                 this.clearDragEnv();
+                this.$altStore.commit('addHistory', {
+                    type: 'deleteItem',
+                    value: JSON.parse(JSON.stringify(this.layout))
+                });
             },
             go(num){
-                let layoutCopy = this.$altStore.state.historyStack.go(num).value;
+                let historyItem = this.$altStore.state.historyStack.go(num);
+                let layoutCopy = historyItem.value;
                 if(!layoutCopy.length) return;
-                for(let i = 0, l = layoutCopy.length; i < l; i++){
-                    let temp = layoutCopy[i];
-                    if(!this.layout[i]){
-                        this.$set(this.layout, i, temp);
-                    }else{
-                        this.layout[i].x = temp.x;
-                        this.layout[i].y = temp.y;
-                        this.layout[i].w = temp.w;
-                        this.layout[i].h = temp.h;
-                    }
-                }
+                // for(let i = 0, l = layoutCopy.length; i < l; i++){
+                //     let temp = layoutCopy[i];
+                //     if(!this.layout[i]){
+                //         this.$set(this.layout, i, temp);
+                //     }else{
+                //         this.layout[i].x = temp.x;
+                //         this.layout[i].y = temp.y;
+                //         this.layout[i].w = temp.w;
+                //         this.layout[i].h = temp.h;
+                //     }
+                // }
+                this.layout = layoutCopy;
                 this.coors.clear();
                 this.coors.batchAddItem(this.layout, true);
 
@@ -745,15 +755,22 @@
 .alt-grid-container .alt-grid-item-resize-handler{
     display: none;
     position: absolute;
-    width: 0;
-    height: 0;
+    
     right: 1px;
     bottom: 1px;
+    
+    cursor: se-resize;
+}
+/*
+    alt-grid-item-resize-handler-default-style -> alt-g-i-r-h-default-style
+*/
+.alt-grid-container .alt-g-i-r-h-default-style{
+    width: 0;
+    height: 0;
     border-top: 5px solid transparent;
     border-left: 5px solid transparent;
     border-right: 5px solid #000;
     border-bottom: 5px solid #000;
-    cursor: se-resize;
 }
 .alt-grid-item-drag-placeholder{
     position: absolute;

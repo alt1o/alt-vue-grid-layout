@@ -2169,7 +2169,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;width:0;height:0;right:1px;bottom:1px;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000;cursor:se-resize\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}", ""]);
 
 // exports
 
@@ -3895,12 +3895,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=2c9c843e&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=5ea98699&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=2c9c843e&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=5ea98699&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4331,9 +4331,9 @@ function () {
       }
 
       var index = -1;
-      var value = 10000;
+      var value = Infinity;
 
-      for (var i = 0; i < arr.length - w; i++) {
+      for (var i = 0; i < arr.length - w + 1; i++) {
         var flag = true;
         var item = arr[i];
 
@@ -5057,7 +5057,7 @@ function () {
       var empty = {
         value: []
       };
-      if (!this.undo.length) return empty;
+      if (!this.undo.length || !(this.undo.length - 1)) return empty;
 
       while (num--) {
         var temp = this.undo.pop();
@@ -5254,7 +5254,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
     resizeHandlerClass: {
       // 设置大小按钮的class
       type: String,
-      default: 'alt-grid-item-resize-handler'
+      default: 'alt-g-i-r-h-default-style'
     },
     placeholderClass: {
       // 拖拽时 placeholder 的class
@@ -5511,7 +5511,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
         type: 'setLayout'
       });
       this.$altStore.commit('addHistory', {
-        type: 'posChange',
+        type: 'setLayout',
         value: JSON.parse(JSON.stringify(this.layout))
       });
 
@@ -5675,7 +5675,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
 
       this.clearDragEnv();
       this.$altStore.commit('addHistory', {
-        type: 'posChange',
+        type: 'move or resize',
         value: JSON.parse(JSON.stringify(this.layout))
       });
     },
@@ -5826,6 +5826,10 @@ var gridvue_type_script_lang_js_Vue = getVue();
         var distributeItem = this.coors.addItem(item);
         this.layout.push(distributeItem);
         this.reRenderCount++;
+        this.$altStore.commit('addHistory', {
+          type: 'addItem',
+          value: JSON.parse(JSON.stringify(this.layout))
+        });
         return distributeItem._id;
       }
     },
@@ -5878,24 +5882,27 @@ var gridvue_type_script_lang_js_Vue = getVue();
       this.layout.splice(index, 1);
       this.reRenderCount++;
       this.clearDragEnv();
+      this.$altStore.commit('addHistory', {
+        type: 'deleteItem',
+        value: JSON.parse(JSON.stringify(this.layout))
+      });
     },
     go: function go(num) {
-      var layoutCopy = this.$altStore.state.historyStack.go(num).value;
-      if (!layoutCopy.length) return;
+      var historyItem = this.$altStore.state.historyStack.go(num);
+      var layoutCopy = historyItem.value;
+      if (!layoutCopy.length) return; // for(let i = 0, l = layoutCopy.length; i < l; i++){
+      //     let temp = layoutCopy[i];
+      //     if(!this.layout[i]){
+      //         this.$set(this.layout, i, temp);
+      //     }else{
+      //         this.layout[i].x = temp.x;
+      //         this.layout[i].y = temp.y;
+      //         this.layout[i].w = temp.w;
+      //         this.layout[i].h = temp.h;
+      //     }
+      // }
 
-      for (var i = 0, l = layoutCopy.length; i < l; i++) {
-        var temp = layoutCopy[i];
-
-        if (!this.layout[i]) {
-          this.$set(this.layout, i, temp);
-        } else {
-          this.layout[i].x = temp.x;
-          this.layout[i].y = temp.y;
-          this.layout[i].w = temp.w;
-          this.layout[i].h = temp.h;
-        }
-      }
-
+      this.layout = layoutCopy;
       this.coors.clear();
       this.coors.batchAddItem(this.layout, true);
       this.$altStore.commit('log', {
