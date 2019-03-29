@@ -745,6 +745,7 @@
 .alt-grid-container .alt-grid-item{
     position: absolute;
     background: gray;
+    cursor: move;
 }
 .alt-grid-container.alt-grid-container-operating .alt-grid-item{
     transition-duration: 100ms;
