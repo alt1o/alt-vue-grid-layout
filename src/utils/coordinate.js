@@ -317,6 +317,23 @@ class Coordinate {
         return upperRows;
     }
 
+    getMoveUpRowsExceptId(item, id){
+        let coors = this.coors;
+        let upperRows = 0;
+        for(let i = item.y - 1; i >= 0; i--){
+            if(this.isNil(coors[i])){
+                upperRows++;
+                continue;
+            }
+            for(let j = item.x; j < item.x + item.w; j++){
+                if(!this.isNil(coors[i][j]) && coors[i][j]._id !== id) return upperRows;
+            }
+            upperRows++;
+        }
+
+        return upperRows;
+    }
+
     // 上移元素
     moveItemUp(item, size){
         // console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);

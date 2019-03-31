@@ -1,8 +1,6 @@
 <template>
     <div 
         @mousedown="mousedown"
-        @mousemove="mousemove"
-        @mouseup="mouseup"
         class="alt-grid-container"
         :class="operatorClass"
         :style="containerStyle">
@@ -161,7 +159,11 @@
                 reRenderCount: 0,
                 timer: null,
                 animation: null,
-                animationHandler: null
+                animationHandler: null,
+                eventHandler: {
+                    mousemove: null,
+                    mouseup: null
+                }
             }
         },
         mounted: function () {
@@ -169,9 +171,11 @@
             this.boxWatchHandler = new watchBoxSize(this.$el, () => {
                 this.initCols();
             })
+            this.bindEvents();
         },
         destroyed(){
             this.boxWatchHandler.destroy();
+            this.unbindEvents();
         },
         watch: {
             rowHeight(val, oldVal){
@@ -218,10 +222,10 @@
                     action: { oldVal,newVal }
                 })
             },
-            'reRenderCountTest.total'(){
-                // console.log('reRenderCountTest.total');
-                this.reRenderStyle();
-            }
+            // 'reRenderCountTest.total'(){
+            //     // console.log('reRenderCountTest.total');
+            //     this.reRenderStyle();
+            // }
         },
         computed: {
             reRenderCountTest(){
@@ -237,10 +241,21 @@
             }
         },
         methods: {
-            reRenderStyle(){
+            bindEvents(){
+                this.eventHandler.mousemove = this.mousemove.bind(this);
+                this.eventHandler.mouseup = this.mouseup.bind(this);
+                window.addEventListener('mousemove', this.eventHandler.mousemove);
+                window.addEventListener('mouseup', this.eventHandler.mouseup)
+            },
+            unbindEvents(){
+                window.removeEventListener('mousemove', this.eventHandler.mousemove);
+                window.removeEventListener('mouseup', this.eventHandler.mouseup);
+            },
+            reRenderStyle(ignoreId){
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.layout.forEach((item, index) => {
+                        if(item._id === ignoreId) return;
                         let card = this.$refs.cards[index];
                         let oldStyle = {
                             style: card.style,
@@ -386,6 +401,12 @@
                 //     height: h + 'px'
                 // }
             },
+            getCardStyleForRealTime(item){
+                if(!item) return;
+                let transform = `transform:translate3d(${item.x}px,${item.y}px,0);`;
+                let style = `${transform}width:${item.w}px;height:${item.h}px;background-color:${this.backgroundColor};z-index:1;`;
+                return style;
+            },
             // 计算卡片的宽度
             getCardWidth(start, end){
                 let width = this.computeColsWidth(start, end);
@@ -423,7 +444,6 @@
                         return;
                     }
                     this.operator = 2; // resize
-                    targetCard.style.zIndex = 1;
                 }
                 if(targetCard && !this.operator){
                     if(!getFirstSetValue(
@@ -455,11 +475,14 @@
                 }
 
                 this.placeholder = {
+                    _id: '__placeHolder__',
                     x: node.x,
                     y: node.y,
                     w: node.w,
                     h: node.h
                 };
+                this.coors.removeItem(node);
+                this.coors.addItem(this.placeholder);
                 // console.log('down', evt, this.operatedItem);
                 // if(hasClass(target, this.resizeHandlerClass)){
                 //     this.operator = 2;
@@ -496,10 +519,14 @@
                     // let node = item.node;
                     this.applyChange();
                     
-                    this.$set(item.node, 'style', this.getCardStyle(item.node));
+                    // this.$set(item.node, 'style', this.getCardStyle(item.node));
+                    item.node.style = this.getCardStyle(item.node);
 
                     this.coors.removeItem(this.placeholder);
                     this.coors.addItem(this.operatedItem.node);
+                    // this.$altStore.commit('log', {
+                    //     type: 'moved or resized'
+                    // })
                 }
 
                 this.clearDragEnv();
@@ -554,21 +581,44 @@
             dragMove(item, sx, sy, ex, ey){
                 // console.log('drag move');
                 let node = this.placeholder;
+                let cacheStyle = item.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
                 let stepX = this.getMoveCols(dx, item.node.x);
                 let stepY = this.getMoveRows(dy, item.node.y);
                 // console.log('calc over step');
+                let targetX = item.node.x + stepX;
+                let targetY = item.node.y + stepY;
+
+                let moveUpRows = this.coors.getMoveUpRowsExceptId({
+                    x: targetX,
+                    y: targetY,
+                    w: item.node.w,
+                    h: item.node.h
+                }, '__placeHolder__');
+
+                targetY -= moveUpRows;
+
                 this.coors.moveItemTo(node, {
-                    x: item.node.x + stepX,
-                    y: item.node.y + stepY
+                    x: targetX,
+                    y: targetY
                 })
-                node.x = item.node.x + stepX;
-                node.y = item.node.y + stepY;
-                let x = item.cacheStyle.x + dx;
-                let y = item.cacheStyle.y + dy;
-                item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                node.x = targetX;
+                node.y = targetY;
+                
+                
+                let x = cacheStyle.x + dx;
+                let y = cacheStyle.y + dy;
+                item.node.style = this.getCardStyleForRealTime({
+                    x: x,
+                    y: y,
+                    w: cacheStyle.w,
+                    h: cacheStyle.h
+                })
+                // item.node.style = `transform:translate3d(${x}px, ${y}px, 0);width:${cacheStyle.w}px;height:${cacheStyle.h}px;z-index:1;`;
+                // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 // this.reRenderCount++;
+                this.reRenderStyle(item.dragId);
                 this.$altStore.commit('log', {
                     type: 'move'
                 })
@@ -577,6 +627,7 @@
             resizeMove(item, sx, sy, ex, ey){
                 // console.log('resize move');
                 let node = this.placeholder;
+                let cacheStyle = item.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
                 let stepX = this.getMoveCols(dx, item.node.x + item.node.w);
@@ -592,11 +643,20 @@
                 })
                 node.w = size.w;
                 node.h = size.h;
-                let w = item.cacheStyle.w + dx;
-                let h = item.cacheStyle.h + dy;
-                item.el.style.width = w + 'px';
-                item.el.style.height = h + 'px';
+                let w = cacheStyle.w + dx;
+                let h = cacheStyle.h + dy;
+                item.node.style = this.getCardStyleForRealTime({
+                    x: cacheStyle.x,
+                    y: cacheStyle.y,
+                    w: w,
+                    h: h
+                })
+                // item.node.style = `transform:translate3d(${cacheStyle.x}px, ${cacheStyle.y}px, 0);width:${w}px;height:${h}px;z-index:1;`;
+                // console.log(item.node.style);
+                // item.el.style.width = w + 'px';
+                // item.el.style.height = h + 'px';
                 // this.reRenderCount++;
+                this.reRenderStyle(item.dragId);
                 this.$altStore.commit('log', {
                     type: 'resize'
                 })

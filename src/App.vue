@@ -94,11 +94,11 @@
         },
         data () {
             return {
-                layout: JSON.parse(JSON.stringify(layout2)),
-                layout2: JSON.parse(JSON.stringify(testLayout)),
+                layout: JSON.parse(JSON.stringify(testLayout)),
+                layout2: JSON.parse(JSON.stringify(layout2)),
                 draggable: true,
                 resizable: true,
-                rowHeight: 50,
+                rowHeight: 150,
                 colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
@@ -114,7 +114,7 @@
             this.$refs.altGrid.setLayout(this.layout);
             setTimeout(() => {
             //    this.$refs.altGrid.setLayout(this.layout2); 
-               this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
+            //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
             }, 500);
             // this.$refs.grid2.setLayout(this.layout);
         },
