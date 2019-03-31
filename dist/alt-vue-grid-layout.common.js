@@ -3886,12 +3886,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=529dbad6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=10a780b2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=529dbad6&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=10a780b2&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -5557,8 +5557,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var x = this.computeColsWidth(0, item.x);
       var w = this.getCardWidth(item.x, item.x + item.w);
       var y = item.y * this.rowHeight;
-      var h = item.h * this.rowHeight - this.margin[1];
-      this.setContainerHeight(y, h);
+      var h = item.h * this.rowHeight - this.margin[1]; // this.setContainerHeight(y, h);
+
       var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
       var style = "".concat(transform, "width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";");
 
@@ -5581,8 +5581,23 @@ var gridvue_type_script_lang_js_Vue = getVue();
     },
     getCardStyleForRealTime: function getCardStyleForRealTime(item) {
       if (!item) return;
-      var transform = "transform:translate3d(".concat(item.x, "px,").concat(item.y, "px,0);");
-      var style = "".concat(transform, "width:").concat(item.w, "px;height:").concat(item.h, "px;background-color:").concat(this.backgroundColor, ";z-index:1;");
+      var w = item.w;
+      var x = item.x;
+
+      if (x < 0) {
+        x = 0;
+      } else if (x + w > this.containerWidth) {
+        x = this.containerWidth - w;
+      }
+
+      var y = item.y;
+
+      if (y < 0) {
+        y = 0;
+      }
+
+      var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
+      var style = "".concat(transform, "width:").concat(w, "px;height:").concat(item.h, "px;background-color:").concat(this.backgroundColor, ";z-index:1;");
       return style;
     },
     // 计算卡片的宽度
@@ -5761,7 +5776,8 @@ var gridvue_type_script_lang_js_Vue = getVue();
       var cacheStyle = item.cacheStyle;
       var dx = ex - sx;
       var dy = ey - sy;
-      var stepX = this.getMoveCols(dx, item.node.x);
+      var startCol = dx > 0 ? item.node.x + item.node.w : item.node.x;
+      var stepX = this.getMoveCols(dx, startCol);
       var stepY = this.getMoveRows(dy, item.node.y); // console.log('calc over step');
 
       var targetX = item.node.x + stepX;
@@ -5816,6 +5832,11 @@ var gridvue_type_script_lang_js_Vue = getVue();
       node.h = size.h;
       var w = cacheStyle.w + dx;
       var h = cacheStyle.h + dy;
+
+      if (cacheStyle.x + w > this.containerWidth) {
+        w = this.containerWidth - cacheStyle.x;
+      }
+
       item.node.style = this.getCardStyleForRealTime({
         x: cacheStyle.x,
         y: cacheStyle.y,
