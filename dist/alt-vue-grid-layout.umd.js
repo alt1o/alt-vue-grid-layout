@@ -3895,12 +3895,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=64982655&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown,"mousemove":_vm.mousemove,"mouseup":_vm.mouseup}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=529dbad6&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=64982655&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=529dbad6&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4508,6 +4508,27 @@ function () {
 
         for (var j = item.x; j < item.x + item.w; j++) {
           if (!this.isNil(coors[i][j])) return upperRows;
+        }
+
+        upperRows++;
+      }
+
+      return upperRows;
+    }
+  }, {
+    key: "getMoveUpRowsExceptId",
+    value: function getMoveUpRowsExceptId(item, id) {
+      var coors = this.coors;
+      var upperRows = 0;
+
+      for (var i = item.y - 1; i >= 0; i--) {
+        if (this.isNil(coors[i])) {
+          upperRows++;
+          continue;
+        }
+
+        for (var j = item.x; j < item.x + item.w; j++) {
+          if (!this.isNil(coors[i][j]) && coors[i][j]._id !== id) return upperRows;
         }
 
         upperRows++;
@@ -5154,8 +5175,6 @@ function createStore() {
 //
 //
 //
-//
-//
 
 
 
@@ -5302,7 +5321,11 @@ var gridvue_type_script_lang_js_Vue = getVue();
       reRenderCount: 0,
       timer: null,
       animation: null,
-      animationHandler: null
+      animationHandler: null,
+      eventHandler: {
+        mousemove: null,
+        mouseup: null
+      }
     };
   },
   mounted: function mounted() {
@@ -5312,9 +5335,11 @@ var gridvue_type_script_lang_js_Vue = getVue();
     this.boxWatchHandler = new watch_box_size(this.$el, function () {
       _this.initCols();
     });
+    this.bindEvents();
   },
   destroyed: function destroyed() {
     this.boxWatchHandler.destroy();
+    this.unbindEvents();
   },
   watch: {
     rowHeight: function rowHeight(val, oldVal) {
@@ -5367,10 +5392,6 @@ var gridvue_type_script_lang_js_Vue = getVue();
           newVal: newVal
         }
       });
-    },
-    'reRenderCountTest.total': function reRenderCountTestTotal() {
-      // console.log('reRenderCountTest.total');
-      this.reRenderStyle();
     }
   },
   computed: {
@@ -5387,12 +5408,23 @@ var gridvue_type_script_lang_js_Vue = getVue();
     }
   },
   methods: {
-    reRenderStyle: function reRenderStyle() {
+    bindEvents: function bindEvents() {
+      this.eventHandler.mousemove = this.mousemove.bind(this);
+      this.eventHandler.mouseup = this.mouseup.bind(this);
+      window.addEventListener('mousemove', this.eventHandler.mousemove);
+      window.addEventListener('mouseup', this.eventHandler.mouseup);
+    },
+    unbindEvents: function unbindEvents() {
+      window.removeEventListener('mousemove', this.eventHandler.mousemove);
+      window.removeEventListener('mouseup', this.eventHandler.mouseup);
+    },
+    reRenderStyle: function reRenderStyle(ignoreId) {
       var _this3 = this;
 
       if (this.timer) clearTimeout(this.timer);
       this.timer = setTimeout(function () {
         _this3.layout.forEach(function (item, index) {
+          if (item._id === ignoreId) return;
           var card = _this3.$refs.cards[index];
           var oldStyle = {
             style: card.style,
@@ -5556,6 +5588,12 @@ var gridvue_type_script_lang_js_Vue = getVue();
       //     height: h + 'px'
       // }
     },
+    getCardStyleForRealTime: function getCardStyleForRealTime(item) {
+      if (!item) return;
+      var transform = "transform:translate3d(".concat(item.x, "px,").concat(item.y, "px,0);");
+      var style = "".concat(transform, "width:").concat(item.w, "px;height:").concat(item.h, "px;background-color:").concat(this.backgroundColor, ";z-index:1;");
+      return style;
+    },
     // 计算卡片的宽度
     getCardWidth: function getCardWidth(start, end) {
       var width = this.computeColsWidth(start, end);
@@ -5596,8 +5634,6 @@ var gridvue_type_script_lang_js_Vue = getVue();
         }
 
         this.operator = 2; // resize
-
-        targetCard.style.zIndex = 1;
       }
 
       if (targetCard && !this.operator) {
@@ -5627,11 +5663,14 @@ var gridvue_type_script_lang_js_Vue = getVue();
         }
       };
       this.placeholder = {
+        _id: '__placeHolder__',
         x: node.x,
         y: node.y,
         w: node.w,
         h: node.h
-      }; // console.log('down', evt, this.operatedItem);
+      };
+      this.coors.removeItem(node);
+      this.coors.addItem(this.placeholder); // console.log('down', evt, this.operatedItem);
       // if(hasClass(target, this.resizeHandlerClass)){
       //     this.operator = 2;
       // } else {
@@ -5667,10 +5706,13 @@ var gridvue_type_script_lang_js_Vue = getVue();
         // let w = this.placeholder.w;
         // let h = this.placeholder.h;
         // let node = item.node;
-        this.applyChange();
-        this.$set(item.node, 'style', this.getCardStyle(item.node));
+        this.applyChange(); // this.$set(item.node, 'style', this.getCardStyle(item.node));
+
+        item.node.style = this.getCardStyle(item.node);
         this.coors.removeItem(this.placeholder);
-        this.coors.addItem(this.operatedItem.node);
+        this.coors.addItem(this.operatedItem.node); // this.$altStore.commit('log', {
+        //     type: 'moved or resized'
+        // })
       }
 
       this.clearDragEnv();
@@ -5725,21 +5767,39 @@ var gridvue_type_script_lang_js_Vue = getVue();
     dragMove: function dragMove(item, sx, sy, ex, ey) {
       // console.log('drag move');
       var node = this.placeholder;
+      var cacheStyle = item.cacheStyle;
       var dx = ex - sx;
       var dy = ey - sy;
       var stepX = this.getMoveCols(dx, item.node.x);
       var stepY = this.getMoveRows(dy, item.node.y); // console.log('calc over step');
 
+      var targetX = item.node.x + stepX;
+      var targetY = item.node.y + stepY;
+      var moveUpRows = this.coors.getMoveUpRowsExceptId({
+        x: targetX,
+        y: targetY,
+        w: item.node.w,
+        h: item.node.h
+      }, '__placeHolder__');
+      targetY -= moveUpRows;
       this.coors.moveItemTo(node, {
-        x: item.node.x + stepX,
-        y: item.node.y + stepY
+        x: targetX,
+        y: targetY
       });
-      node.x = item.node.x + stepX;
-      node.y = item.node.y + stepY;
-      var x = item.cacheStyle.x + dx;
-      var y = item.cacheStyle.y + dy;
-      item.el.style.transform = "translate3d(".concat(x, "px, ").concat(y, "px, 0)"); // this.reRenderCount++;
+      node.x = targetX;
+      node.y = targetY;
+      var x = cacheStyle.x + dx;
+      var y = cacheStyle.y + dy;
+      item.node.style = this.getCardStyleForRealTime({
+        x: x,
+        y: y,
+        w: cacheStyle.w,
+        h: cacheStyle.h
+      }); // item.node.style = `transform:translate3d(${x}px, ${y}px, 0);width:${cacheStyle.w}px;height:${cacheStyle.h}px;z-index:1;`;
+      // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      // this.reRenderCount++;
 
+      this.reRenderStyle(item.dragId);
       this.$altStore.commit('log', {
         type: 'move'
       }); // console.log('reRenderCount', this.reRenderCount);
@@ -5747,6 +5807,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
     resizeMove: function resizeMove(item, sx, sy, ex, ey) {
       // console.log('resize move');
       var node = this.placeholder;
+      var cacheStyle = item.cacheStyle;
       var dx = ex - sx;
       var dy = ey - sy;
       var stepX = this.getMoveCols(dx, item.node.x + item.node.w);
@@ -5762,11 +5823,20 @@ var gridvue_type_script_lang_js_Vue = getVue();
       });
       node.w = size.w;
       node.h = size.h;
-      var w = item.cacheStyle.w + dx;
-      var h = item.cacheStyle.h + dy;
-      item.el.style.width = w + 'px';
-      item.el.style.height = h + 'px'; // this.reRenderCount++;
+      var w = cacheStyle.w + dx;
+      var h = cacheStyle.h + dy;
+      item.node.style = this.getCardStyleForRealTime({
+        x: cacheStyle.x,
+        y: cacheStyle.y,
+        w: w,
+        h: h
+      }); // item.node.style = `transform:translate3d(${cacheStyle.x}px, ${cacheStyle.y}px, 0);width:${w}px;height:${h}px;z-index:1;`;
+      // console.log(item.node.style);
+      // item.el.style.width = w + 'px';
+      // item.el.style.height = h + 'px';
+      // this.reRenderCount++;
 
+      this.reRenderStyle(item.dragId);
       this.$altStore.commit('log', {
         type: 'resize'
       }); // console.log('reRenderCount', this.reRenderCount);
