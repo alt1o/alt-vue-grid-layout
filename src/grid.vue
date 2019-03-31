@@ -388,7 +388,7 @@
                 let w = this.getCardWidth(item.x, item.x + item.w);
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
-                this.setContainerHeight(y, h);
+                // this.setContainerHeight(y, h);
                 let transform = `transform:translate3d(${x}px,${y}px,0);`;
                 let style = `${transform}width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
                 if(raw){
@@ -403,8 +403,19 @@
             },
             getCardStyleForRealTime(item){
                 if(!item) return;
-                let transform = `transform:translate3d(${item.x}px,${item.y}px,0);`;
-                let style = `${transform}width:${item.w}px;height:${item.h}px;background-color:${this.backgroundColor};z-index:1;`;
+                let w = item.w;
+                let x = item.x;
+                if(x < 0){
+                    x = 0;
+                }else if((x + w) > this.containerWidth){
+                    x = this.containerWidth - w;
+                }
+                let y = item.y;
+                if(y < 0){
+                    y = 0;
+                }
+                let transform = `transform:translate3d(${x}px,${y}px,0);`;
+                let style = `${transform}width:${w}px;height:${item.h}px;background-color:${this.backgroundColor};z-index:1;`;
                 return style;
             },
             // 计算卡片的宽度
@@ -584,7 +595,8 @@
                 let cacheStyle = item.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
-                let stepX = this.getMoveCols(dx, item.node.x);
+                let startCol = dx > 0 ? item.node.x + item.node.w : item.node.x;
+                let stepX = this.getMoveCols(dx, startCol);
                 let stepY = this.getMoveRows(dy, item.node.y);
                 // console.log('calc over step');
                 let targetX = item.node.x + stepX;
@@ -645,6 +657,9 @@
                 node.h = size.h;
                 let w = cacheStyle.w + dx;
                 let h = cacheStyle.h + dy;
+                if(cacheStyle.x + w > this.containerWidth){
+                    w = this.containerWidth - cacheStyle.x;
+                }
                 item.node.style = this.getCardStyleForRealTime({
                     x: cacheStyle.x,
                     y: cacheStyle.y,
