@@ -20,6 +20,11 @@ export default Vue.extend({
         this.$on('move', function(fff){
             console.log('move move move', fff)
         })
+    },
+    watch: {
+        ccc(val, old){
+            console.log('test-d ccc change', val, old);
+        }
     }
 })
 </script>

@@ -16,17 +16,18 @@
             :dg-id="item._id"
             :style="item.style"
             class="alt-grid-item"
-            :class="[gridItemClass, gridItemClass, item.gridItemClass]">
+            :class="[gridItemClass, item.gridItemClass]">
             <button 
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item._id)">关闭</button>
-            <component :ref="item._id" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
+            <component :ref="item._id" :is="item.type" :ccc="item.style" :injected-props="getPropsForInject(index, item)"></component>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
                 :class="[resizeHandlerClass, item.resizeHandlerClass]"></span>
         </div>
+        <div class="mask"></div>
     </div>
 </template>
 
@@ -237,7 +238,13 @@
                 }
             },
             operatorClass(){
-                return this.operator ? 'alt-grid-container-operating' : '';
+                if(!this.operator) return '';
+                if(this.operator === 1){
+                    return 'alt-grid-container-operating alt-move';
+                }else if(this.operator === 2){
+                    return 'alt-grid-container-operating alt-resize';
+                }
+                return '';
             }
         },
         methods: {
@@ -857,5 +864,18 @@
 }
 .alt-grid-container-operating{
     user-select: none;
+}
+
+.alt-grid-container-operating .mask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+}
+.alt-grid-container-operating.alt-move .mask{
+    cursor: move;
+}
+.alt-grid-container-operating.alt-resize .mask{
+    cursor: se-resize;
 }
 </style>
