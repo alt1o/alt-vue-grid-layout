@@ -3896,12 +3896,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=678fe20a&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"ccc":item.style,"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=1e38f9e6&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"ccc":item.style,"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=678fe20a&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=1e38f9e6&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -5347,6 +5347,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
       animation: null,
       animationHandler: null,
       eventHandler: {
+        mousedown: null,
         mousemove: null,
         mouseup: null
       }
@@ -5451,14 +5452,17 @@ var gridvue_type_script_lang_js_Vue = getVue();
   },
   methods: {
     bindEvents: function bindEvents() {
+      // this.eventHandler.mousedown = this.mousedown.bind(this);
       this.eventHandler.mousemove = this.mousemove.bind(this);
-      this.eventHandler.mouseup = this.mouseup.bind(this);
-      window.addEventListener('mousemove', this.eventHandler.mousemove);
-      window.addEventListener('mouseup', this.eventHandler.mouseup);
+      this.eventHandler.mouseup = this.mouseup.bind(this); // this.$el.addEventListener('mousedown', this.eventHandler.mousedown);
+
+      document.addEventListener('mousemove', this.eventHandler.mousemove);
+      document.addEventListener('mouseup', this.eventHandler.mouseup);
     },
     unbindEvents: function unbindEvents() {
-      window.removeEventListener('mousemove', this.eventHandler.mousemove);
-      window.removeEventListener('mouseup', this.eventHandler.mouseup);
+      // this.$el.removeEventListener('mousedown', this.eventHandler.mousedown);
+      document.removeEventListener('mousemove', this.eventHandler.mousemove);
+      document.removeEventListener('mouseup', this.eventHandler.mouseup);
     },
     reRenderStyle: function reRenderStyle(ignoreId) {
       var _this3 = this;

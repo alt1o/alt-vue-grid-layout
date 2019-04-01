@@ -115,6 +115,7 @@
             setTimeout(() => {
             //    this.$refs.altGrid.setLayout(this.layout2); 
             //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
+                this.$refs.altGrid.deleteItem(this.$refs.altGrid.layout[0]._id);
             }, 500);
             // this.$refs.grid2.setLayout(this.layout);
         },

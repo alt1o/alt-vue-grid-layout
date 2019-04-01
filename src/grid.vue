@@ -12,7 +12,7 @@
         <div 
             ref="cards"
             v-for="(item, index) in layout"
-            :key="index"
+            :key="item._id"
             :dg-id="item._id"
             :style="item.style"
             class="alt-grid-item"
@@ -163,6 +163,7 @@
                 animation: null,
                 animationHandler: null,
                 eventHandler: {
+                    mousedown: null,
                     mousemove: null,
                     mouseup: null
                 }
@@ -260,14 +261,17 @@
         },
         methods: {
             bindEvents(){
+                // this.eventHandler.mousedown = this.mousedown.bind(this);
                 this.eventHandler.mousemove = this.mousemove.bind(this);
                 this.eventHandler.mouseup = this.mouseup.bind(this);
-                window.addEventListener('mousemove', this.eventHandler.mousemove);
-                window.addEventListener('mouseup', this.eventHandler.mouseup)
+                // this.$el.addEventListener('mousedown', this.eventHandler.mousedown);
+                document.addEventListener('mousemove', this.eventHandler.mousemove);
+                document.addEventListener('mouseup', this.eventHandler.mouseup)
             },
             unbindEvents(){
-                window.removeEventListener('mousemove', this.eventHandler.mousemove);
-                window.removeEventListener('mouseup', this.eventHandler.mouseup);
+                // this.$el.removeEventListener('mousedown', this.eventHandler.mousedown);
+                document.removeEventListener('mousemove', this.eventHandler.mousemove);
+                document.removeEventListener('mouseup', this.eventHandler.mouseup);
             },
             reRenderStyle(ignoreId){
                 if(this.timer) clearTimeout(this.timer);
