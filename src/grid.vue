@@ -254,6 +254,7 @@
             reRenderStyle(ignoreId){
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
+                    this.containerHeight = 0;
                     this.layout.forEach((item, index) => {
                         if(item._id === ignoreId) return;
                         let card = this.$refs.cards[index];
@@ -388,7 +389,7 @@
                 let w = this.getCardWidth(item.x, item.x + item.w);
                 let y = item.y * this.rowHeight;
                 let h = item.h * this.rowHeight - this.margin[1];
-                // this.setContainerHeight(y, h);
+                this.setContainerHeight(y, h);
                 let transform = `transform:translate3d(${x}px,${y}px,0);`;
                 let style = `${transform}width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
                 if(raw){
