@@ -1,6 +1,5 @@
 <template>
     <div 
-        @mousedown="mousedown"
         class="alt-grid-container"
         :class="operatorClass"
         :style="containerStyle">
@@ -183,7 +182,10 @@
             //         this.initCols();
             //     });
             // })
-            this.bindEvents();
+            if(this.isDraggable || this.isResizable){
+                this.bindEvents();
+            }
+            
         },
         destroyed(){
             this.boxWatchHandler.destroy();
@@ -261,15 +263,15 @@
         },
         methods: {
             bindEvents(){
-                // this.eventHandler.mousedown = this.mousedown.bind(this);
+                this.eventHandler.mousedown = this.mousedown.bind(this);
                 this.eventHandler.mousemove = this.mousemove.bind(this);
                 this.eventHandler.mouseup = this.mouseup.bind(this);
-                // this.$el.addEventListener('mousedown', this.eventHandler.mousedown);
+                this.$el.addEventListener('mousedown', this.eventHandler.mousedown);
                 document.addEventListener('mousemove', this.eventHandler.mousemove);
                 document.addEventListener('mouseup', this.eventHandler.mouseup)
             },
             unbindEvents(){
-                // this.$el.removeEventListener('mousedown', this.eventHandler.mousedown);
+                this.$el.removeEventListener('mousedown', this.eventHandler.mousedown);
                 document.removeEventListener('mousemove', this.eventHandler.mousemove);
                 document.removeEventListener('mouseup', this.eventHandler.mouseup);
             },
@@ -465,6 +467,8 @@
                 return (end - start) * this.rowHeight;
             },
             mousedown(evt){
+                this.mousedownTimeStamp = new Date().getTime();
+                let srcElement = evt.srcElement;
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
                 if(!targetCard) return;
@@ -494,6 +498,7 @@
                 let targetCardStyle = targetCard.style;
                 let translate = targetCardStyle.transform.match(/\(([-.\d]*)px, ([-.\d]*)px/);
                 this.operatedItem = {
+                    srcElement: srcElement,
                     el: targetCard,
                     node: node,
                     dragId: dragId,
@@ -538,7 +543,10 @@
                 }
             },
             mouseup(){
-                // console.log('up', evt);
+                let time = new Date().getTime();
+                if(time - this.mousedownTimeStamp < 10){
+                    this.operatedItem && this.operatedItem.srcElement && this.operatedItem.srcElement.click();
+                }
                 let item = this.operatedItem;
                 if(item){
                     // item.node.x = this.placeholder.x;
