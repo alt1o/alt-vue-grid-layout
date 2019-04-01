@@ -14,9 +14,26 @@ function watchBoxSizeChange(el, handler){
     this.el = el;
     this.handler = handler;
 
+    this.checkHidden();
+}
+watchBoxSizeChange.prototype.checkHidden = function checkHidden(){
+    requestAnimationFrame(() => {
+        let width = this.el.offsetWidth;
+        let height = this.el.offsetHeight;
+        if(width === 0 && height === 0){
+            checkHidden();
+        }else{
+            this.handler();
+            this.init();
+        }
+    })
+}
+
+
+watchBoxSizeChange.prototype.init = function init(){
     // 最后一次变动的宽高
-    this.lastWidth = el.offsetWidth || 1;
-    this.lastHeight = el.offsetHeight || 1;
+    this.lastWidth = this.el.offsetWidth || 1;
+    this.lastHeight = this.el.offsetHeight || 1;
 
     // 最大宽高
     this.maxWidth = 10000 * (this.lastWidth);
@@ -47,8 +64,8 @@ function watchBoxSizeChange(el, handler){
     this.el.appendChild(this.expand);
     this.el.appendChild(this.shrink);
 
-    if(this.expand.offsetParent !== el){
-        el.style.position = 'relative';
+    if(this.expand.offsetParent !== this.el){
+        this.el.style.position = 'relative';
     }
 
     this.expand.scrollTop = this.shrink.scrollTop = this.maxHeight;

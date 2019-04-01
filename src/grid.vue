@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import elementResizeDetectorMaker from 'element-resize-detector'
+    // import elementResizeDetectorMaker from 'element-resize-detector'
     import {
         hasClass,
         findParentThoughEvtPath,
@@ -41,7 +41,7 @@
         getVariType,
         getIndexOfArrayByAttr
     } from './utils/util';
-    // import watchBoxSize from './utils/watch-box-size.js'
+    import watchBoxSize from './utils/watch-box-size.js'
     import Coordinate from './utils/coordinate'
     import coorTest from './utils/coordinate.test.js'
  
@@ -156,7 +156,7 @@
                 operator: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
                 operatedItem: null, // 当前被操作的元素的状态
                 containerWidth: 0,
-                // boxWatchHandler: null,
+                boxWatchHandler: null,
                 coors: null,
                 reRenderCount: 0,
                 timer: null,
@@ -169,24 +169,24 @@
             }
         },
         mounted: function () {
-            // this.initCols();
-            // this.boxWatchHandler = new watchBoxSize(this.$el, () => {
-            //     this.initCols();
-            // })
             this.initCols();
-            this.$nextTick(() => {
-                this.erd = elementResizeDetectorMaker({
-                    strategy: "scroll"
-                });
-                this.erd.listenTo(this.$el, () => {
-                    this.initCols();
-                });
+            this.boxWatchHandler = new watchBoxSize(this.$el, () => {
+                this.initCols();
             })
+            // this.initCols();
+            // this.$nextTick(() => {
+            //     this.erd = elementResizeDetectorMaker({
+            //         strategy: "scroll"
+            //     });
+            //     this.erd.listenTo(this.$el, () => {
+            //         this.initCols();
+            //     });
+            // })
             this.bindEvents();
         },
         destroyed(){
-            // this.boxWatchHandler.destroy();
-            this.erd.uninstall(this.$el);
+            this.boxWatchHandler.destroy();
+            // this.erd.uninstall(this.$el);
             this.unbindEvents();
         },
         watch: {
