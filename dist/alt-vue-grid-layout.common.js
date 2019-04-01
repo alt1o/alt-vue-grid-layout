@@ -401,6 +401,7 @@ module.exports = function(options) {
                 object.style.cssText = OBJECT_STYLE;
                 object.tabIndex = -1;
                 object.type = "text/html";
+                object.setAttribute("aria-hidden", "true");
                 object.onload = onObjectLoad;
 
                 //Safari: This must occur before adding the object to the DOM.
@@ -3886,12 +3887,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=9766c8c8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=1fc3f512&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle),on:{"mousedown":_vm.mousedown}},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:index,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"ccc":item.style,"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=9766c8c8&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=1fc3f512&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3913,6 +3914,10 @@ var web_dom_iterable = __webpack_require__("ac6a");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
+
+// EXTERNAL MODULE: ./node_modules/element-resize-detector/src/element-resize-detector.js
+var element_resize_detector = __webpack_require__("eec4");
+var element_resize_detector_default = /*#__PURE__*/__webpack_require__.n(element_resize_detector);
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.split.js
 var es6_regexp_split = __webpack_require__("28a5");
@@ -4042,92 +4047,6 @@ function getUniqueID(len, radix) {
 
   return uuid.join('');
 }
-// CONCATENATED MODULE: ./src/utils/watch-box-size.js
-function watchBoxSizeChange(el, handler) {
-  if (!(el instanceof HTMLElement)) {
-    throw new TypeError('第一个参数必须是一个html元素');
-  }
-
-  if (/^(area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr|script|style|textarea|title)$/i.test(el.tagName)) {
-    throw new TypeError('不支持当前元素类型，可以尝试使用div');
-  }
-
-  if (typeof handler !== 'function') {
-    throw new TypeError('第二个参数必须是一个函数');
-  }
-
-  this.el = el;
-  this.handler = handler; // 最后一次变动的宽高
-
-  this.lastWidth = el.offsetWidth || 1;
-  this.lastHeight = el.offsetHeight || 1; // 最大宽高
-
-  this.maxWidth = 10000 * this.lastWidth;
-  this.maxHeight = 10000 * this.lastHeight; // 变动宽高
-
-  this.newWidth = 0;
-  this.newHeight = 0;
-  this.expand = document.createElement('div');
-  this.expand.style.cssText = 'position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;';
-  this.shrink = this.expand.cloneNode(false);
-  var expandChild = document.createElement('div');
-  expandChild.style.cssText = 'transition:0s;animation:none;';
-  var shrinkChild = expandChild.cloneNode(false);
-  expandChild.style.width = this.maxWidth + 'px';
-  expandChild.style.height = this.maxHeight + 'px';
-  shrinkChild.style.width = '250%';
-  shrinkChild.style.height = '250%';
-  this.expand.appendChild(expandChild);
-  this.shrink.appendChild(shrinkChild);
-  this.el.appendChild(this.expand);
-  this.el.appendChild(this.shrink);
-
-  if (this.expand.offsetParent !== el) {
-    el.style.position = 'relative';
-  }
-
-  this.expand.scrollTop = this.shrink.scrollTop = this.maxHeight;
-  this.expand.scrollLeft = this.shrink.scrollLeft = this.maxWidth;
-  this.bindOnScroll = null;
-  this.addListener();
-}
-
-watchBoxSizeChange.prototype.onScroll = function onScroll() {
-  this.newWidth = this.el.offsetWidth || 1;
-  this.newHeight = this.el.offsetHeight || 1;
-
-  if (this.newWidth !== this.lastWidth || this.newHeight !== this.lastHeight) {
-    requestAnimationFrame(this.onResize.bind(this));
-  }
-
-  this.expand.scrollTop = this.shrink.scrollTop = this.maxHeight;
-  this.expand.scrollLeft = this.shrink.scrollLeft = this.maxWidth;
-};
-
-watchBoxSizeChange.prototype.onResize = function onResize() {
-  this.lastWidth = this.newWidth;
-  this.lastHeight = this.newHeight;
-  this.handler(this.lastWidth, this.lastHeight);
-};
-
-watchBoxSizeChange.prototype.addListener = function addListener() {
-  this.bindOnScroll = this.onScroll.bind(this);
-  this.expand.addEventListener('scroll', this.bindOnScroll, false);
-  this.shrink.addEventListener('scroll', this.bindOnScroll, false);
-};
-
-watchBoxSizeChange.prototype.removeListener = function removeListener() {
-  this.expand.removeEventListener('scroll', this.bindOnScroll, false);
-  this.shrink.removeEventListener('scroll', this.bindOnScroll, false);
-};
-
-watchBoxSizeChange.prototype.destroy = function destroy() {
-  this.removeListener();
-  this.el.removeChild(this.expand);
-  this.el.removeChild(this.shrink);
-};
-
-/* harmony default export */ var watch_box_size = (watchBoxSizeChange);
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -5168,6 +5087,7 @@ function createStore() {
 //
 //
 
+ // import watchBoxSize from './utils/watch-box-size.js'
 
 
 
@@ -5308,7 +5228,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
       operatedItem: null,
       // 当前被操作的元素的状态
       containerWidth: 0,
-      boxWatchHandler: null,
+      // boxWatchHandler: null,
       coors: null,
       reRenderCount: 0,
       timer: null,
@@ -5323,14 +5243,25 @@ var gridvue_type_script_lang_js_Vue = getVue();
   mounted: function mounted() {
     var _this = this;
 
+    // this.initCols();
+    // this.boxWatchHandler = new watchBoxSize(this.$el, () => {
+    //     this.initCols();
+    // })
     this.initCols();
-    this.boxWatchHandler = new watch_box_size(this.$el, function () {
-      _this.initCols();
+    this.$nextTick(function () {
+      _this.erd = element_resize_detector_default()({
+        strategy: "scroll"
+      });
+
+      _this.erd.listenTo(_this.$el, function () {
+        _this.initCols();
+      });
     });
     this.bindEvents();
   },
   destroyed: function destroyed() {
-    this.boxWatchHandler.destroy();
+    // this.boxWatchHandler.destroy();
+    this.erd.uninstall(this.$el);
     this.unbindEvents();
   },
   watch: {
