@@ -394,7 +394,7 @@
                     value: JSON.parse(JSON.stringify(this.layout))
                 })
 
-                if(/_env=dev/.test(window.location.search)){
+                if(/_env=altdev/.test(window.location.search)){
                     coorTest(this, this.layout);
                 }
             },
