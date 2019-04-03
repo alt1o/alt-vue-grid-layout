@@ -15,7 +15,7 @@
             :dg-id="item._id"
             :style="item.style"
             class="alt-grid-item"
-            :class="[gridItemClass, item.gridItemClass]">
+            :class="[canDragClass(item.isDraggable), gridItemClass, item.gridItemClass]">
             <button 
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
@@ -274,6 +274,9 @@
                 this.$el.removeEventListener('mousedown', this.eventHandler.mousedown);
                 document.removeEventListener('mousemove', this.eventHandler.mousemove);
                 document.removeEventListener('mouseup', this.eventHandler.mouseup);
+            },
+            canDragClass(isDraggable){
+                return getFirstSetValue(isDraggable, this.isDraggable, true) ? 'can-drag' : '';
             },
             reRenderStyle(ignoreId){
                 if(this.timer) clearTimeout(this.timer);
@@ -851,6 +854,9 @@
 .alt-grid-container .alt-grid-item{
     position: absolute;
     background: gray;
+    /* cursor: move; */
+}
+.alt-grid-container .alt-grid-item.can-drag{
     cursor: move;
 }
 .alt-grid-container.alt-grid-container-operating .alt-grid-item{
