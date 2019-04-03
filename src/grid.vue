@@ -20,7 +20,7 @@
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item._id)">关闭</button>
-            <component :ref="item._id" :is="item.type" :ccc="item.style" :injected-props="getPropsForInject(index, item)"></component>
+            <component :ref="item._id" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
@@ -193,16 +193,8 @@
             this.unbindEvents();
         },
         watch: {
-            rowHeight(val, oldVal){
-                // console.log('row height change: %d -> %d', oldVal, val);
-                // this.reRenderCount++;
-                this.$altStore.commit('log', {
-                    type: 'rowHeight',
-                    action: {
-                        oldVal: oldVal,
-                        newVal: val
-                    }
-                })
+            rowHeight(){
+                this.reRenderStyle();
             },
             colNum(val){
                 // console.log('change col number');
@@ -230,22 +222,11 @@
                 this.cacheComputed = {};
                 this.reRenderStyle();
             },
-            backgroundColor(newVal, oldVal){
-                // this.reRenderCount++;
-                this.$altStore.commit('log', {
-                    type: 'backgroundColor',
-                    action: { oldVal,newVal }
-                })
-            },
-            // 'reRenderCountTest.total'(){
-            //     // console.log('reRenderCountTest.total');
-            //     this.reRenderStyle();
-            // }
+            backgroundColor(){
+                this.reRenderStyle();
+            }
         },
         computed: {
-            reRenderCountTest(){
-                return this.$altStore.state.counter;
-            },
             containerStyle(){
                 return {
                     height: this.containerHeight + 'px'
@@ -552,16 +533,6 @@
                 }
                 let item = this.operatedItem;
                 if(item){
-                    // item.node.x = this.placeholder.x;
-                    // item.node.y = this.placeholder.y;
-                    // let x = this.computeColsWidth(0, item.node.x);
-                    // let y = item.node.y * this.rowHeight;
-                    // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                    // let x = this.placeholder.x;
-                    // let y = this.placeholder.y;
-                    // let w = this.placeholder.w;
-                    // let h = this.placeholder.h;
-                    // let node = item.node;
                     this.applyChange();
                     
                     // this.$set(item.node, 'style', this.getCardStyle(item.node));
@@ -569,17 +540,9 @@
 
                     this.coors.removeItem(this.placeholder);
                     this.coors.addItem(this.operatedItem.node);
-                    // this.$altStore.commit('log', {
-                    //     type: 'moved or resized'
-                    // })
                 }
 
                 this.clearDragEnv();
-
-                this.$altStore.commit('addHistory', {
-                    type: 'move or resize',
-                    value: JSON.parse(JSON.stringify(this.layout))
-                })
             },
             applyChange(){
                 let x = this.placeholder.x;
@@ -661,17 +624,12 @@
                     w: cacheStyle.w,
                     h: cacheStyle.h
                 })
-                // item.node.style = `transform:translate3d(${x}px, ${y}px, 0);width:${cacheStyle.w}px;height:${cacheStyle.h}px;z-index:1;`;
-                // item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                // this.reRenderCount++;
                 this.reRenderStyle(item.dragId);
                 this.$altStore.commit('log', {
                     type: 'move'
                 })
-                // console.log('reRenderCount', this.reRenderCount);
             },
             resizeMove(item, sx, sy, ex, ey){
-                // console.log('resize move');
                 let node = this.placeholder;
                 let cacheStyle = item.cacheStyle;
                 let dx = ex - sx;
@@ -700,20 +658,13 @@
                     w: w,
                     h: h
                 })
-                // item.node.style = `transform:translate3d(${cacheStyle.x}px, ${cacheStyle.y}px, 0);width:${w}px;height:${h}px;z-index:1;`;
-                // console.log(item.node.style);
-                // item.el.style.width = w + 'px';
-                // item.el.style.height = h + 'px';
-                // this.reRenderCount++;
                 this.reRenderStyle(item.dragId);
                 this.$altStore.commit('log', {
                     type: 'resize'
                 })
-                // console.log('reRenderCount', this.reRenderCount);
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
-                // console.log('get move cols: %d; startCol: %d', dx, startCol);
                 let flag = dx < 0 ? '-' : '+';
                 let absDx = Math.abs(dx);
                 if(absDx < 15) return 0;
@@ -737,14 +688,12 @@
             },
             getMoveRows(dy, startRow){
                 if(startRow <= 0 && dy < 0) return 0;
-                // console.log('get move rows: %d; startRow: %d', dy, startRow);
                 let flag = dy < 0 ? '-' : '+';
                 let absDy = Math.abs(dy);
                 if(absDy < this.rowHeight/2) return 0;
                 let i = 0;
                 let row = startRow;
                 while(absDy > 0){
-                    // console.log('absDy: %d; row: %d', absDy, row);
                     if(flag === '-'){
                         absDy -= this.rowHeight;
                         i++;
@@ -761,8 +710,9 @@
             addItem(item){
                 if(this.coors){
                     let distributeItem = this.coors.addItem(item);
+                    let style = this.getCardStyle(distributeItem);
+                    this.$set(distributeItem, 'style', style);
                     this.layout.push(distributeItem);
-                    this.reRenderCount++;
                     this.$altStore.commit('addHistory', {
                         type: 'addItem',
                         value: JSON.parse(JSON.stringify(this.layout))
@@ -784,7 +734,6 @@
                 let maxW = getFirstSetValue(item.maxW, this.defVal.maxW);
                 let h = size.h;
                 let w = size.w;
-                // console.log('resize %d,%d -> %d, %d; max: %d, %d', item.w, item.h, size.w, size.h, maxW, maxH, item);
                 if(size.h <= minH){
                     h = minH;
                 }
@@ -806,11 +755,10 @@
                 let index = getIndexOfArrayByAttr(this.layout, _id, '_id');
                 if(index === -1) return false;
                 let item = this.layout[index];
-                // console.log(this.layout, this.layout.indexOf(item));
                 this.coors.removeItem(item);
                 this.coors.moveAllItemUp();
                 this.layout.splice(index, 1);
-                this.reRenderCount++;
+                // this.reRenderCount++;
                 this.clearDragEnv();
                 this.$altStore.commit('addHistory', {
                     type: 'deleteItem',
@@ -821,17 +769,7 @@
                 let historyItem = this.$altStore.state.historyStack.go(num);
                 let layoutCopy = historyItem.value;
                 if(!layoutCopy.length) return;
-                // for(let i = 0, l = layoutCopy.length; i < l; i++){
-                //     let temp = layoutCopy[i];
-                //     if(!this.layout[i]){
-                //         this.$set(this.layout, i, temp);
-                //     }else{
-                //         this.layout[i].x = temp.x;
-                //         this.layout[i].y = temp.y;
-                //         this.layout[i].w = temp.w;
-                //         this.layout[i].h = temp.h;
-                //     }
-                // }
+                
                 this.layout = layoutCopy;
                 this.coors.clear();
                 this.coors.batchAddItem(this.layout, true);

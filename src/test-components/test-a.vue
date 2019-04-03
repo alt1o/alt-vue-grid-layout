@@ -39,7 +39,7 @@ export default {
             console.log('before update');
         },
         updated(){
-            console.log('updated');
+            console.log('a updated');
         },
         activated(){
             console.log('activated');

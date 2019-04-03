@@ -6,5 +6,8 @@
 </template>
 <script>
 export default {
+    updated(){
+        console.log('updated b');
+    }
 }
 </script>
