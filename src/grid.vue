@@ -157,7 +157,6 @@
                 containerWidth: 0,
                 boxWatchHandler: null,
                 coors: null,
-                reRenderCount: 0,
                 timer: null,
                 animation: null,
                 animationHandler: null,
@@ -208,22 +207,13 @@
                 this.cacheComputed = {};
                 this.reRenderStyle();
             },
-            reRenderCount(){
-                if(this.timer) clearTimeout(this.timer);
-                this.timer = setTimeout(() => {
-                    this.layout.forEach((item) => {
-                        let style = this.getCardStyle(item);
-                        this.$set(item, 'style', style);
-                        // item.style = style;
-                    })
-                }, 10);
-            },
             margin(){
                 this.cacheComputed = {};
                 this.reRenderStyle();
             },
             backgroundColor(){
-                this.reRenderStyle();
+                // this.reRenderStyle();
+                this.forceReRenderStyle();
             }
         },
         computed: {
@@ -258,6 +248,16 @@
             },
             canDragClass(isDraggable){
                 return getFirstSetValue(isDraggable, this.isDraggable, true) ? 'can-drag' : '';
+            },
+            forceReRenderStyle(){
+                if(this.timer) clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    this.layout.forEach((item) => {
+                        let style = this.getCardStyle(item);
+                        this.$set(item, 'style', style);
+                        // item.style = style;
+                    })
+                }, 10);
             },
             reRenderStyle(ignoreId){
                 if(this.timer) clearTimeout(this.timer);
