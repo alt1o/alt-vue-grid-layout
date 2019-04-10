@@ -26,6 +26,7 @@
             <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    :layout.sync="layout"
                     class="nihao"
                     :is-draggable="draggable"
                     :is-resizable="resizable"
@@ -111,7 +112,7 @@
             }
         },
         mounted: function () {
-            this.$refs.altGrid.setLayout(this.layout);
+            // this.$refs.altGrid.setLayout(this.layout);
             setTimeout(() => {
             //    this.$refs.altGrid.setLayout(this.layout2); 
             //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 

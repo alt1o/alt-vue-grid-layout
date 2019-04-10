@@ -10,7 +10,7 @@
         </div>
         <div 
             ref="cards"
-            v-for="(item, index) in layout"
+            v-for="(item, index) in innerLayout"
             :key="item._id"
             :dg-id="item._id"
             :style="item.style"
@@ -39,22 +39,22 @@
         getVue,
         getVariType,
         getIndexOfArrayByAttr
-    } from './utils/util';
-    import watchBoxSize from './utils/watch-box-size.js'
-    import Coordinate from './utils/coordinate'
-    import coorTest from './utils/coordinate.test.js'
- 
-    import WidgetRender from './components/Widget.render.vue';
-    import WidgetTemplate from './components/Widget.template.vue';
-    import WidgetComponent from './components/Widget.vuecomponent.vue';
+    } from '../utils/util';
 
-    import altStoreFactory from './store.js'
+    import watchBoxSize from '../utils/watch-box-size.js'
+    import Coordinate from '../utils/coordinate'
+    import coorTest from '../utils/coordinate.test.js'
+ 
+    import WidgetRender from './Widget.render.vue';
+    import WidgetTemplate from './Widget.template.vue';
+    import WidgetComponent from './Widget.vuecomponent.vue';
+
+    import props from './props.js'
 
     let Vue = getVue();
 
     export default {
-        name: 'app',
-        altStore: altStoreFactory(),
+        name: 'alt-grid-layout',
         addWidgetType(){
             let args0 = arguments[0];
             let type = getVariType(args0);
@@ -78,67 +78,10 @@
                 extends: parentWidget
             }
         },
-        props: {
-            isDraggable: { // 是否可以拖拽
-                type: Boolean,
-                default: true
-            },
-            isResizable: { // 是否可以调整大小
-                type: Boolean,
-                default: true
-            },
-            rowHeight: { // 每行高度
-                type: Number,
-                default: 150
-            },
-            maxRows: { // 最大
-                type: Number,
-                default: Infinity
-            },
-            margin: {
-                type: Array,
-                default: () => [10, 10]
-            }, // 元素的右边距和下边距
-            verticalCompact: { // 是否自动向上填充
-                type: Boolean,
-                default: true
-            },
-            useCssTransforms: { // 是否使用css transforms
-                type: Boolean,
-                default: true
-            },
-            colNum: { // 列数
-                type: Number,
-                default: 12
-            },
-            backgroundColor: { // 背景颜色
-                type: String,
-                default: 'rgba(200,200,200,1)'
-            },
-            gridItemClass: { // 每一个卡片的class
-                type: String,
-                default: ''
-            },
-            closeHandlerClass: { // 关闭按钮的class
-                type: String,
-                default: ''
-            },
-            resizeHandlerClass: { // 设置大小按钮的class
-                type: String,
-                default: 'alt-g-i-r-h-default-style'
-            },
-            placeholderClass: { // 拖拽时 placeholder 的class
-                type: String,
-                default: ''
-            },
-            isShowOriginCloseBtn: {
-                type: Boolean,
-                default: true
-            }
-        },
+        props: props,
         data () {
             return {
-                layout: [], // 布局源数据
+                innerLayout: [], // 布局源数据
                 defVal: {
                     minH: 1, // 默认每个卡片的最小高度
                     minW: 1, // 默认每个卡片的最小宽度
@@ -172,18 +115,10 @@
             this.boxWatchHandler = new watchBoxSize(this.$el, () => {
                 this.initCols();
             })
-            // this.initCols();
-            // this.$nextTick(() => {
-            //     this.erd = elementResizeDetectorMaker({
-            //         strategy: "scroll"
-            //     });
-            //     this.erd.listenTo(this.$el, () => {
-            //         this.initCols();
-            //     });
-            // })
             if(this.isDraggable || this.isResizable){
                 this.bindEvents();
             }
+            this.setLayout(this.layout);
             
         },
         destroyed(){
@@ -192,6 +127,9 @@
             this.unbindEvents();
         },
         watch: {
+            layout(val){
+                this.setLayout(val);
+            },
             rowHeight(){
                 this.reRenderStyle();
             },
@@ -252,7 +190,7 @@
             forceReRenderStyle(){
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
-                    this.layout.forEach((item) => {
+                    this.innerLayout.forEach((item) => {
                         let style = this.getCardStyle(item);
                         this.$set(item, 'style', style);
                         // item.style = style;
@@ -263,7 +201,7 @@
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.containerHeight = 0;
-                    this.layout.forEach((item, index) => {
+                    this.innerLayout.forEach((item, index) => {
                         if(item._id === ignoreId) return;
                         let card = this.$refs.cards[index];
                         let oldStyle = {
@@ -372,19 +310,10 @@
                     // item.style = style;
                 });
 
-                this.layout = layoutOverCalc;
-
-                this.$altStore.commit('log', {
-                    type: 'setLayout'
-                })
-
-                this.$altStore.commit('addHistory', {
-                    type: 'setLayout',
-                    value: JSON.parse(JSON.stringify(this.layout))
-                })
+                this.innerLayout = layoutOverCalc;
 
                 if(/_env=altdev/.test(window.location.search)){
-                    coorTest(this, this.layout);
+                    coorTest(this, this.innerLayout);
                 }
             },
             // 设置总容器高度
@@ -595,9 +524,9 @@
                 this.placeholder = null;
             },
             getNodeByDragId(dragId){
-                let index = getIndexOfArrayByAttr(this.layout, dragId, '_id');
+                let index = getIndexOfArrayByAttr(this.innerLayout, dragId, '_id');
                 if(index === -1) return null;
-                return this.layout[index];
+                return this.innerLayout[index];
             },
             getDragId(target){
                 return target.getAttribute('dg-id');
@@ -641,9 +570,6 @@
                     h: cacheStyle.h
                 })
                 this.reRenderStyle(item.dragId);
-                this.$altStore.commit('log', {
-                    type: 'move'
-                })
             },
             resizeMove(item, sx, sy, ex, ey){
                 let node = this.placeholder;
@@ -675,9 +601,6 @@
                     h: h
                 })
                 this.reRenderStyle(item.dragId);
-                this.$altStore.commit('log', {
-                    type: 'resize'
-                })
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
@@ -728,11 +651,8 @@
                     let distributeItem = this.coors.addItem(item);
                     let style = this.getCardStyle(distributeItem);
                     this.$set(distributeItem, 'style', style);
-                    this.layout.push(distributeItem);
-                    this.$altStore.commit('addHistory', {
-                        type: 'addItem',
-                        value: JSON.parse(JSON.stringify(this.layout))
-                    });
+                    this.innerLayout.push(distributeItem);
+                    this.$emit('update:layout', this.innerLayout);
                     return distributeItem._id;
                 }
             },
@@ -740,7 +660,7 @@
                 return this.closeWidget(id);
             },
             getAllItems(){
-                return this.layout;
+                return this.innerLayout;
             },
             getItemLegalSize(item, size){
                 
@@ -768,32 +688,15 @@
                 }
             },
             closeWidget(_id){
-                let index = getIndexOfArrayByAttr(this.layout, _id, '_id');
+                let index = getIndexOfArrayByAttr(this.innerLayout, _id, '_id');
                 if(index === -1) return false;
-                let item = this.layout[index];
+                let item = this.innerLayout[index];
                 this.coors.removeItem(item);
                 this.coors.moveAllItemUp();
-                this.layout.splice(index, 1);
+                this.innerLayout.splice(index, 1);
                 // this.reRenderCount++;
                 this.clearDragEnv();
-                this.$altStore.commit('addHistory', {
-                    type: 'deleteItem',
-                    value: JSON.parse(JSON.stringify(this.layout))
-                });
-            },
-            go(num){
-                let historyItem = this.$altStore.state.historyStack.go(num);
-                let layoutCopy = historyItem.value;
-                if(!layoutCopy.length) return;
-                
-                this.layout = layoutCopy;
-                this.coors.clear();
-                this.coors.batchAddItem(this.layout, true);
-
-                this.$altStore.commit('log', {
-                    type: 'go',
-                    value: num
-                })
+                this.$emit('update:layout', this.innerLayout);
             }
         }
     }
