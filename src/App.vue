@@ -109,6 +109,9 @@
         watch: {
             colNumStr(val){
                 this.colNum = Number(val) || 12;
+            },
+            layout(){
+                console.log('layout change');
             }
         },
         mounted: function () {

@@ -489,6 +489,7 @@
                 }
 
                 this.clearDragEnv();
+                this.$emit('update:layout', this.innerLayout);
             },
             applyChange(){
                 let x = this.placeholder.x;
