@@ -13,7 +13,7 @@
             v-for="(item, index) in innerLayout"
             :key="item._id"
             :dg-id="item._id"
-            :style="item.style"
+            :style="item._alt_style"
             class="alt-grid-item"
             :class="[canDragClass(item.isDraggable), gridItemClass, item.gridItemClass]">
             <button 
@@ -192,12 +192,13 @@
                 this.timer = setTimeout(() => {
                     this.innerLayout.forEach((item) => {
                         let style = this.getCardStyle(item);
-                        this.$set(item, 'style', style);
+                        this.$set(item, '_alt_style', style);
                         // item.style = style;
                     })
                 }, 10);
             },
-            reRenderStyle(ignoreId){
+            reRenderStyle(options = {}){
+                let ignoreId = options.ignoreId;
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.containerHeight = 0;
@@ -216,7 +217,7 @@
 
                         let styleRaw = this.getCardStyle(item, true);
 
-                        this.$set(item, 'style', styleRaw.style);
+                        this.$set(item, '_alt_style', styleRaw.style);
                         // item.style = style;
                         let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform']);
                         if(status === 'none') return;
@@ -306,7 +307,7 @@
 
                 layoutOverCalc.forEach((item) => {
                     let style = this.getCardStyle(item);
-                    this.$set(item, 'style', style);
+                    this.$set(item, '_alt_style', style);
                     // item.style = style;
                 });
 
@@ -476,15 +477,15 @@
                 if(time - this.mousedownTimeStamp < 10){
                     this.operatedItem && this.operatedItem.srcElement && this.operatedItem.srcElement.click();
                 }
-                let item = this.operatedItem;
-                if(item){
+                let operatedItem = this.operatedItem;
+                if(operatedItem){
                     this.applyChange();
                     
-                    // this.$set(item.node, 'style', this.getCardStyle(item.node));
-                    item.node.style = this.getCardStyle(item.node);
+                    this.$set(operatedItem.node, '_alt_style', this.getCardStyle(operatedItem.node));
+                    // item.node[] = this.getCardStyle(item.node);
 
                     this.coors.removeItem(this.placeholder);
-                    this.coors.addItem(this.operatedItem.node);
+                    this.coors.addItem(operatedItem.node);
                 }
 
                 this.clearDragEnv();
@@ -531,76 +532,80 @@
             getDragId(target){
                 return target.getAttribute('dg-id');
             },
-            dragMove(item, sx, sy, ex, ey){
+            dragMove(operatedItem, sx, sy, ex, ey){
                 // console.log('drag move');
-                let node = this.placeholder;
-                let cacheStyle = item.cacheStyle;
+                let placeholder = this.placeholder;
+                let cacheStyle = operatedItem.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
-                let startCol = dx > 0 ? item.node.x + item.node.w : item.node.x;
+                let startCol = dx > 0 ? operatedItem.node.x + operatedItem.node.w : operatedItem.node.x;
                 let stepX = this.getMoveCols(dx, startCol);
-                let stepY = this.getMoveRows(dy, item.node.y);
+                let stepY = this.getMoveRows(dy, operatedItem.node.y);
                 // console.log('calc over step');
-                let targetX = item.node.x + stepX;
-                let targetY = item.node.y + stepY;
+                let targetX = operatedItem.node.x + stepX;
+                let targetY = operatedItem.node.y + stepY;
 
                 let moveUpRows = this.coors.getMoveUpRowsExceptId({
                     x: targetX,
                     y: targetY,
-                    w: item.node.w,
-                    h: item.node.h
+                    w: operatedItem.node.w,
+                    h: operatedItem.node.h
                 }, '__placeHolder__');
 
                 targetY -= moveUpRows;
 
-                this.coors.moveItemTo(node, {
+                this.coors.moveItemTo(placeholder, {
                     x: targetX,
                     y: targetY
                 })
-                node.x = targetX;
-                node.y = targetY;
+                placeholder.x = targetX;
+                placeholder.y = targetY;
                 
                 
                 let x = cacheStyle.x + dx;
                 let y = cacheStyle.y + dy;
-                item.node.style = this.getCardStyleForRealTime({
+                operatedItem.node['_alt_style'] = this.getCardStyleForRealTime({
                     x: x,
                     y: y,
                     w: cacheStyle.w,
                     h: cacheStyle.h
                 })
-                this.reRenderStyle(item.dragId);
+                this.reRenderStyle({
+                    ignoreId: operatedItem.dragId
+                });
             },
-            resizeMove(item, sx, sy, ex, ey){
-                let node = this.placeholder;
-                let cacheStyle = item.cacheStyle;
+            resizeMove(operatedItem, sx, sy, ex, ey){
+                let placeholder = this.placeholder;
+                let cacheStyle = operatedItem.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
-                let stepX = this.getMoveCols(dx, item.node.x + item.node.w);
-                let stepY = this.getMoveRows(dy, item.node.y + item.node.h);
-                let size = this.getItemLegalSize(item.node, {
-                    w: item.node.w + stepX,
-                    h: item.node.h + stepY
+                let stepX = this.getMoveCols(dx, operatedItem.node.x + operatedItem.node.w);
+                let stepY = this.getMoveRows(dy, operatedItem.node.y + operatedItem.node.h);
+                let size = this.getItemLegalSize(operatedItem.node, {
+                    w: operatedItem.node.w + stepX,
+                    h: operatedItem.node.h + stepY
                 })
                 // console.log('resize', size.w, size.h)
-                this.coors.resizeItem(node, {
+                this.coors.resizeItem(placeholder, {
                     w: size.w,
                     h: size.h
                 })
-                node.w = size.w;
-                node.h = size.h;
+                placeholder.w = size.w;
+                placeholder.h = size.h;
                 let w = cacheStyle.w + dx;
                 let h = cacheStyle.h + dy;
                 if(cacheStyle.x + w > this.containerWidth){
                     w = this.containerWidth - cacheStyle.x;
                 }
-                item.node.style = this.getCardStyleForRealTime({
+                operatedItem.node['_alt_style'] = this.getCardStyleForRealTime({
                     x: cacheStyle.x,
                     y: cacheStyle.y,
                     w: w,
                     h: h
                 })
-                this.reRenderStyle(item.dragId);
+                this.reRenderStyle({
+                    ignoreId: operatedItem.dragId
+                });
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
@@ -650,7 +655,7 @@
                 if(this.coors){
                     let distributeItem = this.coors.addItem(item);
                     let style = this.getCardStyle(distributeItem);
-                    this.$set(distributeItem, 'style', style);
+                    this.$set(distributeItem, '_alt_style', style);
                     this.innerLayout.push(distributeItem);
                     this.$emit('update:layout', this.innerLayout);
                     return distributeItem._id;
