@@ -4,7 +4,7 @@
         :class="operatorClass"
         :style="containerStyle">
         <div 
-            :style="getCardStyle(placeholder)"
+            :style="getCardStyleForPlaceholder(placeholder)"
             class="alt-grid-item-drag-placeholder"
             :class="placeholderClass">
         </div>
@@ -309,7 +309,12 @@
                 return 'none';
             },
             dispatchEvent(dragId, type, pos){
-                this.$refs[dragId] && this.$refs[dragId][0].$emit(type, pos);
+                this.$nextTick(() => {
+                    this.$nextTick(() => {
+                        this.$refs[dragId] && this.$refs[dragId][0].$emit(type, pos);
+                    })
+                })
+                
             },
             getFirstSetValue(){
                 return getFirstSetValue(...arguments);
@@ -425,6 +430,17 @@
                 }
                 let transform = `transform:translate3d(${x}px,${y}px,0);`;
                 let style = `${transform}width:${w}px;height:${item.h}px;background-color:${this.backgroundColor};z-index:1;`;
+                return style;
+            },
+            getCardStyleForPlaceholder(item){
+                if(!item) return {};
+                let x = this.computeColsWidth(0, item.x);
+                let w = this.getCardWidth(item.x, item.x + item.w);
+                let y = item.y * this.rowHeight;
+                let h = item.h * this.rowHeight - this.margin[1];
+                this.setContainerHeight(y, h);
+                let transform = `transform:translate3d(${x}px,${y}px,0);`;
+                let style = `${transform}width:${w}px;height:${h}px;`;
                 return style;
             },
             // 计算卡片的宽度

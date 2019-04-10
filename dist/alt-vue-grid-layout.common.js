@@ -3887,12 +3887,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=7537cffe&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyle(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/grid.vue?vue&type=template&id=5d25c22e&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.layout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item.style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"injected-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=7537cffe&
+// CONCATENATED MODULE: ./src/grid.vue?vue&type=template&id=5d25c22e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -5501,7 +5501,13 @@ var gridvue_type_script_lang_js_Vue = getVue();
       return 'none';
     },
     dispatchEvent: function dispatchEvent(dragId, type, pos) {
-      this.$refs[dragId] && this.$refs[dragId][0].$emit(type, pos);
+      var _this4 = this;
+
+      this.$nextTick(function () {
+        _this4.$nextTick(function () {
+          _this4.$refs[dragId] && _this4.$refs[dragId][0].$emit(type, pos);
+        });
+      });
     },
     getFirstSetValue: function getFirstSetValue() {
       return util_getFirstSetValue.apply(void 0, arguments);
@@ -5543,7 +5549,7 @@ var gridvue_type_script_lang_js_Vue = getVue();
     },
     // 设置布局layout数组
     setLayout: function setLayout(layout) {
-      var _this4 = this;
+      var _this5 = this;
 
       // this.layout = deepCopy(layout);
       // this.layout = layout;
@@ -5558,9 +5564,9 @@ var gridvue_type_script_lang_js_Vue = getVue();
       this.coors.batchAddItem(layout);
       var layoutOverCalc = this.coors.getAllItems();
       layoutOverCalc.forEach(function (item) {
-        var style = _this4.getCardStyle(item);
+        var style = _this5.getCardStyle(item);
 
-        _this4.$set(item, 'style', style); // item.style = style;
+        _this5.$set(item, 'style', style); // item.style = style;
 
       });
       this.layout = layoutOverCalc;
@@ -5632,6 +5638,17 @@ var gridvue_type_script_lang_js_Vue = getVue();
 
       var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
       var style = "".concat(transform, "width:").concat(w, "px;height:").concat(item.h, "px;background-color:").concat(this.backgroundColor, ";z-index:1;");
+      return style;
+    },
+    getCardStyleForPlaceholder: function getCardStyleForPlaceholder(item) {
+      if (!item) return {};
+      var x = this.computeColsWidth(0, item.x);
+      var w = this.getCardWidth(item.x, item.x + item.w);
+      var y = item.y * this.rowHeight;
+      var h = item.h * this.rowHeight - this.margin[1];
+      this.setContainerHeight(y, h);
+      var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
+      var style = "".concat(transform, "width:").concat(w, "px;height:").concat(h, "px;");
       return style;
     },
     // 计算卡片的宽度
