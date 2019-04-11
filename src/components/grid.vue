@@ -20,7 +20,7 @@
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item._id)">关闭</button>
-            <component :ref="item._id" :is="item.type" :injected-props="getPropsForInject(index, item)"></component>
+            <component :ref="item._id" :is="item.type" :alt-card-props="getPropsForInject(index, item)"></component>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"

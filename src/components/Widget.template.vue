@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ['injectedProps'],
+    props: ['altCardProps'],
     template: '<div></div>'
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>组件D</h1>
-        <p>{{ injectedProps.card.name }}</p>
+        <p>{{ altCardProps.card.name }}</p>
         <p>{{ text }}</p>
     </div>
 </template>

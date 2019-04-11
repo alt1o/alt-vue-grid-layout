@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 @click="_close">a组件-包含vue生命周期，以及close事件</h1> 
-        <p>{{ injectedProps.card.name }}</p>
+        <p>{{ altCardProps.card.name }}</p>
     </div>
 </template>
 
@@ -14,7 +14,12 @@ export default {
     },
     methods: {
         _close(){
-            this.injectedProps.close();
+            this.altCardProps.close();
+        }
+    },
+    watch: {
+        altCard(val, old){
+            console.log('testa watch altCard', val, old);
         }
     },
     beforeCreate(){
