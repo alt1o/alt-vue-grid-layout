@@ -1957,7 +1957,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.3s;transition-duration:.3s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
 
 // exports
 
@@ -2027,12 +2027,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=a221288e&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=d24d42cc&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=a221288e&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=d24d42cc&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3233,7 +3233,9 @@ var Vue = getVue();
     cols: function cols() {
       // console.log('cols change');
       this.cacheComputed = {};
-      this.reRenderStyle();
+      this.reRenderStyle({
+        triggerEventEnd: true
+      });
     },
     margin: function margin() {
       this.cacheComputed = {};
@@ -3297,6 +3299,7 @@ var Vue = getVue();
 
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var ignoreId = options.ignoreId;
+      var triggerEventEnd = options.triggerEventEnd;
       if (this.timer) clearTimeout(this.timer);
       this.timer = setTimeout(function () {
         _this3.containerHeight = 0;
@@ -3320,7 +3323,9 @@ var Vue = getVue();
           _this3.$set(item, '_alt_style', styleRaw.style); // item.style = style;
 
 
-          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform']);
+          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+            triggerEventEnd: triggerEventEnd
+          });
 
           if (status === 'none') return;
 
@@ -3328,13 +3333,16 @@ var Vue = getVue();
             w: item.w,
             h: item.h,
             x: item.x,
-            y: item.y
+            y: item.y,
+            layout: _this3.innerLayout
           }); // console.log('create Style:', styleRaw, oldStyle, index);
 
         });
       }, 10);
     },
     getCardRectChangeStatus: function getCardRectChangeStatus(arg1, arg2, range) {
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var triggerEventEnd = options.triggerEventEnd;
       var keys = range || Object.keys(arg1);
 
       for (var i = 0, l = keys.length; i < l; i++) {
@@ -3342,11 +3350,19 @@ var Vue = getVue();
 
         if (arg1[key] === arg2[key]) {
           if (key === 'w' || key === 'h') {
-            return 'move';
+            if (triggerEventEnd) {
+              return 'resized';
+            }
+
+            return 'resize';
           }
 
           if (key === 'transform') {
-            return 'resize';
+            if (triggerEventEnd) {
+              return 'move';
+            }
+
+            return 'moved';
           }
         }
       }
@@ -3633,7 +3649,8 @@ var Vue = getVue();
           x: x,
           y: y,
           w: node.w,
-          h: node.h
+          h: node.h,
+          layout: this.innerLayout
         });
       } else if (this.operator === 2) {
         if (node.w === w && node.h === h) return;
@@ -3643,7 +3660,8 @@ var Vue = getVue();
           x: node.x,
           y: node.y,
           w: w,
-          h: h
+          h: h,
+          layout: this.innerLayout
         });
       }
     },

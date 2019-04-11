@@ -143,7 +143,9 @@
             cols(){
                 // console.log('cols change');
                 this.cacheComputed = {};
-                this.reRenderStyle();
+                this.reRenderStyle({
+                    triggerEventEnd: true
+                });
             },
             margin(){
                 this.cacheComputed = {};
@@ -199,6 +201,7 @@
             },
             reRenderStyle(options = {}){
                 let ignoreId = options.ignoreId;
+                let triggerEventEnd = options.triggerEventEnd;
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.containerHeight = 0;
@@ -219,29 +222,39 @@
 
                         this.$set(item, '_alt_style', styleRaw.style);
                         // item.style = style;
-                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform']);
+                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+                            triggerEventEnd: triggerEventEnd
+                        });
                         if(status === 'none') return;
                         this.dispatchEvent(index. status, {
                             w: item.w,
                             h: item.h,
                             x: item.x,
-                            y: item.y
+                            y: item.y,
+                            layout: this.innerLayout
                         })
 
                         // console.log('create Style:', styleRaw, oldStyle, index);
                     })
                 }, 10);
             },
-            getCardRectChangeStatus(arg1, arg2, range){
+            getCardRectChangeStatus(arg1, arg2, range, options = {}){
+                let triggerEventEnd = options.triggerEventEnd;
                 let keys = range || Object.keys(arg1);
                 for(let i = 0, l = keys.length; i < l; i++){
                     let key = keys[i];
                     if(arg1[key] === arg2[key]){
                         if(key === 'w' || key === 'h'){
-                            return 'move';
+                            if(triggerEventEnd){
+                                return 'resized';
+                            }
+                            return 'resize';
                         }
                         if(key === 'transform'){
-                            return 'resize';
+                            if(triggerEventEnd){
+                                return 'move';
+                            }
+                            return 'moved';
                         }
                     }
                 }
@@ -506,7 +519,8 @@
                         x: x,
                         y: y,
                         w: node.w,
-                        h: node.h
+                        h: node.h,
+                        layout: this.innerLayout
                     })
                 }else if(this.operator === 2){
                     if(node.w === w && node.h === h)  return;
@@ -516,7 +530,8 @@
                         x: node.x,
                         y: node.y,
                         w: w,
-                        h: h
+                        h: h,
+                        layout: this.innerLayout
                     })
                 }
             },
@@ -779,7 +794,7 @@
     cursor: move;
 }
 .alt-grid-container.alt-grid-container-operating .alt-grid-item{
-    transition-duration: 100ms;
+    transition-duration: 300ms;
 }
 .alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{
     display: block;
