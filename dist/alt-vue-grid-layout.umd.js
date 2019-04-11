@@ -2027,12 +2027,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=65da72ee&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=a221288e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=65da72ee&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=a221288e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3699,14 +3699,15 @@ var Vue = getVue();
     },
     resizeMove: function resizeMove(operatedItem, sx, sy, ex, ey) {
       var placeholder = this.placeholder;
+      var node = operatedItem.node;
       var cacheStyle = operatedItem.cacheStyle;
       var dx = ex - sx;
       var dy = ey - sy;
-      var stepX = this.getMoveCols(dx, operatedItem.node.x + operatedItem.node.w);
-      var stepY = this.getMoveRows(dy, operatedItem.node.y + operatedItem.node.h);
-      var size = this.getItemLegalSize(operatedItem.node, {
-        w: operatedItem.node.w + stepX,
-        h: operatedItem.node.h + stepY
+      var stepX = this.getMoveCols(dx, node.x + node.w);
+      var stepY = this.getMoveRows(dy, node.y + node.h);
+      var size = this.getItemLegalSize(node, {
+        w: node.w + stepX,
+        h: node.h + stepY
       }); // console.log('resize', size.w, size.h)
 
       this.coors.resizeItem(placeholder, {
@@ -3715,22 +3716,76 @@ var Vue = getVue();
       });
       placeholder.w = size.w;
       placeholder.h = size.h;
-      var w = cacheStyle.w + dx;
-      var h = cacheStyle.h + dy;
+      var pixiesSize = this.getItemLegalSizeInPixies(node, {
+        width: cacheStyle.w + dx,
+        height: cacheStyle.h + dy
+      });
 
-      if (cacheStyle.x + w > this.containerWidth) {
-        w = this.containerWidth - cacheStyle.x;
+      if (cacheStyle.x + pixiesSize.width > this.containerWidth) {
+        pixiesSize.width = this.containerWidth - cacheStyle.x;
       }
 
       operatedItem.node['_alt_style'] = this.getCardStyleForRealTime({
         x: cacheStyle.x,
         y: cacheStyle.y,
-        w: w,
-        h: h
+        w: pixiesSize.width,
+        h: pixiesSize.height
       });
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
       });
+    },
+    getItemLegalSizeInPixies: function getItemLegalSizeInPixies(node, size) {
+      var pixiesLimit = this.getPixiesLimit(node);
+      var width = size.width;
+      var height = size.height;
+
+      if (width > pixiesLimit.maxWidth) {
+        width = pixiesLimit.maxWidth;
+      } else if (width < pixiesLimit.minWidth) {
+        width = pixiesLimit.minWidth;
+      }
+
+      if (height > pixiesLimit.maxHeight) {
+        height = pixiesLimit.maxHeight;
+      } else if (height < pixiesLimit.minHeight) {
+        height = pixiesLimit.minHeight;
+      }
+
+      return {
+        width: width,
+        height: height
+      };
+    },
+    getPixiesLimit: function getPixiesLimit(node) {
+      var pixiesLimit = {
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: Infinity,
+        maxHeight: Infinity
+      };
+
+      var minW = util_getFirstSetValue(node.minW, this.defVal.minW);
+
+      var minH = util_getFirstSetValue(node.minH, this.defVal.minH);
+
+      if (minW && minW > 0) {
+        pixiesLimit.minWidth = this.getCardWidth(node.x, node.x + minW);
+      }
+
+      if (minH && minH > 0) {
+        pixiesLimit.minHeight = minH * this.rowHeight - this.margin[1];
+      }
+
+      if (node.maxW && node.maxW > 0) {
+        pixiesLimit.maxWidth = this.getCardWidth(node.x, node.x + node.maxW);
+      }
+
+      if (node.maxH && node.maxH > 0) {
+        pixiesLimit.maxHeight = node.maxH * this.rowHeight - this.margin[1];
+      }
+
+      return pixiesLimit;
     },
     getMoveCols: function getMoveCols(dx, startCol) {
       if (startCol <= 0 && dx < 0) return 0;

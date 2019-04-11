@@ -577,14 +577,15 @@
             },
             resizeMove(operatedItem, sx, sy, ex, ey){
                 let placeholder = this.placeholder;
+                let node = operatedItem.node;
                 let cacheStyle = operatedItem.cacheStyle;
                 let dx = ex - sx;
                 let dy = ey - sy;
-                let stepX = this.getMoveCols(dx, operatedItem.node.x + operatedItem.node.w);
-                let stepY = this.getMoveRows(dy, operatedItem.node.y + operatedItem.node.h);
-                let size = this.getItemLegalSize(operatedItem.node, {
-                    w: operatedItem.node.w + stepX,
-                    h: operatedItem.node.h + stepY
+                let stepX = this.getMoveCols(dx, node.x + node.w);
+                let stepY = this.getMoveRows(dy, node.y + node.h);
+                let size = this.getItemLegalSize(node, {
+                    w: node.w + stepX,
+                    h: node.h + stepY
                 })
                 // console.log('resize', size.w, size.h)
                 this.coors.resizeItem(placeholder, {
@@ -593,20 +594,75 @@
                 })
                 placeholder.w = size.w;
                 placeholder.h = size.h;
-                let w = cacheStyle.w + dx;
-                let h = cacheStyle.h + dy;
-                if(cacheStyle.x + w > this.containerWidth){
-                    w = this.containerWidth - cacheStyle.x;
+
+                let pixiesSize = this.getItemLegalSizeInPixies(node, {
+                    width: cacheStyle.w + dx,
+                    height: cacheStyle.h + dy
+                })
+                
+                if(cacheStyle.x + pixiesSize.width > this.containerWidth){
+                    pixiesSize.width = this.containerWidth - cacheStyle.x;
                 }
                 operatedItem.node['_alt_style'] = this.getCardStyleForRealTime({
                     x: cacheStyle.x,
                     y: cacheStyle.y,
-                    w: w,
-                    h: h
+                    w: pixiesSize.width,
+                    h: pixiesSize.height
                 })
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
+            },
+            getItemLegalSizeInPixies(node, size){
+                let pixiesLimit = this.getPixiesLimit(node);
+                let width = size.width;
+                let height = size.height;
+
+                if(width > pixiesLimit.maxWidth){
+                    width = pixiesLimit.maxWidth;
+                }else if(width < pixiesLimit.minWidth){
+                    width = pixiesLimit.minWidth;
+                }
+
+                if(height > pixiesLimit.maxHeight){
+                    height = pixiesLimit.maxHeight;
+                }else if(height < pixiesLimit.minHeight){
+                    height = pixiesLimit.minHeight;
+                }
+
+                return {
+                    width: width,
+                    height: height
+                }
+            },
+            getPixiesLimit(node){
+                let pixiesLimit = {
+                    minWidth: 0,
+                    minHeight: 0,
+                    maxWidth: Infinity,
+                    maxHeight: Infinity
+                }
+
+                let minW = getFirstSetValue(node.minW, this.defVal.minW);
+                let minH = getFirstSetValue(node.minH, this.defVal.minH);
+
+                if(minW && minW > 0){
+                    pixiesLimit.minWidth = this.getCardWidth(node.x, node.x + minW);
+                }
+
+                if(minH && minH > 0){
+                    pixiesLimit.minHeight = minH * this.rowHeight - this.margin[1];
+                }
+
+                if(node.maxW && node.maxW > 0){
+                    pixiesLimit.maxWidth = this.getCardWidth(node.x, node.x + node.maxW);
+                }
+
+                if(node.maxH && node.maxH > 0){
+                    pixiesLimit.maxHeight = node.maxH * this.rowHeight - this.margin[1];
+                }
+
+                return pixiesLimit;
             },
             getMoveCols(dx, startCol){
                 if(startCol <= 0 && dx < 0) return 0;
