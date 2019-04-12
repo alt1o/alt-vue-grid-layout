@@ -38,7 +38,8 @@
         getFirstSetValue,
         getVue,
         getVariType,
-        getIndexOfArrayByAttr
+        getIndexOfArrayByAttr,
+        normalizeEvent
     } from '../utils/util';
 
     import watchBoxSize from '../utils/watch-box-size.js'
@@ -409,8 +410,9 @@
             computeRowsHeight(start, end){
                 return (end - start) * this.rowHeight;
             },
-            mousedown(evt){
+            mousedown(event){
                 this.mousedownTimeStamp = new Date().getTime();
+                let evt = normalizeEvent(event);
                 let srcElement = evt.srcElement;
                 let target = evt.target;
                 let targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
@@ -475,6 +477,7 @@
             mousemove(evt){
                 if(!this.operator) return;
                 // console.log('mouse move');
+                this.operatedItem.el.classList.add('operated-item');
                 let ex = evt.clientX;
                 let ey = evt.clientY;
                 let sx = this.operatedItem.startX;
@@ -795,6 +798,9 @@
 }
 .alt-grid-container.alt-grid-container-operating .alt-grid-item{
     transition-duration: 300ms;
+}
+.alt-grid-container.alt-grid-container-operating .alt-grid-item.operated-item{
+    transition-duration: 100ms;
 }
 .alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{
     display: block;

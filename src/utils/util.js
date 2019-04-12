@@ -75,6 +75,30 @@ export function getIndexOfArrayByAttr(arr, value, attr){
     return -1;
 }
 
+function getEventPath(event){
+    let target = event.target || null;
+    let pathArr = [target];
+
+    if(!target || !target.parentElement){
+        return [];
+    }
+
+    while(target.parentElement){
+        target = target.parentElement;
+        pathArr.unshift(target);
+    }
+
+    return pathArr;
+}
+
+export function normalizeEvent(event){
+    let evt = event;
+    if(!evt.path){
+        evt.path = (evt.composedPath && evt.composedPath()) || getEventPath(event);
+    }
+    return evt;
+}
+
 export function getUniqueID(len, radix) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     var uuid = [],

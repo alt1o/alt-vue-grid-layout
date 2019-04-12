@@ -1957,7 +1957,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.3s;transition-duration:.3s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.3s;transition-duration:.3s\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item.operated-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
 
 // exports
 
@@ -2027,12 +2027,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=d24d42cc&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=5329bbeb&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=d24d42cc&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=5329bbeb&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2155,6 +2155,32 @@ function getIndexOfArrayByAttr(arr, value, attr) {
   }
 
   return -1;
+}
+
+function getEventPath(event) {
+  var target = event.target || null;
+  var pathArr = [target];
+
+  if (!target || !target.parentElement) {
+    return [];
+  }
+
+  while (target.parentElement) {
+    target = target.parentElement;
+    pathArr.unshift(target);
+  }
+
+  return pathArr;
+}
+
+function normalizeEvent(event) {
+  var evt = event;
+
+  if (!evt.path) {
+    evt.path = evt.composedPath && evt.composedPath() || getEventPath(event);
+  }
+
+  return evt;
 }
 function getUniqueID(len, radix) {
   var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -3540,8 +3566,9 @@ var Vue = getVue();
     computeRowsHeight: function computeRowsHeight(start, end) {
       return (end - start) * this.rowHeight;
     },
-    mousedown: function mousedown(evt) {
+    mousedown: function mousedown(event) {
       this.mousedownTimeStamp = new Date().getTime();
+      var evt = normalizeEvent(event);
       var srcElement = evt.srcElement;
       var target = evt.target;
       var targetCard = findParentThoughEvtPath(evt.path, 'alt-grid-item', 'alt-grid-container');
@@ -3602,6 +3629,7 @@ var Vue = getVue();
     mousemove: function mousemove(evt) {
       if (!this.operator) return; // console.log('mouse move');
 
+      this.operatedItem.el.classList.add('operated-item');
       var ex = evt.clientX;
       var ey = evt.clientY;
       var sx = this.operatedItem.startX;
