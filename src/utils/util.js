@@ -75,6 +75,7 @@ export function getIndexOfArrayByAttr(arr, value, attr){
     return -1;
 }
 
+// 获取event.path的polyfill
 function getEventPath(event){
     let target = event.target || null;
     let pathArr = [target];
@@ -91,12 +92,24 @@ function getEventPath(event){
     return pathArr;
 }
 
+// 标准化event对象
 export function normalizeEvent(event){
     let evt = event;
     if(!evt.path){
         evt.path = (evt.composedPath && evt.composedPath()) || getEventPath(event);
     }
     return evt;
+}
+
+export function isDragIgnoreFrom(target, currentCard, ignoreFrom){
+    let ignoreElementList = currentCard.querySelectorAll(ignoreFrom);
+    for(let i = 0, j = ignoreElementList.length; i < j; i++){
+        if(ignoreElementList[i] === target){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export function getUniqueID(len, radix) {

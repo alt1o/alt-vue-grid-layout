@@ -1948,7 +1948,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.3s;transition-duration:.3s\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item.operated-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
+exports.push([module.i, "\n.alt-grid-container{position:relative\n}\n.alt-grid-container .alt-grid-item{position:absolute;background:grey\n}\n.alt-grid-container .alt-grid-item.can-drag{cursor:move\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item{-webkit-transition-duration:.3s;transition-duration:.3s\n}\n.alt-grid-container.alt-grid-container-operating .alt-grid-item.operated-item{-webkit-transition-duration:.1s;transition-duration:.1s\n}\n.alt-grid-container .alt-grid-item:hover .alt-grid-item-resize-handler{display:block\n}\n.alt-grid-container .alt-grid-item-resize-handler{display:none;position:absolute;right:1px;bottom:1px;cursor:se-resize\n}\n.alt-grid-container .alt-g-i-r-h-default-style{width:0;height:0;border-top:5px solid transparent;border-left:5px solid transparent;border-right:5px solid #000;border-bottom:5px solid #000\n}\n.alt-grid-item-drag-placeholder{position:absolute;width:0;height:0;background:red;visibility:hidden\n}\n.alt-grid-container-operating .alt-grid-item-drag-placeholder{visibility:visible\n}\n.alt-grid-container-operating{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none\n}\n.alt-grid-container-operating .mask{width:100%;height:100%;position:absolute;z-index:2\n}\n.alt-grid-container-operating.alt-move .mask{cursor:move\n}\n.alt-grid-container-operating.alt-resize .mask{cursor:se-resize\n}", ""]);
 
 // exports
 
@@ -2018,12 +2018,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=5329bbeb&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=81ee2b10&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=5329bbeb&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=81ee2b10&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2146,7 +2146,7 @@ function getIndexOfArrayByAttr(arr, value, attr) {
   }
 
   return -1;
-}
+} // 获取event.path的polyfill
 
 function getEventPath(event) {
   var target = event.target || null;
@@ -2162,7 +2162,8 @@ function getEventPath(event) {
   }
 
   return pathArr;
-}
+} // 标准化event对象
+
 
 function normalizeEvent(event) {
   var evt = event;
@@ -2172,6 +2173,17 @@ function normalizeEvent(event) {
   }
 
   return evt;
+}
+function isDragIgnoreFrom(target, currentCard, ignoreFrom) {
+  var ignoreElementList = currentCard.querySelectorAll(ignoreFrom);
+
+  for (var i = 0, j = ignoreElementList.length; i < j; i++) {
+    if (ignoreElementList[i] === target) {
+      return true;
+    }
+  }
+
+  return false;
 }
 function getUniqueID(len, radix) {
   var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -3187,8 +3199,9 @@ var Vue = getVue();
         // 默认每个卡片是否支持拖拽
         isResizable: true,
         // 默认每个卡片是否支持设置大小
-        isShowOriginCloseBtn: true // 是否显示默认的关闭按钮
-
+        isShowOriginCloseBtn: true,
+        // 是否显示默认的关闭按钮
+        dragIgnoreFrom: 'a, input, button, textarea'
       },
       containerHeight: 0,
       // 容器高度
@@ -3196,6 +3209,8 @@ var Vue = getVue();
       cacheComputed: {},
       placeholder: null,
       // 拖拽的placeholder
+      preOperator: 0,
+      // 防止点击事件是触发拖动样式，先赋值给preOperator，如果用户继续执行move，则将preOperator赋值给operator
       operator: 0,
       // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
       operatedItem: null,
@@ -3572,7 +3587,7 @@ var Vue = getVue();
           return;
         }
 
-        this.operator = 2; // resize
+        this.preOperator = 2; // resize
       }
 
       if (targetCard && !this.operator) {
@@ -3580,10 +3595,13 @@ var Vue = getVue();
           return;
         }
 
-        this.operator = 1; // 拖拽
+        var dragIgnoreFrom = util_getFirstSetValue(node.dragIgnoreFrom, this.defVal.dragIgnoreFrom);
+
+        if (isDragIgnoreFrom(target, targetCard, dragIgnoreFrom)) return;
+        this.preOperator = 1; // 拖拽
       }
 
-      if (!targetCard && !this.operator) return; // if(!hasClass(target, 'alt-grid-item')) return;
+      if (!targetCard && !this.preOperator) return; // if(!hasClass(target, 'alt-grid-item')) return;
 
       var targetCardStyle = targetCard.style;
       var translate = targetCardStyle.transform.match(/\(([-.\d]*)px, ([-.\d]*)px/);
@@ -3618,7 +3636,8 @@ var Vue = getVue();
       // }
     },
     mousemove: function mousemove(evt) {
-      if (!this.operator) return; // console.log('mouse move');
+      if (!this.preOperator) return;
+      this.operator = this.preOperator; // console.log('mouse move');
 
       this.operatedItem.el.classList.add('operated-item');
       var ex = evt.clientX;
@@ -3685,6 +3704,7 @@ var Vue = getVue();
       }
     },
     clearDragEnv: function clearDragEnv() {
+      this.preOperator = 0;
       this.operator = 0;
       this.operatedItem = null;
       this.placeholder = null;

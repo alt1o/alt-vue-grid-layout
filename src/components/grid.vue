@@ -39,7 +39,8 @@
         getVue,
         getVariType,
         getIndexOfArrayByAttr,
-        normalizeEvent
+        normalizeEvent,
+        isDragIgnoreFrom
     } from '../utils/util';
 
     import watchBoxSize from '../utils/watch-box-size.js'
@@ -90,12 +91,14 @@
                     maxW: Infinity, // 默认每个卡片的最大宽度
                     isDraggable: true, // 默认每个卡片是否支持拖拽
                     isResizable: true, // 默认每个卡片是否支持设置大小
-                    isShowOriginCloseBtn: true // 是否显示默认的关闭按钮
+                    isShowOriginCloseBtn: true, // 是否显示默认的关闭按钮
+                    dragIgnoreFrom: 'a, input, button, textarea'
                 },
                 containerHeight: 0, // 容器高度
                 cols: [],
                 cacheComputed: {},
                 placeholder: null, // 拖拽的placeholder
+                preOperator: 0, // 防止点击事件是触发拖动样式，先赋值给preOperator，如果用户继续执行move，则将preOperator赋值给operator
                 operator: 0, // 当前操作状态，0 - 无操作，1 - 拖拽， 2 - 缩放
                 operatedItem: null, // 当前被操作的元素的状态
                 containerWidth: 0,
@@ -426,7 +429,7 @@
                         this.defVal.isResizable)){
                         return;
                     }
-                    this.operator = 2; // resize
+                    this.preOperator = 2; // resize
                 }
                 if(targetCard && !this.operator){
                     if(!getFirstSetValue(
@@ -435,9 +438,16 @@
                         this.defVal.isDraggable)){
                         return;
                     }
-                    this.operator = 1; // 拖拽
+                    let dragIgnoreFrom = getFirstSetValue(
+                            node.dragIgnoreFrom,
+                            this.defVal.dragIgnoreFrom);
+                    if(isDragIgnoreFrom(target, targetCard, dragIgnoreFrom)) return;
+
+                    this.preOperator = 1; // 拖拽
                 }
-                if(!targetCard && !this.operator) return;
+                
+                
+                if(!targetCard && !this.preOperator) return;
                 // if(!hasClass(target, 'alt-grid-item')) return;
                 
                 let targetCardStyle = targetCard.style;
@@ -475,7 +485,8 @@
                 // }
             },
             mousemove(evt){
-                if(!this.operator) return;
+                if(!this.preOperator) return;
+                this.operator = this.preOperator;
                 // console.log('mouse move');
                 this.operatedItem.el.classList.add('operated-item');
                 let ex = evt.clientX;
@@ -539,6 +550,7 @@
                 }
             },
             clearDragEnv(){
+                this.preOperator = 0;
                 this.operator = 0;
                 this.operatedItem = null;
                 this.placeholder = null;
@@ -830,6 +842,10 @@
     width: 0;
     height: 0;
     background: red;
+    visibility: hidden;
+}
+.alt-grid-container-operating .alt-grid-item-drag-placeholder{
+    visibility: visible;
 }
 .alt-grid-container-operating{
     user-select: none;
