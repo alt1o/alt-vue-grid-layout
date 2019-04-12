@@ -431,7 +431,7 @@
                     }
                     this.preOperator = 2; // resize
                 }
-                if(targetCard && !this.operator){
+                if(targetCard && !this.preOperator){
                     if(!getFirstSetValue(
                         node.isDraggable, 
                         this.isDraggable, 
