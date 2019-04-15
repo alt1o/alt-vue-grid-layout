@@ -786,6 +786,7 @@
                 this.coors.removeItem(item);
                 this.coors.moveAllItemUp();
                 this.innerLayout.splice(index, 1);
+                this.reRenderStyle();
                 // this.reRenderCount++;
                 this.clearDragEnv();
                 this.$emit('update:layout', this.innerLayout);
