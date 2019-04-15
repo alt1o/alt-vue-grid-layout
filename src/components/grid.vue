@@ -147,6 +147,7 @@
             cols(){
                 // console.log('cols change');
                 this.cacheComputed = {};
+                if(this.operator) return;
                 this.reRenderStyle({
                     triggerEventEnd: true
                 });
@@ -601,6 +602,7 @@
                     w: cacheStyle.w,
                     h: cacheStyle.h
                 })
+                this.coors.moveAllItemUp();
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
