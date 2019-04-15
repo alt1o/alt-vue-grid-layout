@@ -280,6 +280,7 @@
                 return {
                     id: item._id,
                     card: item,
+                    layout: this.innerLayout,
                     close: this.closeWidget.bind(this, item._id)
                 }
             },
