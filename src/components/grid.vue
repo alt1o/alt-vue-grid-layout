@@ -477,8 +477,9 @@
                     w: node.w,
                     h: node.h
                 };
-                this.coors.removeItem(node);
-                this.coors.addItem(this.placeholder);
+                this.coors.replace(node._id, this.placeholder);
+                // this.coors.remove(node._id);
+                // this.coors.add(this.placeholder);
                 // console.log('down', evt, this.operatedItem);
                 // if(hasClass(target, this.resizeHandlerClass)){
                 //     this.operator = 2;
@@ -513,8 +514,9 @@
                     this.$set(operatedItem.node, '_alt_style', this.getCardStyle(operatedItem.node));
                     // item.node[] = this.getCardStyle(item.node);
 
-                    this.coors.removeItem(this.placeholder);
-                    this.coors.addItem(operatedItem.node);
+                    this.coors.replace(this.placeholder._id, operatedItem.node);
+                    // this.coors.remove(this.placeholder._id);
+                    // this.coors.add(operatedItem.node);
                 }
 
                 this.clearDragEnv();
@@ -578,21 +580,22 @@
                 let targetX = operatedItem.node.x + stepX;
                 let targetY = operatedItem.node.y + stepY;
 
-                let moveUpRows = this.coors.getMoveUpRowsExceptId({
-                    x: targetX,
-                    y: targetY,
-                    w: operatedItem.node.w,
-                    h: operatedItem.node.h
-                }, '__placeHolder__');
+                // let moveUpRows = this.coors.getMoveUpRowsExceptId({
+                //     x: targetX,
+                //     y: targetY,
+                //     w: operatedItem.node.w,
+                //     h: operatedItem.node.h
+                // }, '__placeHolder__');
 
-                targetY -= moveUpRows;
+                // targetY -= moveUpRows;
 
-                this.coors.moveItemTo(placeholder, {
-                    x: targetX,
-                    y: targetY
-                })
-                placeholder.x = targetX;
-                placeholder.y = targetY;
+                // this.coors.moveItemTo(placeholder, {
+                //     x: targetX,
+                //     y: targetY
+                // })
+                this.coors.getItemById(placeholder._id).moveTo(targetX, targetY);
+                // placeholder.x = targetX;
+                // placeholder.y = targetY;
                 
                 
                 let x = cacheStyle.x + dx;
@@ -603,7 +606,7 @@
                     w: cacheStyle.w,
                     h: cacheStyle.h
                 })
-                this.coors.moveAllItemUp();
+                // this.coors.moveAllItemUp();
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
@@ -621,12 +624,13 @@
                     h: node.h + stepY
                 })
                 // console.log('resize', size.w, size.h)
-                this.coors.resizeItem(placeholder, {
-                    w: size.w,
-                    h: size.h
-                })
-                placeholder.w = size.w;
-                placeholder.h = size.h;
+                this.coors.getItemById(placeholder._id).resizeTo(size.w, size.h);
+                // this.coors.resizeItem(placeholder, {
+                //     w: size.w,
+                //     h: size.h
+                // })
+                // placeholder.w = size.w;
+                // placeholder.h = size.h;
 
                 let pixiesSize = this.getItemLegalSizeInPixies(node, {
                     width: cacheStyle.w + dx,
@@ -743,12 +747,12 @@
             },
             addItem(item){
                 if(this.coors){
-                    let distributeItem = this.coors.addItem(item);
+                    let distributeItem = this.coors.add(item);
                     let style = this.getCardStyle(distributeItem);
-                    this.$set(distributeItem, '_alt_style', style);
-                    this.innerLayout.push(distributeItem);
+                    this.$set(distributeItem.rawInfo, '_alt_style', style);
+                    this.innerLayout.push(distributeItem.rawInfo);
                     this.$emit('update:layout', this.innerLayout);
-                    return distributeItem._id;
+                    return distributeItem.id;
                 }
             },
             deleteItem(id){
@@ -786,8 +790,8 @@
                 let index = getIndexOfArrayByAttr(this.innerLayout, _id, '_id');
                 if(index === -1) return false;
                 let item = this.innerLayout[index];
-                this.coors.removeItem(item);
-                this.coors.moveAllItemUp();
+                this.coors.remove(item._id);
+                // this.coors.moveAllItemUp();
                 this.innerLayout.splice(index, 1);
                 this.reRenderStyle();
                 // this.reRenderCount++;

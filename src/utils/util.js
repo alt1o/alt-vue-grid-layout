@@ -60,6 +60,12 @@ export function getFirstSetValue(){
     return args[l - 1];
 }
 
+export function forEach(arr, callBack){
+	for(let i = 0, j = arr.length; i < j; i++){
+		callBack && callBack(arr[i], i);
+	}
+}
+
 export function forEachValue(obj, fn){
     Object.keys(obj).forEach(key => fn(obj[key], key));
 }

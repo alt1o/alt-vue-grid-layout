@@ -1,127 +1,91 @@
-import { getUniqueID } from './util'
+import { isNil, forEach } from './util'
+import Rect from './rect'
 class Coordinate {
     constructor(options = {}){
         this.coors = [];
-        this.maxWidth = options.maxWidth || 0;
+        this.coorItemsMap = {};
+        this.maxWidth = options.maxWidth;
     }
 
-    setMaxWidth(num){
-        this.maxWidth = num;
+    add(info){
+        /**
+         * 1. 判断位置参数合法性，不合法则自动分配
+         * 2. 添加到坐标系
+         * 3. 返回 id
+         */
+
+        let rectItem = new Rect(info, this);
+        
+        this.distributeRectPosition(rectItem);
+
+        this.coorsFillRect(rectItem.x, rectItem.y, rectItem.w, rectItem.h, rectItem);
+
+        this.coorItemsMap[rectItem.id] = rectItem;
+
+        return rectItem;
     }
 
-    addItem(item = {}){
-        this.appendUniqueID(item);
-        // console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
-        if(!this.isNotNegative(item.x) || 
-            !this.isNotNegative(item.y) ||
-            !this.isPositiveNumer(item.w) ||
-            !this.isPositiveNumer(item.h) ||
-            !this.checkItemPositionIsLegal(item, this.coors)){
-            let distributePos = this.distributeItemPosition(item, this.getAllItems());
-            item.x = distributePos.x;
-            item.y = distributePos.y;
-            item.w = distributePos.w;
-            item.h = distributePos.h;
-        }
-
-        this.addItemWithNoCheck(item);
-
-        // console.log(this.coors);
-        return item;
-    }
-    addItemWithNoCheck(item = {}){
-        this.appendUniqueID(item);
-        let x = item.x;
-        let y = item.y;
-        let w = item.w;
-        let h = item.h;
-
+    coorsFillRect(x, y, w, h, value){
+        let arr = this.coors;
+        let row;
         for(let i = y; i < y + h; i++){
-            if(this.isNil(this.coors[i])) this.coors[i] = [];
+            row = arr[i];
+            if(isNil(row)){
+                arr[i] = [];
+            }
             for(let j = x; j < x + w; j++){
-                if(this.isNil(this.coors[i][j])){
-                    this.coors[i][j] = item;
+                arr[i][j] = value;
+            }
+        }
+    }
+
+    coorsGetRectItems(x, y, w, h){
+        let itemsList = [];
+        let row, cell;
+        for(let i = y; i < y + h; i++){
+            row = this.coors[i] || [];
+            for(let j = x; j < x + w; j++){
+                cell = row[j];
+                if(!isNil(cell)){
+                    itemsList.push(cell);
                 }
             }
         }
 
-        return item;
+        return itemsList;
     }
 
-    appendUniqueID(item){
-        if(!item._id){
-            item._id = getUniqueID();
+    distributeRectPosition(rectInstance){
+        if(!this.checkRectPositionIsLegal(rectInstance, this.coors)){
+            let legalPos = this.getLegalPosition(rectInstance, this.coorItemsMap);
+            rectInstance.setPos(legalPos);
         }
     }
 
-    batchAddItem(list, checked){
-        let handlerName = checked ? 'addItemWithNoCheck' : 'addItem';
-        for(let i = 0; i < list.length; i++){
-            this[handlerName](list[i])
-        }
-
-        return this.coors;
-    }
-
-    getAllItems(){
-        let items = [];
-        let tempRow = null;
-        let tempItem = null;
-        for(let i = 0; i < this.coors.length; i++){
-            tempRow = this.coors[i];
-            if(this.isNil(tempRow)) continue;
-            for(let j = 0; j < tempRow.length; j++){
-                tempItem = tempRow[j];
-                if(this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
-                items.push(tempItem);
-            }
-        }
-
-        return items;
-    }
-
-    // 检查位置是否合法
-    checkItemPositionIsLegal(item, coors){
-        let x = item.x;
-        let y = item.y;
-        let w = item.w;
-        let h = item.h;
-        for(let i = y; i < y + h; i++){
-            if(this.isNil(coors[i])) continue;
-            for(let j = x; j < x + w; j++){
-                if(!this.isNil(coors[i][j])){
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    // 分配元素位置
-    distributeItemPosition(item, itemList){
-        let x = this.isPositiveNumer(item.x) ? item.x : 0;
-        let y = this.isPositiveNumer(item.y) ? item.y : 0;
-        let w = this.isPositiveNumer(item.w) ? item.w : 1;
-        let h = this.isPositiveNumer(item.h) ? item.h : 1;
+    getLegalPosition(rectInstance, itemsMap){
+        let x = rectInstance.x;
+        let y = rectInstance.y;
+        let w = rectInstance.w;
+        let h = rectInstance.h;
 
         let colsHeight = [];
         let tempItem = null;
         let tempY = 0;
-        for(let i = 0, j = itemList.length; i < j; i++){
-            tempItem = itemList[i];
+
+        forEach(Object.keys(itemsMap), (key) => {
+            tempItem = itemsMap[key];
             tempY = tempItem.y + tempItem.h;
             for(let m = tempItem.x; m < tempItem.x + tempItem.w; m++){
                 if(tempY > (colsHeight[m] || 0)){
                     colsHeight[m] = tempY;
                 }
             }
-        }
+        })
 
-        let max = this.maxWidth || colsHeight.length;
+        let max = this.maxWidth || colsHeight.length + w;
 
         for(let i = 0; i < max; i++){
-            if(this.isNil(colsHeight[i])){
+            if(isNil(colsHeight[i])){
                 colsHeight[i] = 0;
             }
         }
@@ -138,7 +102,6 @@ class Coordinate {
         }
     }
 
-    // 获取最下部分可以插入位置
     getMinPeek(arr, w){
         if(w === 1){
             let minVal = Math.min.apply(null, arr);
@@ -163,243 +126,234 @@ class Coordinate {
         return index;
     }
 
-    // 删除元素
-    removeItem(item){
-        // console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
+    // 检查位置是否合法
+    checkRectPositionIsLegal(item, coors){
         let x = item.x;
         let y = item.y;
         let w = item.w;
         let h = item.h;
         for(let i = y; i < y + h; i++){
-            if(this.isNil(this.coors[y])) continue;
+            if(isNil(coors[i])) continue;
             for(let j = x; j < x + w; j++){
-                this.coors[i][j] = null;
+                if(!isNil(coors[i][j])){
+                    return false;
+                }
             }
         }
+
+        return true;
     }
 
-    moveItemTo(item, target){
-        // console.log('------- move start ------');
-        if(item.x === target.x && item.y === target.y){
-            // console.log('---- no move end ------')
-            return;
-        }
-        // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
-        // console.log('test get move up rows', this.getMoveUpRows(item));
-        this.removeItem(item);
-        
-        let belowItems = this.findFirstItemInEveryColsAtRect({
-            x: item.x,
-            y: item.y + item.h,
-            w: item.w,
-            h: 1
-        });
-        for(let i = 0; i < belowItems.length; i++){
-            this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
-        }
+    _moveTo(id, pos = {}){
+        /**
+         * 1. 找到对应的id
+         * 2. 判断移动的
+         */
 
-        let flag = this.checkItemPositionIsLegal({
-            x: target.x,
-            y: target.y,
-            w: item.w,
-            h: item.h
-        }, this.coors);
-        if(!flag){
-            let targetBelowItems = this.findFirstItemInEveryColsAtRect({
-                x: target.x,
-                y: target.y,
-                h: item.h,
-                w: item.w
-            })
-            // console.log('move down items: %d', targetBelowItems.length);
-            // console.table(targetBelowItems);
-            for(let i = 0; i < targetBelowItems.length; i++){
-                this.moveItemDown(targetBelowItems[i], target.y - targetBelowItems[i].y + item.h);
-            }
+        if(isNil(pos.x) || isNil(pos.y)) return;
+        let rectItem = this.coorItemsMap[id];
+
+        rectItem.fill(null);
+
+        let targetRect = {
+            x: pos.x,
+            y: pos.y,
+            w: rectItem.w,
+            h: rectItem.h
+        };
+
+        let targetAreaRectItems = this.coorsGetFirstItemForColsInRect(targetRect);
+
+        let targetBottomLine = {
+            x: targetRect.x,
+            y: targetRect.y + targetRect.h,
+            w: targetRect.w
         }
 
-        item.x = target.x;
-        item.y = target.y;
-
-        this.addItem(item);
-        // this.moveAllItemUp();
-        // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-        // console.log('----- move end -----');
-    }
-
-    resizeItem(item, target){
-        // console.log('---- resize start ------');
-        if(item.w === target.w && item.h === target.h){
-            // console.log('---- resize no move end -----');
-            return;
-        }
-        // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
-        this.removeItem(item);
-        
-        let belowItems = this.findFirstItemInEveryColsAtRect({
-            x: item.x,
-            y: item.y + item.h,
-            w: item.w,
-            h: 1
-        });
-        for(let i = 0; i < belowItems.length; i++){
-            this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
-        }
-
-        let flag = this.checkItemPositionIsLegal({
-            x: item.x,
-            y: item.y,
-            w: target.w,
-            h: target.h
-        }, this.coors);
-        if(!flag){
-            let targetBelowItems = this.findFirstItemInEveryColsAtRect({
-                x: item.x,
-                y: item.y,
-                h: target.h,
-                w: target.w
-            })
-            // console.log('move down items: %d', targetBelowItems.length);
-            // console.table(targetBelowItems);
-            for(let i = 0; i < targetBelowItems.length; i++){
-                this.moveItemDown(targetBelowItems[i], item.y - targetBelowItems[i].y + target.h);
-            }
-        }
-
-        item.w = target.w;
-        item.h = target.h;
-
-        this.addItem(item);
-        this.moveAllItemUp();
-        // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-        // console.log('----- move end -----');
-    }
-
-    // 查找某个区域位置的每一列的第一个元素
-    findFirstItemInEveryColsAtRect(pos){
-        let x = pos.x;
-        let y = pos.y;
-        let w = pos.w;
-        let h = pos.h;
-
-        let items = [];
-        let tempRow = null;
-        let tempItem = null;
-
-        for(let i = x; i < x + w; i++){
-            for(let j = y; j < y + h; j++){
-                tempRow = this.coors[j];
-                if(this.isNil(tempRow)) continue;
-                tempItem = tempRow[i];
-                if(this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
-                items.push(tempItem);
-                break;
-            }
-        }
-
-        return items;
-    }
-
-    getMoveUpRows(item){
-        let coors = this.coors;
-        let upperRows = 0;
-        for(let i = item.y - 1; i >= 0; i--){
-            if(this.isNil(coors[i])){
-                upperRows++;
-                continue;
-            }
-            for(let j = item.x; j < item.x + item.w; j++){
-                if(!this.isNil(coors[i][j])) return upperRows;
-            }
-            upperRows++;
-        }
-
-        return upperRows;
-    }
-
-    getMoveUpRowsExceptId(item, id){
-        let coors = this.coors;
-        let upperRows = 0;
-        for(let i = item.y - 1; i >= 0; i--){
-            if(this.isNil(coors[i])){
-                upperRows++;
-                continue;
-            }
-            for(let j = item.x; j < item.x + item.w; j++){
-                if(!this.isNil(coors[i][j]) && coors[i][j]._id !== id) return upperRows;
-            }
-            upperRows++;
-        }
-
-        return upperRows;
-    }
-
-    // 上移元素
-    moveItemUp(item, size){
-        // console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
-        if(!size) return;
-        this.removeItem(item);
-        
-        let belowItems = this.findFirstItemInEveryColsAtRect({
-            x: item.x,
-            y: item.y + item.h,
-            h: 1,
-            w: item.w
+        forEach(targetAreaRectItems, (item) => {
+            item.moveDown(targetBottomLine.y - item.y);
         })
 
-        item.y -= size;
-        this.addItem(item);
+        rectItem.setPos(targetRect);
 
-        for(let i = 0; i < belowItems.length; i++){
-            this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]))
-        }
-    }
-    // 暂时移动完成之后全部都moveUp一下
-    moveAllItemUp(){
-        let itemList = this.getAllItems();
-        for(let i = 0, j = itemList.length; i < j; i++){
-            this.moveItemUp(itemList[i], this.getMoveUpRows(itemList[i]));
-        }
+        this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
+
+        this._moveUpAll();
     }
 
-    // 下移元素
-    moveItemDown(item, size){
-        // console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
-        if(!size) return;
-        this.removeItem(item);
+    _resizeTo(id, rect = {}){
+        if(isNil(rect.w) || isNil(rect.h)) return;
 
-        let belowItems = this.findFirstItemInEveryColsAtRect({
-            x: item.x,
-            y: item.y,
-            h: item.h + size,
-            w: item.w
+        let rectItem = this.coorItemsMap[id];
+
+        rectItem.fill(null);
+
+        let targetRect = {
+            x: rectItem.x,
+            y: rectItem.y,
+            w: rect.w,
+            h: rect.h
+        };
+
+        let targetAreaRectItems = this.coorsGetFirstItemForColsInRect(targetRect);
+
+        let targetBottomLine = {
+            x: targetRect.x,
+            y: targetRect.y + targetRect.h,
+            w: targetRect.w
+        }
+
+        forEach(targetAreaRectItems, (item) => {
+            item.moveDown(targetBottomLine.y - item.y);
         })
-        // console.log('move down items: %d', belowItems.length);
-        for(let i = 0; i < belowItems.length; i++){
-            this.moveItemDown(belowItems[i], size);
-        }
 
-        item.y += size;
-        this.addItem(item);
+        rectItem.setPos(targetRect);
+
+        this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
+
+        this._moveUpAll();
+
     }
 
+    _moveDown(id, rows){
+        let rectItem = this.coorItemsMap[id];
+
+        rectItem.fill(null);
+
+        let belowItems = this.coorsGetFirstItemForColsInRect({
+            x: rectItem.x,
+            y: rectItem.y + rectItem.h,
+            w: rectItem.w,
+            h: rectItem.h + rows
+        })
+
+        let targetBottomLine = {
+            x: rectItem.x,
+            y: rectItem.y + rectItem.h + rows,
+            w: rectItem.w
+        }
+
+        forEach(belowItems, (item) => {
+            item.moveDown(targetBottomLine.y - item.y);
+        })
+
+        rectItem.setPos({
+            y: rectItem.y + rows
+        });
+
+        rectItem.fill(rectItem);
+
+    }
+
+    coorsGetFirstItemForColsInRect(rect){
+        let {x, y, w, h} = rect;
+        let itemsList = [];
+
+        let mapList = [];
+
+        let row, cell;
+        for(let i = y; i < y + h; i++){
+            row = this.coors[i] || [];
+            for(let j = x; j < x + w; j++){
+                cell = row[j];
+                if(!isNil(cell) && !mapList[j]){
+                    mapList[j] = cell;
+                    if(!~itemsList.indexOf(cell)){
+                        itemsList.push(cell);
+                    }
+                }
+            }
+            if(itemsList.length >= w) break;
+        }
+
+        return itemsList;
+    }
+
+    getEmptyRowsBeforeLine(x, y, w){
+        if(y === 0) return 0;
+        let count = 0;
+        let row, cell;
+        for(let rowNum = y - 1; rowNum >= 0; rowNum--){
+            row = this.coors[rowNum] || [];
+            for(let colNum = x; colNum < x + w; colNum++){
+                cell = row[colNum];
+                if(!isNil(cell)){
+                    return count;
+                }
+            }
+            count++;
+        }
+
+        return count;
+    }
+
+    _moveUpAll(){
+        let me = this;
+        forEach(this.coors, (row) => {
+            forEach(row, (cell) => {
+                if(!cell || cell.y === 0) return;
+                let canUpRows = me.getEmptyRowsBeforeLine(cell.x, cell.y, cell.w);
+                cell.fill(null);
+                cell.setPos({
+                    y: cell.y - canUpRows
+                })
+                cell.fill(cell);
+            })
+        })
+    }
+    
     clear(){
         this.coors = [];
+        this.coorItemsMap = {};
     }
 
-    // 判断是否是正整数
-    isPositiveNumer(num){
-        if(this.isNil(num)) return false;
-        return num > 0;
-    }
-    // 判断是否为非负数 也就是 大于等于0
-    isNotNegative(num){
-        if(this.isNil(num)) return false;
-        return num >= 0;
+    batchAddItem(itemList){
+        let me = this;
+        forEach(itemList, (item) => {
+            me.add(item);
+        })
     }
 
-    isNil(vari){
-        return vari === undefined || vari === null;
+    getAllItems(){
+        let list = [];
+        let itemMap = this.coorItemsMap;
+        forEach(Object.keys(itemMap), (key) => {
+            list.push(itemMap[key].rawInfo);
+        })
+
+        return list;
+    }
+
+    remove(id){
+        let rectItem = this.coorItemsMap[id];
+        if(rectItem){
+            rectItem.fill(null);
+            delete this.coorItemsMap[id];
+            this._moveUpAll();
+        }
+        return rectItem;
+    }
+
+    replace(id, info){
+        let rectItem = this.coorItemsMap[id];
+        if(rectItem && 
+            rectItem.x === info.x &&
+            rectItem.y === info.y &&
+            rectItem.w === info.w &&
+            rectItem.h === info.h ){
+            rectItem.fill(null);
+            delete this.coorItemsMap[id];
+
+            let newRectItem = new Rect(info, this);
+            newRectItem.fill(newRectItem);
+            this.coorItemsMap[newRectItem.id] = newRectItem;
+            return newRectItem;
+        }
+        return null;
+    }
+
+    getItemById(id){
+        return this.coorItemsMap[id];
     }
 
 }
