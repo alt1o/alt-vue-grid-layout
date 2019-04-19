@@ -1,5 +1,5 @@
 <script>
 export default {
-    props: ['injectedProps']
+    props: ['altCardProps']
 }
 </script>

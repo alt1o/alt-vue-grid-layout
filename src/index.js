@@ -1,17 +1,12 @@
 // import Vue from "vue";
-import VueGridLayout from './grid.vue';
-import GridItem from './components/GridItem.vue';
-import GridLayout from './components/GridLayout.vue';
+import VueGridLayout from './components/grid.vue';
 
 // Vue.component('AltVueGridLayout', VueGridLayout);
 
 function factory(){
     let grid = {
         ...VueGridLayout,
-        components: {
-            GridLayout,
-            GridItem,
-        }
+        components: {}
     };
 
     return grid;

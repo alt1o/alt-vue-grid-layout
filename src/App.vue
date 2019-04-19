@@ -16,23 +16,27 @@
             <input type="checkbox" v-model="draggable"/> Draggable
             <input type="checkbox" v-model="resizable"/> Resizable
             <div style="margin-top: 10px;margin-bottom: 10px;">
-                Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNum"/>
+                Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNumStr"/>
             </div>
             right margin <input type="number" v-model="margin[0]" />
             bottom margin <input type="number" v-model="margin[1]" />
             background color <input type="text" v-model="bgcolor">
             <button @click="addItem">addItem</button>
+            <button @click="go(-1)">goback</button>
+            <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    :layout.sync="layout"
+                    class="nihao"
                     :is-draggable="draggable"
                     :is-resizable="resizable"
-                    :row-height="rowHeight"
+                    :row-height="Number(rowHeight)"
                     :margin="margin"
                     :backgroundColor="bgcolor"
                     :col-num="colNum"
                     grid-item-class="ceshi-global-item"
                     close-handler-class="ceshi-global-close"
-                    resize-handler-class="ceshi-global-resize"
+                    resize-handler-class="alt-g-i-r-h-default-style"
                     placeholder-class="ceshi-global-placeholder"
                     ref="altGrid" ></grid>
             </div>
@@ -67,15 +71,19 @@
     Grid.addWidgetType('testD', testD);
 
     let testLayout = [
-        {"x":0,"y":0,"w":2,"h":2,"i":"0", name:'nihaowxl', type: 'testA', resizable: true, draggable: true},
-        {"x":2,"y":0,"w":3,"h":2,"i":"1", type: 'testB', resizable: null, draggable: null},
-        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, draggable: false},
+        {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
+        {"x":2,"y":0,"w":3,"h":2,"i":"1", minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
+        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, isDraggable: true},
         {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
-        {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, draggable: false},
-        {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":5,"w":2,"h":2,"i":"6", resizable: false, draggable: false},
-        {"x":2,"y":5,"w":2,"h":2,"i":"7", resizable: false, draggable: false}
+        {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: true},
+        // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
+        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
     ];
+    let layout2 = [
+        { x: 0, y: 0, w: 8, h: 6},
+        { x: 0, y: 6, w: 6, h: 6}
+    ]
 
     export default {
         name: 'app',
@@ -88,19 +96,38 @@
         data () {
             return {
                 layout: JSON.parse(JSON.stringify(testLayout)),
+                layout2: JSON.parse(JSON.stringify(layout2)),
                 draggable: true,
                 resizable: true,
                 rowHeight: 150,
+                colNumStr: 12,
                 colNum: 12,
-                margin: [3, 3],
-                bgcolor: '#eee'
+                margin: [1, 1],
+                bgcolor: 'rgba(0,  0, 0, 0.5)'
+            }
+        },
+        watch: {
+            colNumStr(val){
+                this.colNum = Number(val) || 12;
+            },
+            layout(){
+                console.log('layout change');
             }
         },
         mounted: function () {
-            this.$refs.altGrid.setLayout(this.layout);
+            // this.$refs.altGrid.setLayout(this.layout);
+            setTimeout(() => {
+            //    this.$refs.altGrid.setLayout(this.layout2); 
+            //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
+                // this.$refs.altGrid.deleteItem(this.$refs.altGrid.layout[0]._id);
+                this.layout[0].name = 'aafffffff'
+            }, 2000);
             // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
+            go: function(num){
+                this.$refs.altGrid.go(num);
+            },
             clicked: function(index) {
                 this.layout.splice(index, 1);
                 // window.alert("CLICK!");
@@ -134,8 +161,9 @@
 
 <style>
     #container {
-        height: 500px;
-        overflow: auto;
+        /* height: 500px; */
+        /* overflow: auto; */
+        /* width: 1083px; */
     }
 </style>
 

@@ -1,15 +1,25 @@
 <template>
     <div>
         <h1 @click="_close">a组件-包含vue生命周期，以及close事件</h1> 
-        <p>{{ injectedProps.card.name }}</p>
+        <p>{{ altCardProps.card.name }}</p>
     </div>
 </template>
 
 <script>
 export default {
+    data(){
+        return {
+            test: 'test-a-test'
+        }
+    },
     methods: {
         _close(){
-            this.injectedProps.close();
+            this.altCardProps.close();
+        }
+    },
+    watch: {
+        altCard(val, old){
+            console.log('testa watch altCard', val, old);
         }
     },
     beforeCreate(){
@@ -23,12 +33,18 @@ export default {
         },
         mounted(){
             console.log('mounted');
+            this.$on('move', (pos) => {
+                console.log('test-a move:', pos);
+            })
+            this.$on('moved', (pos) => {
+                console.log('test-a moved:', pos);
+            })
         },
         beforeUpdate(){
             console.log('before update');
         },
         updated(){
-            console.log('updated');
+            console.log('a updated');
         },
         activated(){
             console.log('activated');
