@@ -1,6 +1,8 @@
 # vue拖拽布局设计器
 
-**基于大神作品的二次开发[https://github.com/jbaysolutions/vue-grid-layout/](https://github.com/jbaysolutions/vue-grid-layout/)**
+支持功能：
+1. 拖拽布局
+2. 拖动改变元素大小
 
 ## 使用方法
 ```html
@@ -46,7 +48,7 @@ gridItemClass | String类型，统一设置卡片的自定义class | <空>
 closeHandlerClass | String类型，统一设置关闭按钮的class | <空>
 resizeHandlerClass | String类型，统一设置 拖拽大小的class | <空>
 placeholderClass | String类型，统一设置占位符的class | <空>
-isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.injectedProps.close()来关闭组件 | true
+isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.altCardProps.close()来关闭组件 | true
 
 ## 方法
 
@@ -104,6 +106,7 @@ isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭�
             * {Number} y
             * {Number} w
             * {Number} h
+            * {string} type 卡片使用的组件类型
             * {Number} minH 可选，设置卡片最小高度
             * {Number} maxH 可选，设置卡片最大高度
             * {Number} minW 可选，设置卡片最小宽度
@@ -116,6 +119,29 @@ isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭�
             * {String} resizeHandlerClass 可选，单个卡片拖拽大小的class
     * 用法:
         设置布局数组，卡片内部可以通过`this.close()`来关闭卡片
+
+* addItem(itemInfo)
+    * 参数:
+        * {Object} itemInfo
+        * {Number} itemInfo.x 坐标x
+        * {Number} itemInfo.y 坐标y
+        * {Number} itemInfo.w 宽度
+        * {Number} itemInfo.h 高度
+        * {string} type 卡片使用的组件类型
+        * {Number} minH 可选，设置卡片最小高度
+        * {Number} maxH 可选，设置卡片最大高度
+        * {Number} minW 可选，设置卡片最小宽度
+        * {Number} maxW 可选，设置卡片最大宽度
+        * {Boolean} isDraggable 可选，设置卡片是否可拖拽位置
+        * {Boolean} isResizable 可选，设置卡片是否可拖拽大小
+        * {Boolean} isShowOriginCloseBtn 可选，设置卡片是否显示自带的关闭按钮
+        * {String} gridItemClass 可选，单个卡片的class
+        * {String} closeHandlerClass 可选，单个卡片关闭按钮的class
+        * {String} resizeHandlerClass 可选，单个卡片拖拽大小的class
+
+* deleteItem(id)
+    * 参数：
+        * {String} id 卡片id
 
 ## 事件
 
@@ -164,7 +190,7 @@ let type1 = {
         * {Object} newSize 改变后的像素大小，{width: 20px, height: 30px}
 
 ### 组件方法
-组件内部可以通过`this.injectedProps.close()`来关闭当前组件
+组件内部可以通过`this.altCardProps.close()`来关闭当前组件
 
 ### 组件公共属性
-组件内部可以通过`this.injectedProps.card`获取layout中当前组件的参数
+组件内部可以通过`this.altCardProps.card`获取layout中当前组件的参数
