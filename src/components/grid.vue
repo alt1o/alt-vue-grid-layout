@@ -582,22 +582,7 @@
                 let targetX = operatedItem.node.x + stepX;
                 let targetY = operatedItem.node.y + stepY;
 
-                // let moveUpRows = this.coors.getMoveUpRowsExceptId({
-                //     x: targetX,
-                //     y: targetY,
-                //     w: operatedItem.node.w,
-                //     h: operatedItem.node.h
-                // }, '__placeHolder__');
-
-                // targetY -= moveUpRows;
-
-                // this.coors.moveItemTo(placeholder, {
-                //     x: targetX,
-                //     y: targetY
-                // })
                 this.coors.getItemById(placeholder._id).moveTo(targetX, targetY);
-                // placeholder.x = targetX;
-                // placeholder.y = targetY;
                 
                 
                 let x = cacheStyle.x + dx;
@@ -624,15 +609,8 @@
                 let size = this.getItemLegalSize(node, {
                     w: node.w + stepX,
                     h: node.h + stepY
-                })
-                // console.log('resize', size.w, size.h)
+                });
                 this.coors.getItemById(placeholder._id).resizeTo(size.w, size.h);
-                // this.coors.resizeItem(placeholder, {
-                //     w: size.w,
-                //     h: size.h
-                // })
-                // placeholder.w = size.w;
-                // placeholder.h = size.h;
 
                 let pixiesSize = this.getItemLegalSizeInPixies(node, {
                     width: cacheStyle.w + dx,
@@ -659,14 +637,14 @@
 
                 if(width > pixiesLimit.maxWidth){
                     width = pixiesLimit.maxWidth;
-                }else if(width < pixiesLimit.minWidth){
-                    width = pixiesLimit.minWidth;
+                }else if(width < pixiesLimit.minWidth - 10){
+                    width = pixiesLimit.minWidth - 10;
                 }
 
                 if(height > pixiesLimit.maxHeight){
                     height = pixiesLimit.maxHeight;
-                }else if(height < pixiesLimit.minHeight){
-                    height = pixiesLimit.minHeight;
+                }else if(height < pixiesLimit.minHeight - 10){
+                    height = pixiesLimit.minHeight - 10;
                 }
 
                 return {
