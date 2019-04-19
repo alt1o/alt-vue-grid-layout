@@ -209,7 +209,9 @@ class Coordinate {
 
         rectItem.setPos(targetRect);
 
-        this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
+        rectItem.fill(rectItem);
+
+        // this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
 
         this._moveUpAll();
 
@@ -256,7 +258,7 @@ class Coordinate {
             row = this.coors[i] || [];
             for(let j = x; j < x + w; j++){
                 cell = row[j];
-                if(!isNil(cell) && !mapList[j]){
+                if(!isNil(cell) && !mapList[j] && this.checkLineIsLegal(cell, mapList)){
                     mapList[j] = cell;
                     if(!~itemsList.indexOf(cell)){
                         itemsList.push(cell);
@@ -268,6 +270,16 @@ class Coordinate {
 
         return itemsList;
     }
+
+    checkLineIsLegal(cell, line){
+		for(let i = cell.x; i < cell.x + cell.w; i++){
+			if(!isNil(line[i]) && cell !== line[i]){
+				return false;
+			}
+		}
+
+		return true;
+	}
 
     getEmptyRowsBeforeLine(x, y, w){
         if(y === 0) return 0;

@@ -544,9 +544,11 @@
                     if(node.w === w && node.h === h)  return;
                     node.w = this.placeholder.w;
                     node.h = this.placeholder.h;
+                    node.x = this.placeholder.x;
+                    node.y = this.placeholder.y;
                     this.dispatchEvent(dragId, 'resized', {
-                        x: node.x,
-                        y: node.y,
+                        x: x,
+                        y: y,
                         w: w,
                         h: h,
                         layout: this.innerLayout

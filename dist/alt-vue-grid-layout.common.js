@@ -607,6 +607,29 @@ module.exports = __webpack_require__("9e1e") ? function (object, key, value) {
 
 /***/ }),
 
+/***/ "36bd":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
+
+var toObject = __webpack_require__("4bf8");
+var toAbsoluteIndex = __webpack_require__("77f1");
+var toLength = __webpack_require__("9def");
+module.exports = function fill(value /* , start = 0, end = @length */) {
+  var O = toObject(this);
+  var length = toLength(O.length);
+  var aLen = arguments.length;
+  var index = toAbsoluteIndex(aLen > 1 ? arguments[1] : undefined, length);
+  var end = aLen > 2 ? arguments[2] : undefined;
+  var endPos = end === undefined ? length : toAbsoluteIndex(end, length);
+  while (endPos > index) O[index++] = value;
+  return O;
+};
+
+
+/***/ }),
+
 /***/ "3846":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1270,6 +1293,19 @@ if (__webpack_require__("79e5")(function () { return $toString.call({ source: 'a
     return $toString.call(this);
   });
 }
+
+
+/***/ }),
+
+/***/ "6c7b":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
+var $export = __webpack_require__("5ca1");
+
+$export($export.P, 'Array', { fill: __webpack_require__("36bd") });
+
+__webpack_require__("9c6c")('fill');
 
 
 /***/ }),
@@ -2018,12 +2054,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=4ebf1e12&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=1abaec99&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=4ebf1e12&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=1abaec99&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2130,6 +2166,11 @@ function util_getFirstSetValue() {
   }
 
   return args[l - 1];
+}
+function forEach(arr, callBack) {
+  for (var i = 0, j = arr.length; i < j; i++) {
+    callBack && callBack(arr[i], i);
+  }
 }
 function forEachValue(obj, fn) {
   Object.keys(obj).forEach(function (key) {
@@ -2319,6 +2360,9 @@ watchBoxSizeChange.prototype.destroy = function destroy() {
 };
 
 /* harmony default export */ var watch_box_size = (watchBoxSizeChange);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.fill.js
+var es6_array_fill = __webpack_require__("6c7b");
+
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -2341,7 +2385,136 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
 }
+// CONCATENATED MODULE: ./src/utils/rect.js
+
+
+
+
+
+var rect_Rect =
+/*#__PURE__*/
+function () {
+  function Rect() {
+    var info = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var coors = arguments.length > 1 ? arguments[1] : undefined;
+
+    _classCallCheck(this, Rect);
+
+    this.appendUniqueId(info);
+    this.x = this.isNotNegativeNumber(info.x) ? info.x : 0;
+    this.y = this.isNotNegativeNumber(info.y) ? info.y : 0;
+    this.w = this.isPositiveNumber(info.w) ? info.w : 1;
+    this.h = this.isPositiveNumber(info.h) ? info.h : 1;
+    this.id = info._id;
+    this.rawInfo = info;
+    this.coors = coors;
+  }
+
+  _createClass(Rect, [{
+    key: "setPos",
+    value: function setPos(pos) {
+      var attrs = ['x', 'y', 'w', 'h'];
+      var attrName;
+      var tempValue;
+
+      for (var i = 0, j = attrs.length; i < j; i++) {
+        attrName = attrs[i];
+        tempValue = pos[attrName];
+
+        if (!isNil(tempValue)) {
+          this[attrName] = tempValue;
+          this.rawInfo[attrName] = tempValue;
+        }
+      }
+    }
+  }, {
+    key: "moveTo",
+    value: function moveTo(x, y) {
+      this.coors._moveTo(this.id, {
+        x: x,
+        y: y
+      });
+    }
+  }, {
+    key: "resizeTo",
+    value: function resizeTo(w, h) {
+      this.coors._resizeTo(this.id, {
+        w: w,
+        h: h
+      });
+    }
+  }, {
+    key: "moveDown",
+    value: function moveDown(rows) {
+      this.coors._moveDown(this.id, rows);
+    }
+  }, {
+    key: "fill",
+    value: function fill(value) {
+      this.coors.coorsFillRect(this.x, this.y, this.w, this.h, value);
+    } // 判断是否是正整数
+
+  }, {
+    key: "isPositiveNumber",
+    value: function isPositiveNumber(num) {
+      if (isNil(num)) return false;
+      return num > 0;
+    } // 判断是否为非负数 也就是 大于等于0
+
+  }, {
+    key: "isNotNegativeNumber",
+    value: function isNotNegativeNumber(num) {
+      if (isNil(num)) return false;
+      return num >= 0;
+    }
+  }, {
+    key: "appendUniqueId",
+    value: function appendUniqueId(item) {
+      if (!item._id) {
+        item._id = this.getUniqueId();
+      }
+    }
+  }, {
+    key: "getUniqueId",
+    value: function getUniqueId(len, radix) {
+      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+      var uuid = [],
+          i;
+      radix = radix || chars.length;
+
+      if (len) {
+        // Compact form
+        for (i = 0; i < len; i++) {
+          uuid[i] = chars[0 | Math.random() * radix];
+        }
+      } else {
+        // 参考rfc4122，https://tools.ietf.org/html/rfc4122
+        var r;
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+        uuid[14] = '4';
+
+        for (i = 0; i < 36; i++) {
+          if (!uuid[i]) {
+            r = 0 | Math.random() * 16;
+            uuid[i] = chars[i == 19 ? r & 0x3 | 0x8 : r];
+          }
+        }
+      }
+
+      return uuid.join('');
+    }
+  }]);
+
+  return Rect;
+}();
+
+/* harmony default export */ var utils_rect = (rect_Rect);
 // CONCATENATED MODULE: ./src/utils/coordinate.js
+
+
+
+
+
 
 
 
@@ -2355,127 +2528,82 @@ function () {
     _classCallCheck(this, Coordinate);
 
     this.coors = [];
-    this.maxWidth = options.maxWidth || 0;
+    this.coorItemsMap = {};
+    this.maxWidth = options.maxWidth;
   }
 
   _createClass(Coordinate, [{
-    key: "setMaxWidth",
-    value: function setMaxWidth(num) {
-      this.maxWidth = num;
+    key: "add",
+    value: function add(info) {
+      /**
+       * 1. 判断位置参数合法性，不合法则自动分配
+       * 2. 添加到坐标系
+       * 3. 返回 id
+       */
+      var rectItem = new utils_rect(info, this);
+      this.distributeRectPosition(rectItem);
+      this.coorsFillRect(rectItem.x, rectItem.y, rectItem.w, rectItem.h, rectItem);
+      this.coorItemsMap[rectItem.id] = rectItem;
+      return rectItem;
     }
   }, {
-    key: "addItem",
-    value: function addItem() {
-      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.appendUniqueID(item); // console.log('add item: %d; %d; %d; %d;', item.x, item.y, item.w, item.h);
-
-      if (!this.isNotNegative(item.x) || !this.isNotNegative(item.y) || !this.isPositiveNumer(item.w) || !this.isPositiveNumer(item.h) || !this.checkItemPositionIsLegal(item, this.coors)) {
-        var distributePos = this.distributeItemPosition(item, this.getAllItems());
-        item.x = distributePos.x;
-        item.y = distributePos.y;
-        item.w = distributePos.w;
-        item.h = distributePos.h;
-      }
-
-      this.addItemWithNoCheck(item); // console.log(this.coors);
-
-      return item;
-    }
-  }, {
-    key: "addItemWithNoCheck",
-    value: function addItemWithNoCheck() {
-      var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.appendUniqueID(item);
-      var x = item.x;
-      var y = item.y;
-      var w = item.w;
-      var h = item.h;
+    key: "coorsFillRect",
+    value: function coorsFillRect(x, y, w, h, value) {
+      var arr = this.coors;
+      var row;
 
       for (var i = y; i < y + h; i++) {
-        if (this.isNil(this.coors[i])) this.coors[i] = [];
+        row = arr[i];
+
+        if (isNil(row)) {
+          arr[i] = [];
+        }
 
         for (var j = x; j < x + w; j++) {
-          if (this.isNil(this.coors[i][j])) {
-            this.coors[i][j] = item;
+          arr[i][j] = value;
+        }
+      }
+    }
+  }, {
+    key: "coorsGetRectItems",
+    value: function coorsGetRectItems(x, y, w, h) {
+      var itemsList = [];
+      var row, cell;
+
+      for (var i = y; i < y + h; i++) {
+        row = this.coors[i] || [];
+
+        for (var j = x; j < x + w; j++) {
+          cell = row[j];
+
+          if (!isNil(cell)) {
+            itemsList.push(cell);
           }
         }
       }
 
-      return item;
+      return itemsList;
     }
   }, {
-    key: "appendUniqueID",
-    value: function appendUniqueID(item) {
-      if (!item._id) {
-        item._id = getUniqueID();
+    key: "distributeRectPosition",
+    value: function distributeRectPosition(rectInstance) {
+      if (!this.checkRectPositionIsLegal(rectInstance, this.coors)) {
+        var legalPos = this.getLegalPosition(rectInstance, this.coorItemsMap);
+        rectInstance.setPos(legalPos);
       }
     }
   }, {
-    key: "batchAddItem",
-    value: function batchAddItem(list, checked) {
-      var handlerName = checked ? 'addItemWithNoCheck' : 'addItem';
-
-      for (var i = 0; i < list.length; i++) {
-        this[handlerName](list[i]);
-      }
-
-      return this.coors;
-    }
-  }, {
-    key: "getAllItems",
-    value: function getAllItems() {
-      var items = [];
-      var tempRow = null;
-      var tempItem = null;
-
-      for (var i = 0; i < this.coors.length; i++) {
-        tempRow = this.coors[i];
-        if (this.isNil(tempRow)) continue;
-
-        for (var j = 0; j < tempRow.length; j++) {
-          tempItem = tempRow[j];
-          if (this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
-          items.push(tempItem);
-        }
-      }
-
-      return items;
-    } // 检查位置是否合法
-
-  }, {
-    key: "checkItemPositionIsLegal",
-    value: function checkItemPositionIsLegal(item, coors) {
-      var x = item.x;
-      var y = item.y;
-      var w = item.w;
-      var h = item.h;
-
-      for (var i = y; i < y + h; i++) {
-        if (this.isNil(coors[i])) continue;
-
-        for (var j = x; j < x + w; j++) {
-          if (!this.isNil(coors[i][j])) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    } // 分配元素位置
-
-  }, {
-    key: "distributeItemPosition",
-    value: function distributeItemPosition(item, itemList) {
-      var x = this.isPositiveNumer(item.x) ? item.x : 0;
-      var y = this.isPositiveNumer(item.y) ? item.y : 0;
-      var w = this.isPositiveNumer(item.w) ? item.w : 1;
-      var h = this.isPositiveNumer(item.h) ? item.h : 1;
+    key: "getLegalPosition",
+    value: function getLegalPosition(rectInstance, itemsMap) {
+      var x = rectInstance.x;
+      var y = rectInstance.y;
+      var w = rectInstance.w;
+      var h = rectInstance.h;
       var colsHeight = [];
       var tempItem = null;
       var tempY = 0;
-
-      for (var i = 0, j = itemList.length; i < j; i++) {
-        tempItem = itemList[i];
+      forEach(Object.keys(itemsMap), function (key) {
+        tempItem = itemsMap[key];
         tempY = tempItem.y + tempItem.h;
 
         for (var m = tempItem.x; m < tempItem.x + tempItem.w; m++) {
@@ -2483,13 +2611,12 @@ function () {
             colsHeight[m] = tempY;
           }
         }
-      }
+      });
+      var max = this.maxWidth || colsHeight.length + w;
 
-      var max = this.maxWidth || colsHeight.length;
-
-      for (var _i = 0; _i < max; _i++) {
-        if (this.isNil(colsHeight[_i])) {
-          colsHeight[_i] = 0;
+      for (var i = 0; i < max; i++) {
+        if (isNil(colsHeight[i])) {
+          colsHeight[i] = 0;
         }
       }
 
@@ -2502,8 +2629,7 @@ function () {
         w: w,
         h: h
       };
-    } // 获取最下部分可以插入位置
-
+    }
   }, {
     key: "getMinPeek",
     value: function getMinPeek(arr, w) {
@@ -2533,265 +2659,250 @@ function () {
       }
 
       return index;
-    } // 删除元素
+    } // 检查位置是否合法
 
   }, {
-    key: "removeItem",
-    value: function removeItem(item) {
-      // console.log('remove item: %d;%d;%d;%d', item.x, item.y, item.w, item.h);
+    key: "checkRectPositionIsLegal",
+    value: function checkRectPositionIsLegal(item, coors) {
       var x = item.x;
       var y = item.y;
       var w = item.w;
       var h = item.h;
 
       for (var i = y; i < y + h; i++) {
-        if (this.isNil(this.coors[y])) continue;
+        if (isNil(coors[i])) continue;
 
         for (var j = x; j < x + w; j++) {
-          this.coors[i][j] = null;
+          if (!isNil(coors[i][j])) {
+            return false;
+          }
         }
       }
+
+      return true;
     }
   }, {
-    key: "moveItemTo",
-    value: function moveItemTo(item, target) {
-      // console.log('------- move start ------');
-      if (item.x === target.x && item.y === target.y) {
-        // console.log('---- no move end ------')
-        return;
-      } // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.x, target.y);
-      // console.log('test get move up rows', this.getMoveUpRows(item));
+    key: "_moveTo",
+    value: function _moveTo(id) {
+      var pos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-
-      this.removeItem(item);
-      var belowItems = this.findFirstItemInEveryColsAtRect({
-        x: item.x,
-        y: item.y + item.h,
-        w: item.w,
-        h: 1
+      /**
+       * 1. 找到对应的id
+       * 2. 判断移动的
+       */
+      if (isNil(pos.x) || isNil(pos.y)) return;
+      var rectItem = this.coorItemsMap[id];
+      rectItem.fill(null);
+      var targetRect = {
+        x: pos.x,
+        y: pos.y,
+        w: rectItem.w,
+        h: rectItem.h
+      };
+      var targetAreaRectItems = this.coorsGetFirstItemForColsInRect(targetRect);
+      var targetBottomLine = {
+        x: targetRect.x,
+        y: targetRect.y + targetRect.h,
+        w: targetRect.w
+      };
+      forEach(targetAreaRectItems, function (item) {
+        item.moveDown(targetBottomLine.y - item.y);
       });
+      rectItem.setPos(targetRect);
+      this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
 
-      for (var i = 0; i < belowItems.length; i++) {
-        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
-      }
-
-      var flag = this.checkItemPositionIsLegal({
-        x: target.x,
-        y: target.y,
-        w: item.w,
-        h: item.h
-      }, this.coors);
-
-      if (!flag) {
-        var targetBelowItems = this.findFirstItemInEveryColsAtRect({
-          x: target.x,
-          y: target.y,
-          h: item.h,
-          w: item.w
-        }); // console.log('move down items: %d', targetBelowItems.length);
-        // console.table(targetBelowItems);
-
-        for (var _i2 = 0; _i2 < targetBelowItems.length; _i2++) {
-          this.moveItemDown(targetBelowItems[_i2], target.y - targetBelowItems[_i2].y + item.h);
-        }
-      }
-
-      item.x = target.x;
-      item.y = target.y;
-      this.addItem(item); // this.moveAllItemUp();
-      // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-      // console.log('----- move end -----');
+      this._moveUpAll();
     }
   }, {
-    key: "resizeItem",
-    value: function resizeItem(item, target) {
-      // console.log('---- resize start ------');
-      if (item.w === target.w && item.h === target.h) {
-        // console.log('---- resize no move end -----');
-        return;
-      } // console.log('%d;%d;%d;%d; -> %d;%d', item.x, item.y, item.w, item.h, target.w, target.h);
-
-
-      this.removeItem(item);
-      var belowItems = this.findFirstItemInEveryColsAtRect({
-        x: item.x,
-        y: item.y + item.h,
-        w: item.w,
-        h: 1
+    key: "_resizeTo",
+    value: function _resizeTo(id) {
+      var rect = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      if (isNil(rect.w) || isNil(rect.h)) return;
+      var rectItem = this.coorItemsMap[id];
+      rectItem.fill(null);
+      var targetRect = {
+        x: rectItem.x,
+        y: rectItem.y,
+        w: rect.w,
+        h: rect.h
+      };
+      var targetAreaRectItems = this.coorsGetFirstItemForColsInRect(targetRect);
+      var targetBottomLine = {
+        x: targetRect.x,
+        y: targetRect.y + targetRect.h,
+        w: targetRect.w
+      };
+      forEach(targetAreaRectItems, function (item) {
+        item.moveDown(targetBottomLine.y - item.y);
       });
+      rectItem.setPos(targetRect);
+      rectItem.fill(rectItem); // this.coorsFillRect(targetRect.x, targetRect.y, targetRect.w, targetRect.h, rectItem);
 
-      for (var i = 0; i < belowItems.length; i++) {
-        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
-      }
-
-      var flag = this.checkItemPositionIsLegal({
-        x: item.x,
-        y: item.y,
-        w: target.w,
-        h: target.h
-      }, this.coors);
-
-      if (!flag) {
-        var targetBelowItems = this.findFirstItemInEveryColsAtRect({
-          x: item.x,
-          y: item.y,
-          h: target.h,
-          w: target.w
-        }); // console.log('move down items: %d', targetBelowItems.length);
-        // console.table(targetBelowItems);
-
-        for (var _i3 = 0; _i3 < targetBelowItems.length; _i3++) {
-          this.moveItemDown(targetBelowItems[_i3], item.y - targetBelowItems[_i3].y + target.h);
-        }
-      }
-
-      item.w = target.w;
-      item.h = target.h;
-      this.addItem(item);
-      this.moveAllItemUp(); // console.log('coors', JSON.parse(JSON.stringify(this.coors)));
-      // console.log('----- move end -----');
-    } // 查找某个区域位置的每一列的第一个元素
-
-  }, {
-    key: "findFirstItemInEveryColsAtRect",
-    value: function findFirstItemInEveryColsAtRect(pos) {
-      var x = pos.x;
-      var y = pos.y;
-      var w = pos.w;
-      var h = pos.h;
-      var items = [];
-      var tempRow = null;
-      var tempItem = null;
-
-      for (var i = x; i < x + w; i++) {
-        for (var j = y; j < y + h; j++) {
-          tempRow = this.coors[j];
-          if (this.isNil(tempRow)) continue;
-          tempItem = tempRow[i];
-          if (this.isNil(tempItem) || ~items.indexOf(tempItem)) continue;
-          items.push(tempItem);
-          break;
-        }
-      }
-
-      return items;
+      this._moveUpAll();
     }
   }, {
-    key: "getMoveUpRows",
-    value: function getMoveUpRows(item) {
-      var coors = this.coors;
-      var upperRows = 0;
-
-      for (var i = item.y - 1; i >= 0; i--) {
-        if (this.isNil(coors[i])) {
-          upperRows++;
-          continue;
-        }
-
-        for (var j = item.x; j < item.x + item.w; j++) {
-          if (!this.isNil(coors[i][j])) return upperRows;
-        }
-
-        upperRows++;
-      }
-
-      return upperRows;
-    }
-  }, {
-    key: "getMoveUpRowsExceptId",
-    value: function getMoveUpRowsExceptId(item, id) {
-      var coors = this.coors;
-      var upperRows = 0;
-
-      for (var i = item.y - 1; i >= 0; i--) {
-        if (this.isNil(coors[i])) {
-          upperRows++;
-          continue;
-        }
-
-        for (var j = item.x; j < item.x + item.w; j++) {
-          if (!this.isNil(coors[i][j]) && coors[i][j]._id !== id) return upperRows;
-        }
-
-        upperRows++;
-      }
-
-      return upperRows;
-    } // 上移元素
-
-  }, {
-    key: "moveItemUp",
-    value: function moveItemUp(item, size) {
-      // console.log('move item up: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
-      if (!size) return;
-      this.removeItem(item);
-      var belowItems = this.findFirstItemInEveryColsAtRect({
-        x: item.x,
-        y: item.y + item.h,
-        h: 1,
-        w: item.w
+    key: "_moveDown",
+    value: function _moveDown(id, rows) {
+      var rectItem = this.coorItemsMap[id];
+      rectItem.fill(null);
+      var belowItems = this.coorsGetFirstItemForColsInRect({
+        x: rectItem.x,
+        y: rectItem.y + rectItem.h,
+        w: rectItem.w,
+        h: rectItem.h + rows
       });
-      item.y -= size;
-      this.addItem(item);
-
-      for (var i = 0; i < belowItems.length; i++) {
-        this.moveItemUp(belowItems[i], this.getMoveUpRows(belowItems[i]));
-      }
-    } // 暂时移动完成之后全部都moveUp一下
-
+      var targetBottomLine = {
+        x: rectItem.x,
+        y: rectItem.y + rectItem.h + rows,
+        w: rectItem.w
+      };
+      forEach(belowItems, function (item) {
+        item.moveDown(targetBottomLine.y - item.y);
+      });
+      rectItem.setPos({
+        y: rectItem.y + rows
+      });
+      rectItem.fill(rectItem);
+    }
   }, {
-    key: "moveAllItemUp",
-    value: function moveAllItemUp() {
-      var itemList = this.getAllItems();
+    key: "coorsGetFirstItemForColsInRect",
+    value: function coorsGetFirstItemForColsInRect(rect) {
+      var x = rect.x,
+          y = rect.y,
+          w = rect.w,
+          h = rect.h;
+      var itemsList = [];
+      var mapList = [];
+      var row, cell;
 
-      for (var i = 0, j = itemList.length; i < j; i++) {
-        this.moveItemUp(itemList[i], this.getMoveUpRows(itemList[i]));
+      for (var i = y; i < y + h; i++) {
+        row = this.coors[i] || [];
+
+        for (var j = x; j < x + w; j++) {
+          cell = row[j];
+
+          if (!isNil(cell) && !mapList[j] && this.checkLineIsLegal(cell, mapList)) {
+            mapList[j] = cell;
+
+            if (!~itemsList.indexOf(cell)) {
+              itemsList.push(cell);
+            }
+          }
+        }
+
+        if (itemsList.length >= w) break;
       }
-    } // 下移元素
 
+      return itemsList;
+    }
   }, {
-    key: "moveItemDown",
-    value: function moveItemDown(item, size) {
-      // console.log('move item down: %d; %d; %d; %d  => %d', item.x, item.y, item.w, item.h, size);
-      if (!size) return;
-      this.removeItem(item);
-      var belowItems = this.findFirstItemInEveryColsAtRect({
-        x: item.x,
-        y: item.y,
-        h: item.h + size,
-        w: item.w
-      }); // console.log('move down items: %d', belowItems.length);
-
-      for (var i = 0; i < belowItems.length; i++) {
-        this.moveItemDown(belowItems[i], size);
+    key: "checkLineIsLegal",
+    value: function checkLineIsLegal(cell, line) {
+      for (var i = cell.x; i < cell.x + cell.w; i++) {
+        if (!isNil(line[i]) && cell !== line[i]) {
+          return false;
+        }
       }
 
-      item.y += size;
-      this.addItem(item);
+      return true;
+    }
+  }, {
+    key: "getEmptyRowsBeforeLine",
+    value: function getEmptyRowsBeforeLine(x, y, w) {
+      if (y === 0) return 0;
+      var count = 0;
+      var row, cell;
+
+      for (var rowNum = y - 1; rowNum >= 0; rowNum--) {
+        row = this.coors[rowNum] || [];
+
+        for (var colNum = x; colNum < x + w; colNum++) {
+          cell = row[colNum];
+
+          if (!isNil(cell)) {
+            return count;
+          }
+        }
+
+        count++;
+      }
+
+      return count;
+    }
+  }, {
+    key: "_moveUpAll",
+    value: function _moveUpAll() {
+      var me = this;
+      forEach(this.coors, function (row) {
+        forEach(row, function (cell) {
+          if (!cell || cell.y === 0) return;
+          var canUpRows = me.getEmptyRowsBeforeLine(cell.x, cell.y, cell.w);
+          cell.fill(null);
+          cell.setPos({
+            y: cell.y - canUpRows
+          });
+          cell.fill(cell);
+        });
+      });
     }
   }, {
     key: "clear",
     value: function clear() {
       this.coors = [];
-    } // 判断是否是正整数
-
-  }, {
-    key: "isPositiveNumer",
-    value: function isPositiveNumer(num) {
-      if (this.isNil(num)) return false;
-      return num > 0;
-    } // 判断是否为非负数 也就是 大于等于0
-
-  }, {
-    key: "isNotNegative",
-    value: function isNotNegative(num) {
-      if (this.isNil(num)) return false;
-      return num >= 0;
+      this.coorItemsMap = {};
     }
   }, {
-    key: "isNil",
-    value: function isNil(vari) {
-      return vari === undefined || vari === null;
+    key: "batchAddItem",
+    value: function batchAddItem(itemList) {
+      var me = this;
+      forEach(itemList, function (item) {
+        me.add(item);
+      });
+    }
+  }, {
+    key: "getAllItems",
+    value: function getAllItems() {
+      var list = [];
+      var itemMap = this.coorItemsMap;
+      forEach(Object.keys(itemMap), function (key) {
+        list.push(itemMap[key].rawInfo);
+      });
+      return list;
+    }
+  }, {
+    key: "remove",
+    value: function remove(id) {
+      var rectItem = this.coorItemsMap[id];
+
+      if (rectItem) {
+        rectItem.fill(null);
+        delete this.coorItemsMap[id];
+
+        this._moveUpAll();
+      }
+
+      return rectItem;
+    }
+  }, {
+    key: "replace",
+    value: function replace(id, info) {
+      var rectItem = this.coorItemsMap[id];
+
+      if (rectItem && rectItem.x === info.x && rectItem.y === info.y && rectItem.w === info.w && rectItem.h === info.h) {
+        rectItem.fill(null);
+        delete this.coorItemsMap[id];
+        var newRectItem = new utils_rect(info, this);
+        newRectItem.fill(newRectItem);
+        this.coorItemsMap[newRectItem.id] = newRectItem;
+        return newRectItem;
+      }
+
+      return null;
+    }
+  }, {
+    key: "getItemById",
+    value: function getItemById(id) {
+      return this.coorItemsMap[id];
     }
   }]);
 
@@ -3629,8 +3740,9 @@ var Vue = getVue();
         w: node.w,
         h: node.h
       };
-      this.coors.removeItem(node);
-      this.coors.addItem(this.placeholder); // console.log('down', evt, this.operatedItem);
+      this.coors.replace(node._id, this.placeholder); // this.coors.remove(node._id);
+      // this.coors.add(this.placeholder);
+      // console.log('down', evt, this.operatedItem);
       // if(hasClass(target, this.resizeHandlerClass)){
       //     this.operator = 2;
       // } else {
@@ -3666,8 +3778,8 @@ var Vue = getVue();
         this.applyChange();
         this.$set(operatedItem.node, '_alt_style', this.getCardStyle(operatedItem.node)); // item.node[] = this.getCardStyle(item.node);
 
-        this.coors.removeItem(this.placeholder);
-        this.coors.addItem(operatedItem.node);
+        this.coors.replace(this.placeholder._id, operatedItem.node); // this.coors.remove(this.placeholder._id);
+        // this.coors.add(operatedItem.node);
       }
 
       this.clearDragEnv();
@@ -3696,9 +3808,11 @@ var Vue = getVue();
         if (node.w === w && node.h === h) return;
         node.w = this.placeholder.w;
         node.h = this.placeholder.h;
+        node.x = this.placeholder.x;
+        node.y = this.placeholder.y;
         this.dispatchEvent(dragId, 'resized', {
-          x: node.x,
-          y: node.y,
+          x: x,
+          y: y,
           w: w,
           h: h,
           layout: this.innerLayout
@@ -3730,20 +3844,21 @@ var Vue = getVue();
       var stepY = this.getMoveRows(dy, operatedItem.node.y); // console.log('calc over step');
 
       var targetX = operatedItem.node.x + stepX;
-      var targetY = operatedItem.node.y + stepY;
-      var moveUpRows = this.coors.getMoveUpRowsExceptId({
-        x: targetX,
-        y: targetY,
-        w: operatedItem.node.w,
-        h: operatedItem.node.h
-      }, '__placeHolder__');
-      targetY -= moveUpRows;
-      this.coors.moveItemTo(placeholder, {
-        x: targetX,
-        y: targetY
-      });
-      placeholder.x = targetX;
-      placeholder.y = targetY;
+      var targetY = operatedItem.node.y + stepY; // let moveUpRows = this.coors.getMoveUpRowsExceptId({
+      //     x: targetX,
+      //     y: targetY,
+      //     w: operatedItem.node.w,
+      //     h: operatedItem.node.h
+      // }, '__placeHolder__');
+      // targetY -= moveUpRows;
+      // this.coors.moveItemTo(placeholder, {
+      //     x: targetX,
+      //     y: targetY
+      // })
+
+      this.coors.getItemById(placeholder._id).moveTo(targetX, targetY); // placeholder.x = targetX;
+      // placeholder.y = targetY;
+
       var x = cacheStyle.x + dx;
       var y = cacheStyle.y + dy;
       operatedItem.node['_alt_style'] = this.getCardStyleForRealTime({
@@ -3751,8 +3866,8 @@ var Vue = getVue();
         y: y,
         w: cacheStyle.w,
         h: cacheStyle.h
-      });
-      this.coors.moveAllItemUp();
+      }); // this.coors.moveAllItemUp();
+
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
       });
@@ -3770,12 +3885,13 @@ var Vue = getVue();
         h: node.h + stepY
       }); // console.log('resize', size.w, size.h)
 
-      this.coors.resizeItem(placeholder, {
-        w: size.w,
-        h: size.h
-      });
-      placeholder.w = size.w;
-      placeholder.h = size.h;
+      this.coors.getItemById(placeholder._id).resizeTo(size.w, size.h); // this.coors.resizeItem(placeholder, {
+      //     w: size.w,
+      //     h: size.h
+      // })
+      // placeholder.w = size.w;
+      // placeholder.h = size.h;
+
       var pixiesSize = this.getItemLegalSizeInPixies(node, {
         width: cacheStyle.w + dx,
         height: cacheStyle.h + dy
@@ -3896,12 +4012,12 @@ var Vue = getVue();
     },
     addItem: function addItem(item) {
       if (this.coors) {
-        var distributeItem = this.coors.addItem(item);
+        var distributeItem = this.coors.add(item);
         var style = this.getCardStyle(distributeItem);
-        this.$set(distributeItem, '_alt_style', style);
-        this.innerLayout.push(distributeItem);
+        this.$set(distributeItem.rawInfo, '_alt_style', style);
+        this.innerLayout.push(distributeItem.rawInfo);
         this.$emit('update:layout', this.innerLayout);
-        return distributeItem._id;
+        return distributeItem.id;
       }
     },
     deleteItem: function deleteItem(id) {
@@ -3947,8 +4063,8 @@ var Vue = getVue();
       var index = getIndexOfArrayByAttr(this.innerLayout, _id, '_id');
       if (index === -1) return false;
       var item = this.innerLayout[index];
-      this.coors.removeItem(item);
-      this.coors.moveAllItemUp();
+      this.coors.remove(item._id); // this.coors.moveAllItemUp();
+
       this.innerLayout.splice(index, 1);
       this.reRenderStyle(); // this.reRenderCount++;
 
