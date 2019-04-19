@@ -33,6 +33,12 @@ class Rect {
     }
 
     moveTo(x, y){
+        if(this.coors.maxWidth && x + this.w > this.coors.maxWidth){
+			x = this.coors.maxWidth - this.w;
+		}
+		if(x < 0) x = 0;
+        if(y < 0) y = 0;
+        
         this.coors._moveTo(this.id, {
             x: x,
             y: y
@@ -40,6 +46,12 @@ class Rect {
     }
 
     resizeTo(w, h){
+        if(this.coors.maxWidth && w + this.x > this.coors.maxWidth){
+			w = this.coors.maxWidth - this.x;
+		}
+		if(w < 1) w = 1;
+        if(h < 1) h = 1;
+        
         this.coors._resizeTo(this.id, {
             w: w,
             h: h
