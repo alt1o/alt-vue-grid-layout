@@ -38,7 +38,9 @@
                     close-handler-class="ceshi-global-close"
                     resize-handler-class="alt-g-i-r-h-default-style"
                     placeholder-class="ceshi-global-placeholder"
-                    ref="altGrid" ></grid>
+                    ref="altGrid" >
+                    <div slot-scope="slotProps">{{ JSON.stringify(slotProps.altCardProps.card._id) }}</div>
+                </grid>
             </div>
         </div>
     </div>

@@ -20,7 +20,7 @@
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item._id)">关闭</button>
-            <component :ref="item._id" :is="item.type" :alt-card-props="getPropsForInject(index, item)"></component>
+            <slot :alt-card-props="getPropsForInject(index, item)"></slot>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
@@ -135,7 +135,9 @@
                 this.setLayout(val);
             },
             rowHeight(){
-                this.reRenderStyle();
+                this.reRenderStyle({
+                    triggerEventEnd: true
+                });
             },
             colNum(val){
                 // console.log('change col number');
@@ -257,9 +259,9 @@
                         }
                         if(key === 'transform'){
                             if(triggerEventEnd){
-                                return 'move';
+                                return 'moved';
                             }
-                            return 'moved';
+                            return 'move';
                         }
                     }
                 }
