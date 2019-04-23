@@ -13,7 +13,10 @@ let props = {
     },
     rowHeight: { // 每行高度
         type: Number,
-        default: 150
+        default: 150,
+        validator: function(value){
+            return !isNaN(value) && (value > 0);
+        }
     },
     maxRows: { // 最大
         type: Number,
