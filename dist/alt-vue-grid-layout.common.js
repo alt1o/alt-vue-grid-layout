@@ -2054,12 +2054,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=437e7182&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=97369684&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=437e7182&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=97369684&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3377,7 +3377,9 @@ var Vue = getVue();
       this.setLayout(val);
     },
     rowHeight: function rowHeight() {
-      this.reRenderStyle();
+      this.reRenderStyle({
+        triggerEventEnd: true
+      });
     },
     colNum: function colNum(val) {
       // console.log('change col number');
@@ -3467,8 +3469,8 @@ var Vue = getVue();
           var card = _this3.$refs.cards[index];
           var oldStyle = {
             style: card.style,
-            w: card.style.width,
-            h: card.style.height,
+            width: card.style.width,
+            height: card.style.height,
             transform: card.style.transform
           };
 
@@ -3481,13 +3483,13 @@ var Vue = getVue();
           _this3.$set(item, '_alt_style', styleRaw.style); // item.style = style;
 
 
-          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
             triggerEventEnd: triggerEventEnd
           });
 
           if (status === 'none') return;
 
-          _this3.dispatchEvent(index.status, {
+          _this3.dispatchEvent(item._id, status, {
             w: item.w,
             h: item.h,
             x: item.x,
@@ -3506,8 +3508,8 @@ var Vue = getVue();
       for (var i = 0, l = keys.length; i < l; i++) {
         var key = keys[i];
 
-        if (arg1[key] === arg2[key]) {
-          if (key === 'w' || key === 'h') {
+        if (arg1[key] !== arg2[key]) {
+          if (key === 'width' || key === 'height') {
             if (triggerEventEnd) {
               return 'resized';
             }
@@ -3517,10 +3519,10 @@ var Vue = getVue();
 
           if (key === 'transform') {
             if (triggerEventEnd) {
-              return 'move';
+              return 'moved';
             }
 
-            return 'moved';
+            return 'move';
           }
         }
       }

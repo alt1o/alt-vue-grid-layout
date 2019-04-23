@@ -135,7 +135,9 @@
                 this.setLayout(val);
             },
             rowHeight(){
-                this.reRenderStyle();
+                this.reRenderStyle({
+                    triggerEventEnd: true
+                });
             },
             colNum(val){
                 // console.log('change col number');
@@ -215,8 +217,8 @@
                         let card = this.$refs.cards[index];
                         let oldStyle = {
                             style: card.style,
-                            w: card.style.width,
-                            h: card.style.height,
+                            width: card.style.width,
+                            height: card.style.height,
                             transform: card.style.transform
                         };
                         if(oldStyle.transform){
@@ -227,11 +229,11 @@
 
                         this.$set(item, '_alt_style', styleRaw.style);
                         // item.style = style;
-                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
                             triggerEventEnd: triggerEventEnd
                         });
                         if(status === 'none') return;
-                        this.dispatchEvent(index. status, {
+                        this.dispatchEvent(item._id, status, {
                             w: item.w,
                             h: item.h,
                             x: item.x,
@@ -248,8 +250,8 @@
                 let keys = range || Object.keys(arg1);
                 for(let i = 0, l = keys.length; i < l; i++){
                     let key = keys[i];
-                    if(arg1[key] === arg2[key]){
-                        if(key === 'w' || key === 'h'){
+                    if(arg1[key] !== arg2[key]){
+                        if(key === 'width' || key === 'height'){
                             if(triggerEventEnd){
                                 return 'resized';
                             }
@@ -257,9 +259,9 @@
                         }
                         if(key === 'transform'){
                             if(triggerEventEnd){
-                                return 'move';
+                                return 'moved';
                             }
-                            return 'moved';
+                            return 'move';
                         }
                     }
                 }
