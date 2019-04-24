@@ -136,7 +136,8 @@
             },
             rowHeight(){
                 this.reRenderStyle({
-                    triggerEventEnd: true
+                    triggerEventEnd: true,
+                    onlyReRender: true
                 });
             },
             colNum(val){
@@ -151,7 +152,8 @@
                 this.cacheComputed = {};
                 if(this.operator) return;
                 this.reRenderStyle({
-                    triggerEventEnd: true
+                    triggerEventEnd: true,
+                    onlyReRender: true
                 });
             },
             margin(){
@@ -209,6 +211,7 @@
             reRenderStyle(options = {}){
                 let ignoreId = options.ignoreId;
                 let triggerEventEnd = options.triggerEventEnd;
+                let onlyReRender = options.onlyReRender;
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.containerHeight = 0;
@@ -238,7 +241,8 @@
                             h: item.h,
                             x: item.x,
                             y: item.y,
-                            layout: this.innerLayout
+                            layout: this.innerLayout,
+                            onlyReRender: onlyReRender
                         })
 
                         // console.log('create Style:', styleRaw, oldStyle, index);
