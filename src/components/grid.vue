@@ -254,6 +254,7 @@
                 let keys = range || Object.keys(arg1);
                 for(let i = 0, l = keys.length; i < l; i++){
                     let key = keys[i];
+                    
                     if(arg1[key] !== arg2[key]){
                         if(key === 'width' || key === 'height'){
                             if(triggerEventEnd){
@@ -353,15 +354,22 @@
             // 获取卡片大小和位移
             getCardStyle(item, raw){
                 if(!item) return {};
-                let x = this.computeColsWidth(0, item.x);
-                let w = this.getCardWidth(item.x, item.x + item.w);
-                let y = item.y * this.rowHeight;
-                let h = item.h * this.rowHeight - this.margin[1];
+                let x = this.computeColsWidth(0, item.x) + 'px';
+                let w = this.getCardWidth(item.x, item.x + item.w) + 'px';
+                let y = item.y * this.rowHeight + 'px';
+                let h = item.h * this.rowHeight - this.margin[1] + 'px';
                 this.setContainerHeight(y, h);
-                let transform = `transform:translate3d(${x}px,${y}px,0);`;
-                let style = `${transform}width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
+                let transform = `translate3d(${x},${y},0px)`;
+                let style = `transform:${transform};width:${w};height:${h};background-color:${this.backgroundColor};`;
                 if(raw){
-                    return { style, x, y, w, h, transform };
+                    return { 
+                        style,
+                        x,
+                        y,
+                        width: w, 
+                        height: h, 
+                        transform
+                    };
                 }
                 return style;
                 // return {
@@ -603,6 +611,13 @@
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
+                this.dispatchEvent(operatedItem.dragId, 'move', {
+                    x: this.placeholder.x,
+                    y: this.placeholder.y,
+                    w: this.placeholder.w,
+                    h: this.placeholder.h,
+                    layout: this.innerLayout
+                })
             },
             resizeMove(operatedItem, sx, sy, ex, ey){
                 let placeholder = this.placeholder;
@@ -635,6 +650,13 @@
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
+                this.dispatchEvent(operatedItem.dragId, 'resize', {
+                    x: this.placeholder.x,
+                    y: this.placeholder.y,
+                    w: this.placeholder.w,
+                    h: this.placeholder.h,
+                    layout: this.innerLayout
+                })
             },
             getItemLegalSizeInPixies(node, size){
                 let pixiesLimit = this.getPixiesLimit(node);

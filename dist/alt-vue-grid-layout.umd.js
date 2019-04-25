@@ -2063,12 +2063,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=f88fad52&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=9949dff2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=f88fad52&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=9949dff2&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3633,21 +3633,21 @@ var Vue = getVue();
     // 获取卡片大小和位移
     getCardStyle: function getCardStyle(item, raw) {
       if (!item) return {};
-      var x = this.computeColsWidth(0, item.x);
-      var w = this.getCardWidth(item.x, item.x + item.w);
-      var y = item.y * this.rowHeight;
-      var h = item.h * this.rowHeight - this.margin[1];
+      var x = this.computeColsWidth(0, item.x) + 'px';
+      var w = this.getCardWidth(item.x, item.x + item.w) + 'px';
+      var y = item.y * this.rowHeight + 'px';
+      var h = item.h * this.rowHeight - this.margin[1] + 'px';
       this.setContainerHeight(y, h);
-      var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
-      var style = "".concat(transform, "width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";");
+      var transform = "translate3d(".concat(x, ",").concat(y, ",0px)");
+      var style = "transform:".concat(transform, ";width:").concat(w, ";height:").concat(h, ";background-color:").concat(this.backgroundColor, ";");
 
       if (raw) {
         return {
           style: style,
           x: x,
           y: y,
-          w: w,
-          h: h,
+          width: w,
+          height: h,
           transform: transform
         };
       }
@@ -3890,6 +3890,13 @@ var Vue = getVue();
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
       });
+      this.dispatchEvent(operatedItem.dragId, 'move', {
+        x: this.placeholder.x,
+        y: this.placeholder.y,
+        w: this.placeholder.w,
+        h: this.placeholder.h,
+        layout: this.innerLayout
+      });
     },
     resizeMove: function resizeMove(operatedItem, sx, sy, ex, ey) {
       var placeholder = this.placeholder;
@@ -3921,6 +3928,13 @@ var Vue = getVue();
       });
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
+      });
+      this.dispatchEvent(operatedItem.dragId, 'resize', {
+        x: this.placeholder.x,
+        y: this.placeholder.y,
+        w: this.placeholder.w,
+        h: this.placeholder.h,
+        layout: this.innerLayout
       });
     },
     getItemLegalSizeInPixies: function getItemLegalSizeInPixies(node, size) {

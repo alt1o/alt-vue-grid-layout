@@ -72,13 +72,13 @@
 
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
-        {"x":2,"y":0,"w":3,"h":2,"i":"1", minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
-        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, isDraggable: true},
-        {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
+        {"x":2,"y":0,"w":3,"h":2,"i":"1", name: '123', minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
+        {"x":5,"y":0,"w":2,"h":2,"i":"2", name: '22', type: 'testC', resizable: false, isDraggable: true},
+        {"x":7,"y":0,"w":4,"h":2,"i":"3", name: '334', gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
         {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: true},
         // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
-        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
+        {"x":0,"y":2,"w":2,"h":2,"i":"6", name: '1222', resizable: false, isDraggable: true},
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", name: '13', resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
     ];
     let layout2 = [
         { x: 0, y: 0, w: 8, h: 6},
