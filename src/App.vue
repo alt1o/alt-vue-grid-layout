@@ -52,6 +52,9 @@
     import testD from './test-components/test-d.vue';
     import Vue from 'vue';
 
+    let vue = Vue;
+    console.log(vue);
+
     Vue.use(GridLayout.altStore);
 
     let store = new GridLayout.altStore.Store({

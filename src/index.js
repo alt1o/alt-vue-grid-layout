@@ -1,8 +1,7 @@
-import Vue from "vue";
+// import Vue from "vue";
 import VueGridLayout from './components/grid.vue';
 import altStore from './alt-store/index'
 
-Vue.use(altStore);
 // Vue.component('AltVueGridLayout', VueGridLayout);
 
 function factory(options = {}){
