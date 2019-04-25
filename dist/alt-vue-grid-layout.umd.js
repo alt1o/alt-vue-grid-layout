@@ -2063,6 +2063,10 @@ function _objectSpread(target) {
 
   return target;
 }
+// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
+var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
+var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
+
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=9949dff2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
@@ -2102,10 +2106,6 @@ var es6_number_is_integer = __webpack_require__("7cdf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
 var es6_regexp_to_string = __webpack_require__("6b54");
-
-// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
-var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
-var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
 
 // CONCATENATED MODULE: ./src/utils/util.js
 
@@ -4126,15 +4126,141 @@ var grid_component = normalizeComponent(
 
 grid_component.options.__file = "grid.vue"
 /* harmony default export */ var components_grid = (grid_component.exports);
+// CONCATENATED MODULE: ./src/alt-store/mixin.js
+function mixin(Vue) {
+  Vue.mixin({
+    beforeCreate: altStoreInit
+  });
+
+  function altStoreInit() {
+    var options = this.$options;
+
+    if (options.altStore) {
+      this.$altStore = options.altStore;
+    } else if (options.parent && options.parent.$altStore) {
+      this.$altStore = options.parent.$altStore;
+    }
+  }
+}
+// CONCATENATED MODULE: ./src/alt-store/util.js
+
+
+
+function util_forEachValue(obj, fn) {
+  Object.keys(obj).forEach(function (key) {
+    return fn(obj[key], key);
+  });
+}
+// CONCATENATED MODULE: ./src/alt-store/store.js
+
+
+
+
+
+var store_Vue;
+var store_AltStore =
+/*#__PURE__*/
+function () {
+  function AltStore(options) {
+    _classCallCheck(this, AltStore);
+
+    this._mutations = Object.create(null);
+    this.initVm(options.state);
+    this.initMutations(options.mutations);
+  }
+
+  _createClass(AltStore, [{
+    key: "commit",
+    value: function commit(type, payload) {
+      var entry = this._mutations[type];
+
+      if (!entry) {
+        console.error('[altStore] unknown commit type.');
+        return;
+      }
+
+      entry.forEach(function (handler) {
+        handler(payload);
+      });
+    }
+  }, {
+    key: "getOriginState",
+    value: function getOriginState() {
+      return this._vm._data.$$state;
+    }
+  }, {
+    key: "initMutations",
+    value: function initMutations(mutations) {
+      var store = this;
+      var state = this.getOriginState();
+      util_forEachValue(mutations, function (handler, key) {
+        var entry = store._mutations[key] || (store._mutations[key] = []);
+        entry.push(function wrapperHandler(payload) {
+          handler.call(store, state, payload);
+        });
+      });
+    }
+  }, {
+    key: "initVm",
+    value: function initVm(state) {
+      var oldVm = this._vm;
+      this._vm = new store_Vue({
+        data: {
+          $$state: state
+        }
+      });
+
+      if (oldVm) {
+        store_Vue.nextTick(function () {
+          return oldVm.$destroy();
+        });
+      }
+    }
+  }, {
+    key: "state",
+    get: function get() {
+      return this._vm._data.$$state;
+    },
+    set: function set(v) {
+      console.error('cannot set state directly.');
+    }
+  }]);
+
+  return AltStore;
+}();
+function install(_Vue) {
+  if (store_Vue && _Vue === store_Vue) {
+    if (false) {}
+
+    return;
+  }
+
+  store_Vue = _Vue;
+  mixin(store_Vue);
+}
+// CONCATENATED MODULE: ./src/alt-store/index.js
+
+/* harmony default export */ var alt_store = ({
+  Store: store_AltStore,
+  install: install
+});
 // CONCATENATED MODULE: ./src/index.js
 
-// import Vue from "vue";
- // Vue.component('AltVueGridLayout', VueGridLayout);
+
+
+
+external_commonjs_vue_commonjs2_vue_root_Vue_default.a.use(alt_store); // Vue.component('AltVueGridLayout', VueGridLayout);
 
 function factory() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
   var grid = _objectSpread({}, components_grid, {
     components: {}
   });
+
+  if (options.altStore && options.altStore instanceof alt_store.Store) {
+    grid.altStore = options.altStore;
+  }
 
   return grid;
 } // export default VueGridLayout;
@@ -4142,7 +4268,8 @@ function factory() {
 
 /* harmony default export */ var src = ({
   createGrid: factory,
-  grid: components_grid
+  grid: components_grid,
+  altStore: alt_store
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 

@@ -35,6 +35,7 @@ export default {
             console.log('mounted');
             this.$on('move', (pos) => {
                 console.log('test-a move:', pos);
+                this.$altStore.commit('add');
             })
             this.$on('moved', (pos) => {
                 console.log('test-a moved:', pos);

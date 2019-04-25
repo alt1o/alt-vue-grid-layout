@@ -50,6 +50,20 @@
     import testA from './test-components/test-a.vue';
     import testB from './test-components/test-b.vue';
     import testD from './test-components/test-d.vue';
+    import Vue from 'vue';
+
+    Vue.use(GridLayout.altStore);
+
+    let store = new GridLayout.altStore.Store({
+        state: {
+            count: 0
+        },
+        mutations: {
+            add(state){
+                state.count++;
+            }
+        }
+    })
 
     let Grid = GridLayout.createGrid();
     // console.log(Grid)
@@ -87,6 +101,7 @@
 
     export default {
         name: 'app',
+        altStore: store,
         components: {
             Grid
         },
@@ -112,6 +127,14 @@
             },
             layout(){
                 console.log('layout change');
+            },
+            count(val, oldVal){
+                console.log('count change', val, oldVal);
+            }
+        },
+        computed: {
+            count(){
+                return this.$altStore.state.count;
             }
         },
         mounted: function () {
