@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Vue Grid Layout Example 1 - Basic</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="app.css">
+    <!--<link rel="stylesheet" href="../dist/vue-grid-layout.css">-->
+</head>
+<body>
+    <a href="https://github.com/alongite/alt-vue-grid-layout">View project on Github</a>
+
+    <div id="app">
+        <h1 style="text-align: center">Vue Grid Layout</h1>
+        <h2>{{ txt }}</h2>
+        <div>
+            <div class="layoutJSON">
+                Displayed as <code>[x, y, w, h]</code>:
+                <div class="columns">
+                    <div class="layoutItem" v-for="item in layout" :key="item.i">
+                        <b>{{item.i}}</b>: [{{item.x}}, {{item.y}}, {{item.w}}, {{item.h}}]
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content">
+            <input type="checkbox" v-model="draggable"/> Draggable
+            <input type="checkbox" v-model="resizable"/> Resizable
+            <div style="margin-top: 10px;margin-bottom: 10px;">
+                Row Height: <input type="number" v-model="rowHeight"/> Col nums: <input type="number" v-model="colNumStr"/>
+            </div>
+            right margin <input type="number" v-model="margin[0]" />
+            bottom margin <input type="number" v-model="margin[1]" />
+            background color <input type="text" v-model="bgcolor">
+            <button @click="addItem">addItem</button>
+            <div id="container">
+                <grid 
+                    @updated="gridUpdated"
+                    v-show="isGridShow"
+                    :layout.sync="layout"
+                    class="nihao"
+                    :is-draggable="draggable"
+                    :is-resizable="resizable"
+                    :row-height="Number(rowHeight)"
+                    :margin="margin"
+                    :backgroundColor="bgcolor"
+                    :col-num="colNum"
+                    grid-item-class="ceshi-global-item"
+                    close-handler-class="ceshi-global-close"
+                    resize-handler-class="alt-g-i-r-h-default-style"
+                    placeholder-class="ceshi-global-placeholder"
+                    ref="altGrid" >
+                    <div slot-scope="slotProps">
+                        {{ slotProps.altCardProps.card._id }}
+                    </div>
+                </grid>
+            </div>
+        </div>
+    </div>
+    <script src="vue.min.js"></script>
+    <script src="../dist/alt-vue-grid-layout.umd.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
