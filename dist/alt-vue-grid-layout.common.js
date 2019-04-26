@@ -2280,7 +2280,7 @@ watchBoxSizeChange.prototype.checkHidden = function checkHidden() {
     var height = _this.el.offsetHeight;
 
     if (width === 0 && height === 0) {
-      checkHidden();
+      _this.checkHidden();
     } else {
       _this.handler();
 

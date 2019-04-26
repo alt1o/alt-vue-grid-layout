@@ -26,6 +26,7 @@
             <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    v-show="isGridShow"
                     :layout.sync="layout"
                     class="nihao"
                     :is-draggable="draggable"
@@ -121,7 +122,8 @@
                 colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
-                bgcolor: 'rgba(0,  0, 0, 0.5)'
+                bgcolor: 'rgba(0,  0, 0, 0.5)',
+                isGridShow: false
             }
         },
         watch: {
@@ -143,6 +145,7 @@
         mounted: function () {
             // this.$refs.altGrid.setLayout(this.layout);
             setTimeout(() => {
+                this.isGridShow = true;
             //    this.$refs.altGrid.setLayout(this.layout2); 
             //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
                 // this.$refs.altGrid.deleteItem(this.$refs.altGrid.layout[0]._id);
