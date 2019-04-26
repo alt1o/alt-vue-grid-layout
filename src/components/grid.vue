@@ -317,7 +317,7 @@
                 this.cols = cols;
             },
             // 设置布局layout数组
-            setLayout(layout){
+            setLayout(layout = []){
                 // this.layout = deepCopy(layout);
                 // this.layout = layout;
                 // // console.log(deepCopy)
@@ -754,14 +754,15 @@
                 return parseInt(flag + i);
             },
             addItem(item){
-                if(this.coors){
-                    let distributeItem = this.coors.add(item);
-                    let style = this.getCardStyle(distributeItem);
-                    this.$set(distributeItem.rawInfo, '_alt_style', style);
-                    this.innerLayout.push(distributeItem.rawInfo);
-                    this.$emit('update:layout', this.innerLayout);
-                    return distributeItem.id;
+                if(!this.coors){
+                    this.setLayout();
                 }
+                let distributeItem = this.coors.add(item);
+                let style = this.getCardStyle(distributeItem);
+                this.$set(distributeItem.rawInfo, '_alt_style', style);
+                this.innerLayout.push(distributeItem.rawInfo);
+                this.$emit('update:layout', this.innerLayout);
+                return distributeItem.id;
             },
             deleteItem(id){
                 return this.closeWidget(id);
