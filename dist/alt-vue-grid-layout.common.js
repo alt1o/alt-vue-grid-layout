@@ -2019,47 +2019,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/defineProperty.js
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/builtin/es6/objectSpread.js
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
-
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
-    }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
-  }
-
-  return target;
-}
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=437e7182&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=84aee10e&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_vm._t("default",null,{altCardProps:_vm.getPropsForInject(index, item)}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],2)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=437e7182&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=84aee10e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2969,194 +2934,6 @@ function autoMove(that, layout) {
     y: 1
   });
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=template&id=67aab659&
-var Widget_rendervue_type_template_id_67aab659_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div')}
-var Widget_rendervue_type_template_id_67aab659_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./src/components/Widget.render.vue?vue&type=template&id=67aab659&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-/* harmony default export */ var Widget_rendervue_type_script_lang_js_ = ({
-  props: ['altCardProps']
-});
-// CONCATENATED MODULE: ./src/components/Widget.render.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_Widget_rendervue_type_script_lang_js_ = (Widget_rendervue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-// CONCATENATED MODULE: ./src/components/Widget.render.vue
-
-
-
-
-
-/* normalize component */
-
-var component = normalizeComponent(
-  components_Widget_rendervue_type_script_lang_js_,
-  Widget_rendervue_type_template_id_67aab659_render,
-  Widget_rendervue_type_template_id_67aab659_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-component.options.__file = "Widget.render.vue"
-/* harmony default export */ var Widget_render = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.template.vue?vue&type=script&lang=js&
-/* harmony default export */ var Widget_templatevue_type_script_lang_js_ = ({
-  props: ['altCardProps'],
-  template: '<div></div>'
-});
-// CONCATENATED MODULE: ./src/components/Widget.template.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_Widget_templatevue_type_script_lang_js_ = (Widget_templatevue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./src/components/Widget.template.vue
-var Widget_template_render, Widget_template_staticRenderFns
-
-
-
-
-/* normalize component */
-
-var Widget_template_component = normalizeComponent(
-  components_Widget_templatevue_type_script_lang_js_,
-  Widget_template_render,
-  Widget_template_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-Widget_template_component.options.__file = "Widget.template.vue"
-/* harmony default export */ var Widget_template = (Widget_template_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.vuecomponent.vue?vue&type=script&lang=js&
-/* harmony default export */ var Widget_vuecomponentvue_type_script_lang_js_ = ({
-  props: ['altCardProps']
-});
-// CONCATENATED MODULE: ./src/components/Widget.vuecomponent.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_Widget_vuecomponentvue_type_script_lang_js_ = (Widget_vuecomponentvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./src/components/Widget.vuecomponent.vue
-var Widget_vuecomponent_render, Widget_vuecomponent_staticRenderFns
-
-
-
-
-/* normalize component */
-
-var Widget_vuecomponent_component = normalizeComponent(
-  components_Widget_vuecomponentvue_type_script_lang_js_,
-  Widget_vuecomponent_render,
-  Widget_vuecomponent_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-Widget_vuecomponent_component.options.__file = "Widget.vuecomponent.vue"
-/* harmony default export */ var Widget_vuecomponent = (Widget_vuecomponent_component.exports);
 // CONCATENATED MODULE: ./src/components/props.js
 
 var props = {
@@ -3236,7 +3013,6 @@ var props = {
 
 
 
-
 //
 //
 //
@@ -3275,37 +3051,8 @@ var props = {
 
 
 
-
-
-
-var Vue = getVue();
 /* harmony default export */ var gridvue_type_script_lang_js_ = ({
   name: 'alt-grid-layout',
-  addWidgetType: function addWidgetType() {
-    var args0 = arguments[0];
-    var type = getVariType(args0);
-
-    if (type === 'string') {
-      this._addWidgetType.apply(this, arguments);
-    } else if (type === 'object') {
-      for (var key in args0) {
-        args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
-      }
-    }
-  },
-  // 添加组件类型处理函数
-  _addWidgetType: function _addWidgetType(type, widget) {
-    var parentWidget = widget.template ? Widget_template : Widget_render;
-
-    if (widget.super == Vue) {
-      this.components[type] = widget.extend(Widget_vuecomponent);
-      return;
-    }
-
-    this.components[type] = _objectSpread({}, widget, {
-      extends: parentWidget
-    });
-  },
   props: components_props,
   data: function data() {
     return {
@@ -3377,7 +3124,9 @@ var Vue = getVue();
       this.setLayout(val);
     },
     rowHeight: function rowHeight() {
-      this.reRenderStyle();
+      this.reRenderStyle({
+        triggerEventEnd: true
+      });
     },
     colNum: function colNum(val) {
       // console.log('change col number');
@@ -3517,10 +3266,10 @@ var Vue = getVue();
 
           if (key === 'transform') {
             if (triggerEventEnd) {
-              return 'move';
+              return 'moved';
             }
 
-            return 'moved';
+            return 'move';
           }
         }
       }
@@ -4072,6 +3821,101 @@ var Vue = getVue();
 // EXTERNAL MODULE: ./src/components/grid.vue?vue&type=style&index=0&lang=css&
 var gridvue_type_style_index_0_lang_css_ = __webpack_require__("d812");
 
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
 // CONCATENATED MODULE: ./src/components/grid.vue
 
 
@@ -4081,7 +3925,7 @@ var gridvue_type_style_index_0_lang_css_ = __webpack_require__("d812");
 
 /* normalize component */
 
-var grid_component = normalizeComponent(
+var component = normalizeComponent(
   components_gridvue_type_script_lang_js_,
   render,
   staticRenderFns,
@@ -4092,25 +3936,15 @@ var grid_component = normalizeComponent(
   
 )
 
-grid_component.options.__file = "grid.vue"
-/* harmony default export */ var components_grid = (grid_component.exports);
+component.options.__file = "grid.vue"
+/* harmony default export */ var grid = (component.exports);
 // CONCATENATED MODULE: ./src/index.js
-
 // import Vue from "vue";
  // Vue.component('AltVueGridLayout', VueGridLayout);
-
-function factory() {
-  var grid = _objectSpread({}, components_grid, {
-    components: {}
-  });
-
-  return grid;
-} // export default VueGridLayout;
-
+// export default VueGridLayout;
 
 /* harmony default export */ var src = ({
-  createGrid: factory,
-  grid: components_grid
+  Grid: grid
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 

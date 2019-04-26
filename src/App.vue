@@ -39,7 +39,12 @@
                     resize-handler-class="alt-g-i-r-h-default-style"
                     placeholder-class="ceshi-global-placeholder"
                     ref="altGrid" >
-                    <div slot-scope="slotProps">{{ JSON.stringify(slotProps.altCardProps.card._id) }}</div>
+                    <div slot-scope="slotProps">
+                        <component 
+                            :is="slotProps.altCardProps.card.type" 
+                            :alt-card-props="slotProps.altCardProps">
+                        </component>
+                    </div>
                 </grid>
             </div>
         </div>
@@ -52,25 +57,6 @@
     import testA from './test-components/test-a.vue';
     import testB from './test-components/test-b.vue';
     import testD from './test-components/test-d.vue';
-
-    let Grid = GridLayout.createGrid();
-    // console.log(Grid)
-    Grid.addWidgetType({
-        'testA': testA,
-        'testB': testB
-    })
-    // Grid.addWidgetType('testA', testA);
-    // Grid.addWidgetType('testB', testB);
-    Grid.addWidgetType('testC', {
-        mounted(){
-            console.log('mounted');
-            this.$el.innerHTML += 'heello world'
-            this.$on('resize', (a, b) => {
-                console.log('components resize', a, b, arguments);
-            })
-        }
-    })
-    Grid.addWidgetType('testD', testD);
 
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
@@ -90,7 +76,11 @@
     export default {
         name: 'app',
         components: {
-            Grid
+            Grid: GridLayout.Grid,
+            testA,
+            testB,
+            testC: testA,
+            testD
         },
         props: {
             txt: String

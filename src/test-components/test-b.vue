@@ -7,6 +7,7 @@
 </template>
 <script>
 export default {
+    props: ['altCardProps'],
     updated(){
         console.log('updated b');
     }

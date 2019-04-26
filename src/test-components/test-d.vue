@@ -15,6 +15,7 @@ export default Vue.extend({
             text: 'text content'
         }
     },
+    props: ['altCardProps'],
     mounted(){
         console.log('mounted')
         this.$on('move', function(fff){
