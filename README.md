@@ -52,6 +52,7 @@ closeHandlerClass | String类型，统一设置关闭按钮的class | <空>
 resizeHandlerClass | String类型，统一设置 拖拽大小的class | <空>
 placeholderClass | String类型，统一设置占位符的class | <空>
 isShowOriginCloseBtn | Boolean类型，统一设置是否显示自带的关闭按钮，可以使用注册组件的this.altCardProps.close()来关闭组件 | true
+width | Number或false，设置width后，不会自动监听容器变化 | false
 
 ## 方法
 
