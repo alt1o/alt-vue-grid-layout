@@ -98,6 +98,7 @@
             this.boxWatchHandler.destroy();
             // this.erd.uninstall(this.$el);
             this.unbindEvents();
+            clearTimeout(this.timer);
         },
         watch: {
             layout(val){
@@ -105,7 +106,8 @@
             },
             rowHeight(){
                 this.reRenderStyle({
-                    triggerEventEnd: true
+                    triggerEventEnd: true,
+                    onlyReRender: true
                 });
             },
             colNum(val){
@@ -120,7 +122,8 @@
                 this.cacheComputed = {};
                 if(this.operator) return;
                 this.reRenderStyle({
-                    triggerEventEnd: true
+                    triggerEventEnd: true,
+                    onlyReRender: true
                 });
             },
             margin(){
@@ -178,6 +181,7 @@
             reRenderStyle(options = {}){
                 let ignoreId = options.ignoreId;
                 let triggerEventEnd = options.triggerEventEnd;
+                let onlyReRender = options.onlyReRender;
                 if(this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     this.containerHeight = 0;
@@ -186,8 +190,8 @@
                         let card = this.$refs.cards[index];
                         let oldStyle = {
                             style: card.style,
-                            w: card.style.width,
-                            h: card.style.height,
+                            width: card.style.width,
+                            height: card.style.height,
                             transform: card.style.transform
                         };
                         if(oldStyle.transform){
@@ -198,16 +202,17 @@
 
                         this.$set(item, '_alt_style', styleRaw.style);
                         // item.style = style;
-                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+                        let status = this.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
                             triggerEventEnd: triggerEventEnd
                         });
                         if(status === 'none') return;
-                        this.dispatchEvent(index. status, {
+                        this.dispatchEvent(item._id, status, {
                             w: item.w,
                             h: item.h,
                             x: item.x,
                             y: item.y,
-                            layout: this.innerLayout
+                            layout: this.innerLayout,
+                            onlyReRender: onlyReRender
                         })
 
                         // console.log('create Style:', styleRaw, oldStyle, index);
@@ -219,8 +224,9 @@
                 let keys = range || Object.keys(arg1);
                 for(let i = 0, l = keys.length; i < l; i++){
                     let key = keys[i];
-                    if(arg1[key] === arg2[key]){
-                        if(key === 'w' || key === 'h'){
+                    
+                    if(arg1[key] !== arg2[key]){
+                        if(key === 'width' || key === 'height'){
                             if(triggerEventEnd){
                                 return 'resized';
                             }
@@ -281,7 +287,7 @@
                 this.cols = cols;
             },
             // 设置布局layout数组
-            setLayout(layout){
+            setLayout(layout = []){
                 // this.layout = deepCopy(layout);
                 // this.layout = layout;
                 // // console.log(deepCopy)
@@ -318,15 +324,22 @@
             // 获取卡片大小和位移
             getCardStyle(item, raw){
                 if(!item) return {};
-                let x = this.computeColsWidth(0, item.x);
-                let w = this.getCardWidth(item.x, item.x + item.w);
-                let y = item.y * this.rowHeight;
-                let h = item.h * this.rowHeight - this.margin[1];
+                let x = this.computeColsWidth(0, item.x) + 'px';
+                let w = this.getCardWidth(item.x, item.x + item.w) + 'px';
+                let y = item.y * this.rowHeight + 'px';
+                let h = item.h * this.rowHeight - this.margin[1] + 'px';
                 this.setContainerHeight(y, h);
-                let transform = `transform:translate3d(${x}px,${y}px,0);`;
-                let style = `${transform}width:${w}px;height:${h}px;background-color:${this.backgroundColor};`;
+                let transform = `translate3d(${x},${y},0px)`;
+                let style = `transform:${transform};width:${w};height:${h};background-color:${this.backgroundColor};`;
                 if(raw){
-                    return { style, x, y, w, h, transform };
+                    return { 
+                        style,
+                        x,
+                        y,
+                        width: w, 
+                        height: h, 
+                        transform
+                    };
                 }
                 return style;
                 // return {
@@ -568,6 +581,13 @@
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
+                this.dispatchEvent(operatedItem.dragId, 'move', {
+                    x: this.placeholder.x,
+                    y: this.placeholder.y,
+                    w: this.placeholder.w,
+                    h: this.placeholder.h,
+                    layout: this.innerLayout
+                })
             },
             resizeMove(operatedItem, sx, sy, ex, ey){
                 let placeholder = this.placeholder;
@@ -600,6 +620,13 @@
                 this.reRenderStyle({
                     ignoreId: operatedItem.dragId
                 });
+                this.dispatchEvent(operatedItem.dragId, 'resize', {
+                    x: this.placeholder.x,
+                    y: this.placeholder.y,
+                    w: this.placeholder.w,
+                    h: this.placeholder.h,
+                    layout: this.innerLayout
+                })
             },
             getItemLegalSizeInPixies(node, size){
                 let pixiesLimit = this.getPixiesLimit(node);
@@ -697,14 +724,15 @@
                 return parseInt(flag + i);
             },
             addItem(item){
-                if(this.coors){
-                    let distributeItem = this.coors.add(item);
-                    let style = this.getCardStyle(distributeItem);
-                    this.$set(distributeItem.rawInfo, '_alt_style', style);
-                    this.innerLayout.push(distributeItem.rawInfo);
-                    this.$emit('update:layout', this.innerLayout);
-                    return distributeItem.id;
+                if(!this.coors){
+                    this.setLayout();
                 }
+                let distributeItem = this.coors.add(item);
+                let style = this.getCardStyle(distributeItem);
+                this.$set(distributeItem.rawInfo, '_alt_style', style);
+                this.innerLayout.push(distributeItem.rawInfo);
+                this.$emit('update:layout', this.innerLayout);
+                return distributeItem.id;
             },
             deleteItem(id){
                 return this.closeWidget(id);
@@ -749,6 +777,9 @@
                 this.clearDragEnv();
                 this.$emit('update:layout', this.innerLayout);
             }
+        },
+        updated(){
+            this.$emit('updated');
         }
     }
 </script>

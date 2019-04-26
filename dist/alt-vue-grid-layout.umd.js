@@ -2028,12 +2028,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=84aee10e&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=41419530&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_vm._t("default",null,{altCardProps:_vm.getPropsForInject(index, item)}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],2)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=84aee10e&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=41419530&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2243,6 +2243,7 @@ function watchBoxSizeChange(el, handler) {
 
   this.el = el;
   this.handler = handler;
+  this.hadInitScrollListener = false;
   this.checkHidden();
 }
 
@@ -2254,11 +2255,13 @@ watchBoxSizeChange.prototype.checkHidden = function checkHidden() {
     var height = _this.el.offsetHeight;
 
     if (width === 0 && height === 0) {
-      checkHidden();
+      _this.checkHidden();
     } else {
       _this.handler();
 
       _this.init();
+
+      _this.hadInitScrollListener = true;
     }
   });
 };
@@ -2328,9 +2331,11 @@ watchBoxSizeChange.prototype.removeListener = function removeListener() {
 };
 
 watchBoxSizeChange.prototype.destroy = function destroy() {
-  this.removeListener();
-  this.el.removeChild(this.expand);
-  this.el.removeChild(this.shrink);
+  if (this.hadInitScrollListener) {
+    this.removeListener();
+    this.el.removeChild(this.expand);
+    this.el.removeChild(this.shrink);
+  }
 };
 
 /* harmony default export */ var watch_box_size = (watchBoxSizeChange);
@@ -2965,7 +2970,10 @@ var props = {
   rowHeight: {
     // 每行高度
     type: Number,
-    default: 150
+    default: 150,
+    validator: function validator(value) {
+      return !isNaN(value) && value > 0;
+    }
   },
   maxRows: {
     // 最大
@@ -3127,6 +3135,7 @@ var props = {
     this.boxWatchHandler.destroy(); // this.erd.uninstall(this.$el);
 
     this.unbindEvents();
+    clearTimeout(this.timer);
   },
   watch: {
     layout: function layout(val) {
@@ -3134,7 +3143,8 @@ var props = {
     },
     rowHeight: function rowHeight() {
       this.reRenderStyle({
-        triggerEventEnd: true
+        triggerEventEnd: true,
+        onlyReRender: true
       });
     },
     colNum: function colNum(val) {
@@ -3150,7 +3160,8 @@ var props = {
       this.cacheComputed = {};
       if (this.operator) return;
       this.reRenderStyle({
-        triggerEventEnd: true
+        triggerEventEnd: true,
+        onlyReRender: true
       });
     },
     margin: function margin() {
@@ -3216,6 +3227,7 @@ var props = {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var ignoreId = options.ignoreId;
       var triggerEventEnd = options.triggerEventEnd;
+      var onlyReRender = options.onlyReRender;
       if (this.timer) clearTimeout(this.timer);
       this.timer = setTimeout(function () {
         _this3.containerHeight = 0;
@@ -3225,8 +3237,8 @@ var props = {
           var card = _this3.$refs.cards[index];
           var oldStyle = {
             style: card.style,
-            w: card.style.width,
-            h: card.style.height,
+            width: card.style.width,
+            height: card.style.height,
             transform: card.style.transform
           };
 
@@ -3239,18 +3251,19 @@ var props = {
           _this3.$set(item, '_alt_style', styleRaw.style); // item.style = style;
 
 
-          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['w', 'h', 'transform'], {
+          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
             triggerEventEnd: triggerEventEnd
           });
 
           if (status === 'none') return;
 
-          _this3.dispatchEvent(index.status, {
+          _this3.dispatchEvent(item._id, status, {
             w: item.w,
             h: item.h,
             x: item.x,
             y: item.y,
-            layout: _this3.innerLayout
+            layout: _this3.innerLayout,
+            onlyReRender: onlyReRender
           }); // console.log('create Style:', styleRaw, oldStyle, index);
 
         });
@@ -3264,8 +3277,8 @@ var props = {
       for (var i = 0, l = keys.length; i < l; i++) {
         var key = keys[i];
 
-        if (arg1[key] === arg2[key]) {
-          if (key === 'w' || key === 'h') {
+        if (arg1[key] !== arg2[key]) {
+          if (key === 'width' || key === 'height') {
             if (triggerEventEnd) {
               return 'resized';
             }
@@ -3334,8 +3347,10 @@ var props = {
       this.cols = cols;
     },
     // 设置布局layout数组
-    setLayout: function setLayout(layout) {
+    setLayout: function setLayout() {
       var _this5 = this;
+
+      var layout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
       // this.layout = deepCopy(layout);
       // this.layout = layout;
@@ -3373,21 +3388,21 @@ var props = {
     // 获取卡片大小和位移
     getCardStyle: function getCardStyle(item, raw) {
       if (!item) return {};
-      var x = this.computeColsWidth(0, item.x);
-      var w = this.getCardWidth(item.x, item.x + item.w);
-      var y = item.y * this.rowHeight;
-      var h = item.h * this.rowHeight - this.margin[1];
+      var x = this.computeColsWidth(0, item.x) + 'px';
+      var w = this.getCardWidth(item.x, item.x + item.w) + 'px';
+      var y = item.y * this.rowHeight + 'px';
+      var h = item.h * this.rowHeight - this.margin[1] + 'px';
       this.setContainerHeight(y, h);
-      var transform = "transform:translate3d(".concat(x, "px,").concat(y, "px,0);");
-      var style = "".concat(transform, "width:").concat(w, "px;height:").concat(h, "px;background-color:").concat(this.backgroundColor, ";");
+      var transform = "translate3d(".concat(x, ",").concat(y, ",0px)");
+      var style = "transform:".concat(transform, ";width:").concat(w, ";height:").concat(h, ";background-color:").concat(this.backgroundColor, ";");
 
       if (raw) {
         return {
           style: style,
           x: x,
           y: y,
-          w: w,
-          h: h,
+          width: w,
+          height: h,
           transform: transform
         };
       }
@@ -3630,6 +3645,13 @@ var props = {
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
       });
+      this.dispatchEvent(operatedItem.dragId, 'move', {
+        x: this.placeholder.x,
+        y: this.placeholder.y,
+        w: this.placeholder.w,
+        h: this.placeholder.h,
+        layout: this.innerLayout
+      });
     },
     resizeMove: function resizeMove(operatedItem, sx, sy, ex, ey) {
       var placeholder = this.placeholder;
@@ -3661,6 +3683,13 @@ var props = {
       });
       this.reRenderStyle({
         ignoreId: operatedItem.dragId
+      });
+      this.dispatchEvent(operatedItem.dragId, 'resize', {
+        x: this.placeholder.x,
+        y: this.placeholder.y,
+        w: this.placeholder.w,
+        h: this.placeholder.h,
+        layout: this.innerLayout
       });
     },
     getItemLegalSizeInPixies: function getItemLegalSizeInPixies(node, size) {
@@ -3763,14 +3792,16 @@ var props = {
       return parseInt(flag + i);
     },
     addItem: function addItem(item) {
-      if (this.coors) {
-        var distributeItem = this.coors.add(item);
-        var style = this.getCardStyle(distributeItem);
-        this.$set(distributeItem.rawInfo, '_alt_style', style);
-        this.innerLayout.push(distributeItem.rawInfo);
-        this.$emit('update:layout', this.innerLayout);
-        return distributeItem.id;
+      if (!this.coors) {
+        this.setLayout();
       }
+
+      var distributeItem = this.coors.add(item);
+      var style = this.getCardStyle(distributeItem);
+      this.$set(distributeItem.rawInfo, '_alt_style', style);
+      this.innerLayout.push(distributeItem.rawInfo);
+      this.$emit('update:layout', this.innerLayout);
+      return distributeItem.id;
     },
     deleteItem: function deleteItem(id) {
       return this.closeWidget(id);
@@ -3823,6 +3854,9 @@ var props = {
       this.clearDragEnv();
       this.$emit('update:layout', this.innerLayout);
     }
+  },
+  updated: function updated() {
+    this.$emit('updated');
   }
 });
 // CONCATENATED MODULE: ./src/components/grid.vue?vue&type=script&lang=js&
@@ -3947,13 +3981,133 @@ var component = normalizeComponent(
 
 component.options.__file = "grid.vue"
 /* harmony default export */ var grid = (component.exports);
+// CONCATENATED MODULE: ./src/alt-store/mixin.js
+function mixin(Vue) {
+  Vue.mixin({
+    beforeCreate: altStoreInit
+  });
+
+  function altStoreInit() {
+    var options = this.$options;
+
+    if (options.altStore) {
+      this.$altStore = options.altStore;
+    } else if (options.parent && options.parent.$altStore) {
+      this.$altStore = options.parent.$altStore;
+    }
+  }
+}
+// CONCATENATED MODULE: ./src/alt-store/util.js
+
+
+
+function util_forEachValue(obj, fn) {
+  Object.keys(obj).forEach(function (key) {
+    return fn(obj[key], key);
+  });
+}
+// CONCATENATED MODULE: ./src/alt-store/store.js
+
+
+
+
+
+var Vue;
+var store_AltStore =
+/*#__PURE__*/
+function () {
+  function AltStore(options) {
+    _classCallCheck(this, AltStore);
+
+    this._mutations = Object.create(null);
+    this.initVm(options.state);
+    this.initMutations(options.mutations);
+  }
+
+  _createClass(AltStore, [{
+    key: "commit",
+    value: function commit(type, payload) {
+      var entry = this._mutations[type];
+
+      if (!entry) {
+        console.error('[altStore] unknown commit type.');
+        return;
+      }
+
+      entry.forEach(function (handler) {
+        handler(payload);
+      });
+    }
+  }, {
+    key: "getOriginState",
+    value: function getOriginState() {
+      return this._vm._data.$$state;
+    }
+  }, {
+    key: "initMutations",
+    value: function initMutations(mutations) {
+      var store = this;
+      var state = this.getOriginState();
+      util_forEachValue(mutations, function (handler, key) {
+        var entry = store._mutations[key] || (store._mutations[key] = []);
+        entry.push(function wrapperHandler(payload) {
+          handler.call(store, state, payload);
+        });
+      });
+    }
+  }, {
+    key: "initVm",
+    value: function initVm(state) {
+      var oldVm = this._vm;
+      this._vm = new Vue({
+        data: {
+          $$state: state
+        }
+      });
+
+      if (oldVm) {
+        Vue.nextTick(function () {
+          return oldVm.$destroy();
+        });
+      }
+    }
+  }, {
+    key: "state",
+    get: function get() {
+      return this._vm._data.$$state;
+    },
+    set: function set(v) {
+      console.error('cannot set state directly.');
+    }
+  }]);
+
+  return AltStore;
+}();
+function install(_Vue) {
+  if (Vue && _Vue === Vue) {
+    if (false) {}
+
+    return;
+  }
+
+  Vue = _Vue;
+  mixin(Vue);
+}
+// CONCATENATED MODULE: ./src/alt-store/index.js
+
+/* harmony default export */ var alt_store = ({
+  Store: store_AltStore,
+  install: install
+});
 // CONCATENATED MODULE: ./src/index.js
 // import Vue from "vue";
+
  // Vue.component('AltVueGridLayout', VueGridLayout);
 // export default VueGridLayout;
 
 /* harmony default export */ var src = ({
-  Grid: grid
+  Grid: grid,
+  altStore: alt_store
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 

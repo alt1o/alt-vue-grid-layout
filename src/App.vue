@@ -26,6 +26,8 @@
             <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    @updated="gridUpdated"
+                    v-show="isGridShow"
                     :layout.sync="layout"
                     class="nihao"
                     :is-draggable="draggable"
@@ -57,16 +59,33 @@
     import testA from './test-components/test-a.vue';
     import testB from './test-components/test-b.vue';
     import testD from './test-components/test-d.vue';
+    import Vue from 'vue';
+
+    let vue = Vue;
+    console.log(vue);
+
+    Vue.use(GridLayout.altStore);
+
+    let store = new GridLayout.altStore.Store({
+        state: {
+            count: 0
+        },
+        mutations: {
+            add(state){
+                state.count++;
+            }
+        }
+    })
 
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
-        {"x":2,"y":0,"w":3,"h":2,"i":"1", minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
-        {"x":5,"y":0,"w":2,"h":2,"i":"2", type: 'testC', resizable: false, isDraggable: true},
-        {"x":7,"y":0,"w":4,"h":2,"i":"3", gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
+        {"x":2,"y":0,"w":3,"h":2,"i":"1", name: '123', minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
+        {"x":5,"y":0,"w":2,"h":2,"i":"2", name: '22', type: 'testC', resizable: false, isDraggable: true},
+        {"x":7,"y":0,"w":4,"h":2,"i":"3", name: '334', gridItemClass: 'ceshi-class', closeHandlerClass:"ceshi-close-class", resizeHandlerClass:"ceshi-resize-class", resizable: false, draggable: false},
         {"x":11,"y":0,"w":1,"h":2,"i":"4", type: 'testD', name: 'wakaka', resizable: false, isDraggable: true},
         // {"x":10,"y":0,"w":2,"h":2,"i":"5", resizable: false, draggable: false},
-        {"x":0,"y":2,"w":2,"h":2,"i":"6", resizable: false, isDraggable: true},
-        {"x":2,"y":2,"w":2,"h":2,"i":"7", resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
+        {"x":0,"y":2,"w":2,"h":2,"i":"6", name: '1222', resizable: false, isDraggable: true},
+        {"x":2,"y":2,"w":2,"h":2,"i":"7", name: '13', resizable: false, isDraggable: true, isShowOriginCloseBtn: true}
     ];
     let layout2 = [
         { x: 0, y: 0, w: 8, h: 6},
@@ -75,6 +94,7 @@
 
     export default {
         name: 'app',
+        altStore: store,
         components: {
             Grid: GridLayout.Grid,
             testA,
@@ -95,7 +115,8 @@
                 colNumStr: 12,
                 colNum: 12,
                 margin: [1, 1],
-                bgcolor: 'rgba(0,  0, 0, 0.5)'
+                bgcolor: 'rgba(0,  0, 0, 0.5)',
+                isGridShow: true
             }
         },
         watch: {
@@ -104,11 +125,20 @@
             },
             layout(){
                 console.log('layout change');
+            },
+            count(val, oldVal){
+                console.log('count change', val, oldVal);
+            }
+        },
+        computed: {
+            count(){
+                return this.$altStore.state.count;
             }
         },
         mounted: function () {
             // this.$refs.altGrid.setLayout(this.layout);
             setTimeout(() => {
+                this.isGridShow = true;
             //    this.$refs.altGrid.setLayout(this.layout2); 
             //    this.$refs.altGrid.addItem({ x: 0, y: 0, w: 6, h: 6 }); 
                 // this.$refs.altGrid.deleteItem(this.$refs.altGrid.layout[0]._id);
@@ -117,6 +147,9 @@
             // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
+            gridUpdated(){
+                console.log('grid updated');
+            },
             go: function(num){
                 this.$refs.altGrid.go(num);
             },
