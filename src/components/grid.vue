@@ -20,7 +20,7 @@
                 v-if="getFirstSetValue(item.isShowOriginCloseBtn, isShowOriginCloseBtn, true)"
                 :class="[closeHandlerClass, item.closeHandlerClass]" 
                 @click="closeWidget(item._id)">关闭</button>
-            <component :ref="item._id" :is="item.type" :alt-card-props="getPropsForInject(index, item)"></component>
+            <slot :alt-card-props="getPropsForInject(index, item)"></slot>
             <span 
                 v-if="getFirstSetValue(item.isResizable, isResizable, true)"
                 class="alt-grid-item-resize-handler"
@@ -36,8 +36,6 @@
         hasClass,
         findParentThoughEvtPath,
         getFirstSetValue,
-        getVue,
-        getVariType,
         getIndexOfArrayByAttr,
         normalizeEvent,
         isDragIgnoreFrom
@@ -46,40 +44,11 @@
     import watchBoxSize from '../utils/watch-box-size.js'
     import Coordinate from '../utils/coordinate'
     import coorTest from '../utils/coordinate.test.js'
- 
-    import WidgetRender from './Widget.render.vue';
-    import WidgetTemplate from './Widget.template.vue';
-    import WidgetComponent from './Widget.vuecomponent.vue';
 
     import props from './props.js'
 
-    let Vue = getVue();
-
     export default {
         name: 'alt-grid-layout',
-        addWidgetType(){
-            let args0 = arguments[0];
-            let type = getVariType(args0);
-            if(type === 'string'){
-                this._addWidgetType(...arguments);
-            } else if(type === 'object'){
-                for(let key in args0){
-                    args0.hasOwnProperty(key) && this._addWidgetType(key, args0[key]);
-                }
-            }
-        },
-        // 添加组件类型处理函数
-        _addWidgetType(type, widget){
-            let parentWidget = widget.template ? WidgetTemplate : WidgetRender;
-            if(widget.super == Vue){
-                this.components[type] = widget.extend(WidgetComponent);
-                return;
-            }
-            this.components[type] = {
-                ...widget,
-                extends: parentWidget
-            }
-        },
         props: props,
         data () {
             return {

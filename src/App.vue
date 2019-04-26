@@ -40,7 +40,14 @@
                     close-handler-class="ceshi-global-close"
                     resize-handler-class="alt-g-i-r-h-default-style"
                     placeholder-class="ceshi-global-placeholder"
-                    ref="altGrid" ></grid>
+                    ref="altGrid" >
+                    <div slot-scope="slotProps">
+                        <component 
+                            :is="slotProps.altCardProps.card.type" 
+                            :alt-card-props="slotProps.altCardProps">
+                        </component>
+                    </div>
+                </grid>
             </div>
         </div>
     </div>
@@ -70,25 +77,6 @@
         }
     })
 
-    let Grid = GridLayout.createGrid();
-    // console.log(Grid)
-    Grid.addWidgetType({
-        'testA': testA,
-        'testB': testB
-    })
-    // Grid.addWidgetType('testA', testA);
-    // Grid.addWidgetType('testB', testB);
-    Grid.addWidgetType('testC', {
-        mounted(){
-            console.log('mounted');
-            this.$el.innerHTML += 'heello world'
-            this.$on('resize', (a, b) => {
-                console.log('components resize', a, b, arguments);
-            })
-        }
-    })
-    Grid.addWidgetType('testD', testD);
-
     let testLayout = [
         {"x":0,"y":0,"w":2,"h":2,"i":"0", maxW: 3, maxH: 3, name:'nihaowxl', type: 'testA', resizable: true, isDraggable: true},
         {"x":2,"y":0,"w":3,"h":2,"i":"1", name: '123', minH: 2, minW: 2, type: 'testB', resizable: null, isDraggable: null},
@@ -108,7 +96,11 @@
         name: 'app',
         altStore: store,
         components: {
-            Grid
+            Grid: GridLayout.Grid,
+            testA,
+            testB,
+            testC: testA,
+            testD
         },
         props: {
             txt: String
@@ -124,7 +116,7 @@
                 colNum: 12,
                 margin: [1, 1],
                 bgcolor: 'rgba(0,  0, 0, 0.5)',
-                isGridShow: false
+                isGridShow: true
             }
         },
         watch: {

@@ -12,6 +12,7 @@ export default {
             test: 'test-a-test'
         }
     },
+    props: ['altCardProps'],
     methods: {
         _close(){
             this.altCardProps.close();
