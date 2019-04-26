@@ -85,12 +85,15 @@
         },
         mounted: function () {
             this.initCols();
-            this.boxWatchHandler = new watchBoxSize(this.$el, () => {
-                this.initCols();
-            })
-            if(this.isDraggable || this.isResizable){
-                this.bindEvents();
+            if(this.width === false){
+                this.boxWatchHandler = new watchBoxSize(this.$el, () => {
+                    this.initCols();
+                })
             }
+            
+            // 绑定拖拽事件
+            this.bindEvents();
+
             this.setLayout(this.layout);
             
         },
@@ -264,7 +267,13 @@
             // 初始化每个列宽
             initCols(){
                 // // // console.log('init cols');
-                let containerWidth = this.$el.clientWidth;
+                let containerWidth = 0;
+                if(this.width === false){
+                    containerWidth = this.$el.clientWidth;
+                }else{
+                    containerWidth = this.width > 0 ? this.width : 0;
+                }
+                // let containerWidth = this.$el.clientWidth;
                 if(this.colNum === this.cols.length &&
                     this.containerWidth && 
                     this.containerWidth === containerWidth){
@@ -326,11 +335,13 @@
                 if(!item) return {};
                 let x = this.computeColsWidth(0, item.x) + 'px';
                 let w = this.getCardWidth(item.x, item.x + item.w) + 'px';
-                let y = item.y * this.rowHeight + 'px';
-                let h = item.h * this.rowHeight - this.margin[1] + 'px';
+                let y = item.y * this.rowHeight;
+                let yPx = y + 'px';
+                let h = item.h * this.rowHeight - this.margin[1];
+                let hPx = h + 'px';
                 this.setContainerHeight(y, h);
-                let transform = `translate3d(${x},${y},0px)`;
-                let style = `transform:${transform};width:${w};height:${h};background-color:${this.backgroundColor};`;
+                let transform = `translate3d(${x},${yPx},0px)`;
+                let style = `transform:${transform};width:${w};height:${hPx};background-color:${this.backgroundColor};`;
                 if(raw){
                     return { 
                         style,

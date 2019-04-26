@@ -2028,12 +2028,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=41419530&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"6ef977f9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=c48d017e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){_vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_vm._t("default",null,{altCardProps:_vm.getPropsForInject(index, item)}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],2)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=41419530&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=c48d017e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -3020,6 +3020,10 @@ var props = {
   isShowOriginCloseBtn: {
     type: Boolean,
     default: true
+  },
+  width: {
+    type: [Number, Boolean],
+    default: false
   }
 };
 /* harmony default export */ var components_props = (props);
@@ -3121,14 +3125,15 @@ var props = {
     var _this = this;
 
     this.initCols();
-    this.boxWatchHandler = new watch_box_size(this.$el, function () {
-      _this.initCols();
-    });
 
-    if (this.isDraggable || this.isResizable) {
-      this.bindEvents();
-    }
+    if (this.width === false) {
+      this.boxWatchHandler = new watch_box_size(this.$el, function () {
+        _this.initCols();
+      });
+    } // 绑定拖拽事件
 
+
+    this.bindEvents();
     this.setLayout(this.layout);
   },
   destroyed: function destroyed() {
@@ -3321,7 +3326,14 @@ var props = {
     // 初始化每个列宽
     initCols: function initCols() {
       // // // console.log('init cols');
-      var containerWidth = this.$el.clientWidth;
+      var containerWidth = 0;
+
+      if (this.width === false) {
+        containerWidth = this.$el.clientWidth;
+      } else {
+        containerWidth = this.width > 0 ? this.width : 0;
+      } // let containerWidth = this.$el.clientWidth;
+
 
       if (this.colNum === this.cols.length && this.containerWidth && this.containerWidth === containerWidth) {
         return;
@@ -3390,11 +3402,13 @@ var props = {
       if (!item) return {};
       var x = this.computeColsWidth(0, item.x) + 'px';
       var w = this.getCardWidth(item.x, item.x + item.w) + 'px';
-      var y = item.y * this.rowHeight + 'px';
-      var h = item.h * this.rowHeight - this.margin[1] + 'px';
+      var y = item.y * this.rowHeight;
+      var yPx = y + 'px';
+      var h = item.h * this.rowHeight - this.margin[1];
+      var hPx = h + 'px';
       this.setContainerHeight(y, h);
-      var transform = "translate3d(".concat(x, ",").concat(y, ",0px)");
-      var style = "transform:".concat(transform, ";width:").concat(w, ";height:").concat(h, ";background-color:").concat(this.backgroundColor, ";");
+      var transform = "translate3d(".concat(x, ",").concat(yPx, ",0px)");
+      var style = "transform:".concat(transform, ";width:").concat(w, ";height:").concat(hPx, ";background-color:").concat(this.backgroundColor, ";");
 
       if (raw) {
         return {

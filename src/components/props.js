@@ -1,3 +1,4 @@
+
 let props = {
     layout: {
         type: Array,
@@ -53,6 +54,10 @@ let props = {
     isShowOriginCloseBtn: {
         type: Boolean,
         default: true
+    },
+    width: {
+        type: [Number, Boolean],
+        default: false
     }
 }
 
