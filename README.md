@@ -5,7 +5,7 @@
 2. 拖动改变元素大小
 
 ### 特别注意
-本分支的布局子组件不支持slot的方式传入。`release/slot`分支的代码支持vue@2.6.0版本以下的slot-scope方式。
+本分支的布局子组件只支持vue@2.6.0以下版本slot的方式传入。`release/regSubComponentsByFun`分支的代码支持通过函数的方式注册子组件。
 
 ## 使用方法
 ```html
