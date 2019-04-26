@@ -129,6 +129,7 @@
             this.boxWatchHandler.destroy();
             // this.erd.uninstall(this.$el);
             this.unbindEvents();
+            clearTimeout(this.timer);
         },
         watch: {
             layout(val){

@@ -13,6 +13,7 @@ function watchBoxSizeChange(el, handler){
 
     this.el = el;
     this.handler = handler;
+    this.hadInitScrollListener = false;
 
     this.checkHidden();
 }
@@ -25,6 +26,7 @@ watchBoxSizeChange.prototype.checkHidden = function checkHidden(){
         }else{
             this.handler();
             this.init();
+            this.hadInitScrollListener = true;
         }
     })
 }
@@ -103,9 +105,11 @@ watchBoxSizeChange.prototype.removeListener = function removeListener(){
 }
 
 watchBoxSizeChange.prototype.destroy = function destroy(){
-    this.removeListener();
-    this.el.removeChild(this.expand);
-    this.el.removeChild(this.shrink);
+    if(this.hadInitScrollListener){
+        this.removeListener();
+        this.el.removeChild(this.expand);
+        this.el.removeChild(this.shrink);
+    }
 }
 
 export default watchBoxSizeChange;
