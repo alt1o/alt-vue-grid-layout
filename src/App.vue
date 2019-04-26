@@ -26,6 +26,7 @@
             <button @click="go(1)">goforward</button>
             <div id="container">
                 <grid 
+                    @updated="gridUpdated"
                     v-show="isGridShow"
                     :layout.sync="layout"
                     class="nihao"
@@ -154,6 +155,9 @@
             // this.$refs.grid2.setLayout(this.layout);
         },
         methods: {
+            gridUpdated(){
+                console.log('grid updated');
+            },
             go: function(num){
                 this.$refs.altGrid.go(num);
             },

@@ -808,6 +808,9 @@
                 this.clearDragEnv();
                 this.$emit('update:layout', this.innerLayout);
             }
+        },
+        updated(){
+            this.$emit('updated');
         }
     }
 </script>
