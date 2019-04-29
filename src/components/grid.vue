@@ -136,6 +136,9 @@
             backgroundColor(){
                 // this.reRenderStyle();
                 this.forceReRenderStyle();
+            },
+            width(){
+                this.initCols();
             }
         },
         computed: {
