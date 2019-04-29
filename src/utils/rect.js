@@ -11,6 +11,11 @@ class Rect {
 
         this.id = info._id;
 
+        info.x = this.x;
+        info.y = this.y;
+        info.w = this.w;
+        info.h = this.h;
+
         this.rawInfo = info;
 
         this.coors = coors;

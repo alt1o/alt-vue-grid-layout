@@ -104,9 +104,9 @@
             clearTimeout(this.timer);
         },
         watch: {
-            layout(val){
-                this.setLayout(val);
-            },
+            // layout(val){
+            //     this.setLayout(val);
+            // },
             rowHeight(){
                 this.reRenderStyle({
                     triggerEventEnd: true,
