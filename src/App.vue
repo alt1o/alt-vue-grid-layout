@@ -101,6 +101,9 @@
         { x: 0, y: 0, w: 8, h: 6},
         { x: 0, y: 6, w: 6, h: 6}
     ]
+    for(let i = 0; i < testLayout.length; i++){
+        testLayout[i].gridItemClass = 'color' + i % 5;
+    }
 
     export default {
         name: 'app',
@@ -206,5 +209,20 @@
   /*text-align: center;*/
   color: #2c3e50;
   /*margin-top: 60px;*/
+}
+.color0{
+    background: goldenrod !important;
+}
+.color1{
+    background: wheat !important;
+}
+.color2{
+    background:aqua !important;
+}
+.color3{
+    background: cadetblue !important;
+}
+.color4{
+    background: saddlebrown !important;
 }
 </style>
