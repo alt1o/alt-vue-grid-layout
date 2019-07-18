@@ -189,7 +189,7 @@
             }
         },
         methods: {
-            resetReSize(){
+            resetResize(){
                 this.boxWatchHandler.destroy();
                 this.boxWatchHandler = new watchBoxSize(this.$el, () => {
                     this.initCols();

@@ -3820,12 +3820,12 @@ function _objectSpread(target) {
 
   return target;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"db62b8fc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=52fbb5aa&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0fa0e932-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/grid.vue?vue&type=template&id=1b71c16c&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alt-grid-container",class:_vm.operatorClass,style:(_vm.containerStyle)},[_c('div',{staticClass:"alt-grid-item-drag-placeholder",class:_vm.placeholderClass,style:(_vm.getCardStyleForPlaceholder(_vm.placeholder))}),_vm._l((_vm.innerLayout),function(item,index){return _c('div',{key:item._id,ref:"cards",refInFor:true,staticClass:"alt-grid-item",class:[_vm.canDragClass(item.isDraggable), _vm.gridItemClass, item.gridItemClass],style:(item._alt_style),attrs:{"dg-id":item._id}},[(_vm.getFirstSetValue(item.isShowOriginCloseBtn, _vm.isShowOriginCloseBtn, true))?_c('button',{class:[_vm.closeHandlerClass, item.closeHandlerClass],on:{"click":function($event){return _vm.closeWidget(item._id)}}},[_vm._v("关闭")]):_vm._e(),_c(item.type,{ref:item._id,refInFor:true,tag:"component",attrs:{"alt-card-props":_vm.getPropsForInject(index, item)}}),(_vm.getFirstSetValue(item.isResizable, _vm.isResizable, true))?_c('span',{staticClass:"alt-grid-item-resize-handler",class:[_vm.resizeHandlerClass, item.resizeHandlerClass]}):_vm._e()],1)}),_c('div',{staticClass:"mask"})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=52fbb5aa&
+// CONCATENATED MODULE: ./src/components/grid.vue?vue&type=template&id=1b71c16c&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4306,7 +4306,6 @@ function () {
 
 
 
-
 var coordinate_Coordinate =
 /*#__PURE__*/
 function () {
@@ -4743,7 +4742,7 @@ function autoMove(that, layout) {
     y: 1
   });
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"db62b8fc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=template&id=67aab659&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0fa0e932-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Widget.render.vue?vue&type=template&id=67aab659&
 var Widget_rendervue_type_template_id_67aab659_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div')}
 var Widget_rendervue_type_template_id_67aab659_staticRenderFns = []
 
@@ -5210,6 +5209,14 @@ var Vue = getVue();
     }
   },
   methods: {
+    resetResize: function resetResize() {
+      var _this2 = this;
+
+      this.boxWatchHandler.destroy();
+      this.boxWatchHandler = new watch_box_size(this.$el, function () {
+        _this2.initCols();
+      });
+    },
     bindEvents: function bindEvents() {
       this.eventHandler.mousedown = this.mousedown.bind(this);
       this.eventHandler.mousemove = this.mousemove.bind(this);
@@ -5227,20 +5234,20 @@ var Vue = getVue();
       return util_getFirstSetValue(isDraggable, this.isDraggable, true) ? 'can-drag' : '';
     },
     forceReRenderStyle: function forceReRenderStyle() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.timer) clearTimeout(this.timer);
       this.timer = setTimeout(function () {
-        _this2.innerLayout.forEach(function (item) {
-          var style = _this2.getCardStyle(item);
+        _this3.innerLayout.forEach(function (item) {
+          var style = _this3.getCardStyle(item);
 
-          _this2.$set(item, '_alt_style', style); // item.style = style;
+          _this3.$set(item, '_alt_style', style); // item.style = style;
 
         });
       }, 10);
     },
     reRenderStyle: function reRenderStyle() {
-      var _this3 = this;
+      var _this4 = this;
 
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var ignoreId = options.ignoreId;
@@ -5248,11 +5255,11 @@ var Vue = getVue();
       var onlyReRender = options.onlyReRender;
       if (this.timer) clearTimeout(this.timer);
       this.timer = setTimeout(function () {
-        _this3.containerHeight = 0;
+        _this4.containerHeight = 0;
 
-        _this3.innerLayout.forEach(function (item, index) {
+        _this4.innerLayout.forEach(function (item, index) {
           if (item._id === ignoreId) return;
-          var card = _this3.$refs.cards[index];
+          var card = _this4.$refs.cards[index];
           var oldStyle = {
             style: card.style,
             width: card.style.width,
@@ -5264,23 +5271,23 @@ var Vue = getVue();
             oldStyle.transform = oldStyle.transform.replace(/\s/g, '');
           }
 
-          var styleRaw = _this3.getCardStyle(item, true);
+          var styleRaw = _this4.getCardStyle(item, true);
 
-          _this3.$set(item, '_alt_style', styleRaw.style); // item.style = style;
+          _this4.$set(item, '_alt_style', styleRaw.style); // item.style = style;
 
 
-          var status = _this3.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
+          var status = _this4.getCardRectChangeStatus(oldStyle, styleRaw, ['width', 'height', 'transform'], {
             triggerEventEnd: triggerEventEnd
           });
 
           if (status === 'none') return;
 
-          _this3.dispatchEvent(item._id, status, {
+          _this4.dispatchEvent(item._id, status, {
             w: item.w,
             h: item.h,
             x: item.x,
             y: item.y,
-            layout: _this3.innerLayout,
+            layout: _this4.innerLayout,
             onlyReRender: onlyReRender
           }); // console.log('create Style:', styleRaw, oldStyle, index);
 
@@ -5317,11 +5324,11 @@ var Vue = getVue();
       return 'none';
     },
     dispatchEvent: function dispatchEvent(dragId, type, pos) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$nextTick(function () {
-        _this4.$nextTick(function () {
-          _this4.$refs[dragId] && _this4.$refs[dragId][0].$emit(type, pos);
+        _this5.$nextTick(function () {
+          _this5.$refs[dragId] && _this5.$refs[dragId][0].$emit(type, pos);
         });
       });
     },
@@ -5373,7 +5380,7 @@ var Vue = getVue();
     },
     // 设置布局layout数组
     setLayout: function setLayout() {
-      var _this5 = this;
+      var _this6 = this;
 
       var layout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
@@ -5390,9 +5397,9 @@ var Vue = getVue();
       this.coors.batchAddItem(layout);
       var layoutOverCalc = this.coors.getAllItems();
       layoutOverCalc.forEach(function (item) {
-        var style = _this5.getCardStyle(item);
+        var style = _this6.getCardStyle(item);
 
-        _this5.$set(item, '_alt_style', style); // item.style = style;
+        _this6.$set(item, '_alt_style', style); // item.style = style;
 
       });
       this.innerLayout = layoutOverCalc;
@@ -5929,7 +5936,6 @@ function mixin(Vue) {
   }
 }
 // CONCATENATED MODULE: ./src/alt-store/util.js
-
 
 
 function util_forEachValue(obj, fn) {
