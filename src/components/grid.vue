@@ -189,6 +189,12 @@
             }
         },
         methods: {
+            resetWatchBoxSize(){
+                this.boxWatchHandler.destroy();
+                this.boxWatchHandler = new watchBoxSize(this.$el, () => {
+                    this.initCols();
+                })
+            },
             bindEvents(){
                 this.eventHandler.mousedown = this.mousedown.bind(this);
                 this.eventHandler.mousemove = this.mousemove.bind(this);
