@@ -324,6 +324,7 @@ class Coordinate {
         forEach(itemList, (item) => {
             me.add(item);
         })
+        this._moveUpAll();
     }
 
     getAllItems(){

@@ -4306,6 +4306,7 @@ function () {
 
 
 
+
 var coordinate_Coordinate =
 /*#__PURE__*/
 function () {
@@ -4645,6 +4646,8 @@ function () {
       forEach(itemList, function (item) {
         me.add(item);
       });
+
+      this._moveUpAll();
     }
   }, {
     key: "getAllItems",
