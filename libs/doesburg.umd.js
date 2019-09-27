@@ -3943,6 +3943,8 @@ function util_getFirstSetValue() {
   return args[l - 1];
 }
 function forEach(arr, callBack) {
+  if (!arr || !arr.length) return;
+
   for (var i = 0, j = arr.length; i < j; i++) {
     callBack && callBack(arr[i], i);
   }
@@ -4631,7 +4633,7 @@ function () {
     value: function _moveUpAll() {
       var me = this;
       forEach(this.coors, function (row) {
-        forEach(row, function (cell) {
+        forEach(row || [], function (cell) {
           if (!cell || cell.y === 0) return;
           var canUpRows = me.getEmptyRowsBeforeLine(cell.x, cell.y, cell.w);
           cell.fill(null);

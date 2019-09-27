@@ -61,6 +61,7 @@ export function getFirstSetValue(){
 }
 
 export function forEach(arr, callBack){
+    if(!arr || !arr.length) return;
 	for(let i = 0, j = arr.length; i < j; i++){
 		callBack && callBack(arr[i], i);
 	}
