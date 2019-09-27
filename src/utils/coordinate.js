@@ -302,7 +302,7 @@ class Coordinate {
     _moveUpAll(){
         let me = this;
         forEach(this.coors, (row) => {
-            forEach(row, (cell) => {
+            forEach(row || [], (cell) => {
                 if(!cell || cell.y === 0) return;
                 let canUpRows = me.getEmptyRowsBeforeLine(cell.x, cell.y, cell.w);
                 cell.fill(null);
