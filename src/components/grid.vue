@@ -42,6 +42,7 @@
         normalizeEvent,
         isDragIgnoreFrom
     } from '../utils/util';
+    import device from '../utils/device';
 
     import watchBoxSize from '../utils/watch-box-size.js'
     import Coordinate from '../utils/coordinate'
@@ -383,7 +384,12 @@
                 let hPx = h + 'px';
 
                 this.setContainerHeight(y, h);
-                let transform = `translate3d(${x},${yPx},0px)`;
+                let transform = '';
+                if(device.isMac){
+                    transform = `translate(${x},${yPx})`;
+                }else{
+                    transform = `translate3d(${x},${yPx},0px)`;
+                }
                 let style = `transform:${transform};width:${w};height:${hPx};background-color:${this.backgroundColor};`;
                 if(raw){
                     return { 
